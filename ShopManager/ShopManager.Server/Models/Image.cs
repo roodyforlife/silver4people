@@ -8,7 +8,5 @@ namespace ShopManager.Server.Models
         public Guid Id { get; set; }
 
         public int Index { get; set; }
-
-        public BinaryContent Content { get; set; }
     }
 }

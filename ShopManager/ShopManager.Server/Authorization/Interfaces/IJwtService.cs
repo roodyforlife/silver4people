@@ -2,6 +2,6 @@
 {
     public interface IJwtService
     {
-        string CreateToken(string userName, IEnumerable<string> roles);
+        string CreateToken(string userName);
     }
 }

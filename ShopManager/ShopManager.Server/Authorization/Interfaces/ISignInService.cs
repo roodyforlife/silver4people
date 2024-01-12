@@ -1,7 +1,9 @@
-﻿namespace ShopManager.Server.Authorization.Interfaces
+﻿using ShopManager.Server.Dto;
+
+namespace ShopManager.Server.Authorization.Interfaces
 {
     public interface ISignInService
     {
-        Task<string> SignIn(string login, string password);
+        Task<string> SignIn(AdminSignInDto userSignInDto);
     }
 }

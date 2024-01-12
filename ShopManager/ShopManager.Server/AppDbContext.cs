@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ShopManager.Server.Models;
 using System.Security.Principal;
 using System;
+using System.Reflection.Emit;
 
 namespace ShopManager.Server
 {
@@ -10,17 +11,26 @@ namespace ShopManager.Server
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Category>()
+                .HasOne(c => c.ParentCategory)
+                .WithMany()
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Product> Products { get; set; }
 
-        public DbSet<DeliveryState> DeliveryStates { get; set;}
-
         public DbSet<Image> Images { get; set; }
 
-        public DbSet<BinaryContent> BinaryContent { get; set; }
+        public DbSet<Site> Sites { get; set; }
     }
 }
