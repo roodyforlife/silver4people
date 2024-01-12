@@ -1,0 +1,15 @@
+.container {
+    margin-top: 20px;
+}
+
+.content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+}
+
+.createButton {
+    margin-bottom: 20px;
+    max-width: 150px;
+}

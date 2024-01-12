@@ -1,0 +1,20 @@
+.content {
+    width: 100vw;
+    height: 100vh;
+    background: rgb(245, 245, 245);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.form {
+    display: inline-block;
+    background: white;
+    margin-top: 50px;
+    border-radius: 5px;
+    padding: 20px;
+    min-width: 500px;
+}
+
+h1 {
+}
