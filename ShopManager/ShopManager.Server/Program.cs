@@ -1,7 +1,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SharpCraftStudio.Authorization.Services;
 using ShopManager.Server;
+using ShopManager.Server.Authorization;
+using ShopManager.Server.Authorization.Interfaces;
+using ShopManager.Server.Authorization.Services;
+using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
+using ShopManager.Server.Repositories;
+using ShopManager.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -14,6 +22,21 @@ services.AddDbContext<AppDbContext>(options =>
 
 services.AddIdentity<Admin, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
+
+var jwtOptions = new JwtOptions();
+builder.Configuration.GetSection(JwtOptions.Jwt).Bind(jwtOptions);
+
+services.AddScoped<ICategoryRepository, CategoryRepository>();
+services.AddScoped<IProductRepository, ProductRepository>();
+services.AddScoped<ISiteRepository, SiteRepository>();
+services.AddScoped<ISiteService, SiteService>();
+services.AddScoped<ISignInService, SignInService>();
+services.AddScoped<IJwtService, JwtService>();
+services.AddScoped<ICategoryService, CategoryService>();
+services.AddScoped<IProductService, ProductService>();
+services.AddSingleton<IImageService, ImageService>();
+services.AddSingleton(jwtOptions);
+
 
 var app = builder.Build();
 
