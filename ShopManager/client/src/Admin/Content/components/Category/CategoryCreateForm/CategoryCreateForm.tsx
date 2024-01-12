@@ -11,14 +11,15 @@ export interface ICategoryCreateFormData {
   }
   
   interface IProps {
-    fetchCategories: () => void
+    fetchCategories: () => void,
+    handleCloseCreateModal: () => void,
   }
 
-export const CategoryCreateForm = ({fetchCategories}:IProps) => {
+export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal}:IProps) => {
     const { handleSubmit, control, formState: {errors}, getValues } = useForm<ICategoryCreateFormData>()
   
     const onSubmit = async (data:ICategoryCreateFormData) => {
-      await createCategory(data).then(() => fetchCategories())
+      await createCategory(data).then(() => { fetchCategories(); handleCloseCreateModal(); })
     }
   
     return (
@@ -45,7 +46,10 @@ export const CategoryCreateForm = ({fetchCategories}:IProps) => {
         ></Controller>
         <p style={{color: 'red'}}>{errors.name?.message}</p>
       </div>
-      <Button type="submit">Створити</Button>
+      <div className={formCl.buttons}>
+        <Button type="button" onClick={handleCloseCreateModal} variant='secondary'>Закрити</Button>
+        <Button type="submit" variant='primary'>Створити</Button>
+      </div>
     </form>
       </div>
     )

@@ -21,3 +21,9 @@
     background: #ffffff;
     color: #313030;
 }
+
+.controlls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
