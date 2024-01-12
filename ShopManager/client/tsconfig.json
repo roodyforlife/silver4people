@@ -22,7 +22,7 @@
   "include": [
     "src", // включает все файлы .tsx из директории src и ее поддиректорий
     "src/store/UserStore/**/*.tsx", // добавляет все файлы .tsx из папки src/store/UserStore и ее поддиректорий
-    "src/Auth/styles/Login.module.css"
+    "src/Admin/Auth/styles/Login.module.css"
   ],
   "exclude": [
     "node_modules" // исключает папку node_modules из компиляции TypeScript

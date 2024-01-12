@@ -8,7 +8,7 @@ export default class UserStore {
     private _user: User;
 
     constructor() {
-        this._isAuthorize = false;
+        this._isAuthorize = true;
         this._user = {} as User;
     }
 

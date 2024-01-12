@@ -1,11 +1,12 @@
 import React, {useContext} from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../..';
-import { Button } from '../../components/UI/Button/Button';
-import { Input } from '../../components/UI/Input/Input';
-import mapJwtClaims from '../../utils/mapJwtClaims';
+import { Context } from '../../..';
+import { Button } from '../../../components/UI/Button/Button';
+import { Input } from '../../../components/UI/Input/Input';
+import mapJwtClaims from '../../../utils/mapJwtClaims';
 import { login } from '../http/authApi';
 import cl from '../styles/Login.module.css';
+import formCl from '../../../styles/Form.module.css';
 
 export interface LoginFormData {
     login: string;
@@ -27,7 +28,7 @@ export const Login = () => {
     <div className={cl.content}>
       <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
         <h1>Вхід</h1>
-    <div className={cl.item}>
+    <div className={formCl.item}>
       <Controller
         control={control}
         name={'login'}
@@ -48,7 +49,7 @@ export const Login = () => {
       ></Controller>
       <p style={{color: 'red'}}>{errors.login?.message}</p>
     </div>
-    <div className={cl.item}>
+    <div className={formCl.item}>
       <Controller
         control={control}
         name={'password'}

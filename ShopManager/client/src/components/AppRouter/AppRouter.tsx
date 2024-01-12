@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Context } from '../..'
+import { Navbar } from '../../Admin/components/Navbar/Navbar'
 import { authRoutes, publicRoutes } from '../../routes'
 
 export const AppRouter = () => {
@@ -10,9 +11,11 @@ export const AppRouter = () => {
   return (
     <div>
         {user.isAuth ?
-          <Routes>
-            {authRoutes.map(({path, Component}) => <Route path={path} key={path} element={Component} /> )}
-          </Routes>
+            <Navbar>
+              <Routes>
+                  {authRoutes.map(({path, Component}) => <Route path={path} key={path} element={<Component></Component>} /> )}
+              </Routes>
+            </Navbar>
         :
         <Routes>
           {publicRoutes.map(({path, Component}) => <Route path={path} element={<Component></Component>} key={path}/> )}

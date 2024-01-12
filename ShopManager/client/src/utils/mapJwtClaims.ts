@@ -1,4 +1,4 @@
-import { ClaimName, UserClaims } from "../Auth/http/authApi";
+import { ClaimName, UserClaims } from "../Admin/Auth/http/authApi";
 import { User } from "../store/UserStore";
 
 type Claim = "name" | "role";
