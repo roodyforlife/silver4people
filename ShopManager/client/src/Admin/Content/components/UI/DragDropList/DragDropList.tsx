@@ -55,7 +55,7 @@ export const DragDropList = ({items, setItems}:IProps) => {
                 onDragOver={(e) => handleDragOver(e)}
                 onDrop={(e) => handleDrop(e, index)}
                 >
-                    <div className={cl.slider}><MenuSlider></MenuSlider></div>
+                    {items.length > 1 && <div className={cl.slider}><MenuSlider></MenuSlider></div>}
                     <div className={cl.itemContent}>
                         <div className={cl.children}>{item.content}</div>
                         <div className={cl.closeButton}><CloseButton size={15} onClick={() => handleDelete(item.id)}></CloseButton></div>

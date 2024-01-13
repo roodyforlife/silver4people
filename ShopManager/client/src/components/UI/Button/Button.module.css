@@ -1,11 +1,10 @@
 .button {
-    width: 100%;
     border-radius: 5px;
     padding: 7.5px 10px;
-    background: rgb(124, 181, 255);
     font-size: 16px;
+    user-select: none;
 }
 
 .button:hover{
-    background: rgb(153, 197, 255);
+    opacity: .8;
 }

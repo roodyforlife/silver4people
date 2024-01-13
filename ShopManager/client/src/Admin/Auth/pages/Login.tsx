@@ -70,7 +70,9 @@ export const Login = () => {
       ></Controller>
       <p style={{color: 'red'}}>{errors.password?.message}</p>
     </div>
-    <Button type="submit">Увійти</Button>
+    <div className={formCl.buttons}>
+      <Button type="submit" variant='primary'>Увійти</Button>
+    </div>
   </form>
     </div>
   )

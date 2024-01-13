@@ -105,11 +105,11 @@ export const AdminProducts = () => {
         show={showCreateModal}
         title="Створення продукту"
       >
-        <ProductCreateForm fetchProducts={fetchProducts}></ProductCreateForm>
+        <ProductCreateForm fetchProducts={fetchProducts} handleCloseCreateModal={handleCloseCreateModal}></ProductCreateForm>
       </Modal>
       <div className={tablePageClasses.content}>
         <div className={tablePageClasses.createButton}>
-          <Button onClick={handleShowCreateModal} type="button">
+          <Button onClick={handleShowCreateModal} type="button" variant='primary'>
             Створити
           </Button>
         </div>

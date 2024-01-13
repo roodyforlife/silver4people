@@ -22,11 +22,13 @@ export interface IProductCreateFormData {
   purchasePrice:number,
   salePrice:number,
   trackNumber:string,
+  location:string,
   images:IImage[]
 }
 
 interface IProps {
   fetchProducts: () => void,
+  handleCloseCreateModal: () => void,
 }
 
 interface FileInfo {
@@ -34,7 +36,7 @@ interface FileInfo {
   file: File;
 }
 
-export const ProductCreateForm = ({fetchProducts}:IProps) => {
+export const ProductCreateForm = ({fetchProducts, handleCloseCreateModal}:IProps) => {
   const { handleSubmit, control, formState: {errors}, getValues } = useForm<IProductCreateFormData>()
   const [files, setFiles] = useState<FileInfo[]>([])
   
@@ -89,7 +91,10 @@ const addMoreFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
 const onSubmit = async (data:IProductCreateFormData) => {
   const imageArray:IImage[] = files.map(({file}, index) => { return {id: Guid.create(), index: index, file} });
   data.images = imageArray;
-  await createProduct(data).then(() => fetchProducts())
+  
+  const formData = new FormData();
+  Object.keys(data).forEach(key => formData.append(key, (data as any)[key]));
+  await createProduct(data).then(() => {fetchProducts(); handleCloseCreateModal()})
 }
 
   return (
@@ -181,7 +186,20 @@ const onSubmit = async (data:IProductCreateFormData) => {
       ></Controller>
       <p style={{color: 'red'}}>{errors.trackNumber?.message}</p>
     </div>
-    <Button type="submit">Створити</Button>
+    <div className={formCl.item}>
+      <Controller
+        control={control}
+        name={'location'}
+        render={({ field }) => (
+          <Input label={'Місцезнаходження'} inputType="text" field={field}></Input>
+        )}
+      ></Controller>
+      <p style={{color: 'red'}}>{errors.location?.message}</p>
+    </div>
+    <div className={formCl.buttons}>
+      <Button type="button" variant='secondary' onClick={handleCloseCreateModal}>Закрити</Button>
+      <Button type="submit" variant='primary'>Створити</Button>
+    </div>
   </form>
     </div>
   )
