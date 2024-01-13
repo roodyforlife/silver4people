@@ -37,6 +37,16 @@ services.AddScoped<IProductService, ProductService>();
 services.AddSingleton<IImageService, ImageService>();
 services.AddSingleton(jwtOptions);
 
+services.AddCors(options =>
+{
+    options.AddPolicy(name: "_myAllowSpecificOrigins",
+                      policy =>
+                      {
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyMethod();
+                          policy.SetIsOriginAllowed((host) => true);
+                      });
+});
 
 var app = builder.Build();
 
@@ -50,7 +60,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("_myAllowSpecificOrigins");
 app.UseAuthorization();
 app.UseAuthentication();
 
