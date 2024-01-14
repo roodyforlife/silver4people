@@ -25,8 +25,9 @@ namespace ShopManager.Server.Requests
 
         public override ISpecification<Product> GetFilterSpecification()
         {
-            var lowerSearchString = SearchString.ToLower();
-            var search = new FilterSpecification<Product>(product => product.Name.ToLower().Contains(lowerSearchString) ||
+            var lowerSearchString = SearchString?.ToLower();
+            var search = new FilterSpecification<Product>(product => string.IsNullOrEmpty(lowerSearchString) ||
+                product.Name.ToLower().Contains(lowerSearchString) ||
                 product.TrackNumber.ToLower().Contains(lowerSearchString) ||
                 product.Description.ToLower().Contains(lowerSearchString));
 

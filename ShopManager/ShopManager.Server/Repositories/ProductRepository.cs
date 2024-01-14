@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
+using ShopManager.Server.Requests;
 using ShopManager.Server.RequestSpecifications;
 
 namespace ShopManager.Server.Repositories
@@ -12,12 +13,11 @@ namespace ShopManager.Server.Repositories
         }
 
 
-        public Task<List<Product>> GetAllAsync(ISpecification<Product> specification)
+        public async Task<PageResponse<Product>> GetAllAsync(IPageRequest<Product> request)
         {
-            return specification.Specify(_appDbContext.Products
+            return await request.Execute(_appDbContext.Products
                 .Include(c => c.Categories)
-                .Include(c => c.Images))
-                .ToListAsync();
+                .Include(c => c.Images));
         }
 
         public override Task<List<Product>> GetAllAsync()
