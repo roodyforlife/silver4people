@@ -7,6 +7,7 @@ namespace ShopManager.Server.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly ISiteRepository _siteRepository;
         private readonly IImageService _imageService;
         private readonly ICategoryRepository _categoryRepository;
 
@@ -20,6 +21,7 @@ namespace ShopManager.Server.Services
         public async Task CreateAsync(ProductCreationDto productCreation)
         {
             var categories = await _categoryRepository.GetAsync(productCreation.CategoryIdes);
+            var sites = await _siteRepository.GetAsync(productCreation.SiteIdes);
             var images = productCreation.Images.Select(c => new Image()
             {
                 Id = c.Id,
@@ -43,8 +45,8 @@ namespace ShopManager.Server.Services
                 Published = productCreation.Published,
                 PurchasePrice = productCreation.PurchasePrice,
                 SalePrice = productCreation.SalePrice,
-                SiteId = productCreation.SiteId,
                 TrackNumber = productCreation.TrackNumber,
+                Sites = sites,
                 Images = images,
             };
 

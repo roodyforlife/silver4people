@@ -10,6 +10,13 @@ namespace ShopManager.Server.Repositories
         {
         }
 
+        public async Task<List<Site>> GetAsync(int[] ides)
+        {
+            return await _appDbContext.Sites
+                .Where(c => ides.Any(i => i == c.Id))
+                .ToListAsync();
+        }
+
         public override Task<List<Site>> GetAllAsync()
         {
             return _appDbContext.Sites.ToListAsync();

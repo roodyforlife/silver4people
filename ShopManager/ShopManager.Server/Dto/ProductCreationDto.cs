@@ -22,7 +22,7 @@ namespace ShopManager.Server.Dto
 
         public string Location { get; set; }
 
-        public int SiteId { get; set; }
+        public int[] SiteIdes { get; set; }
 
         public int[] CategoryIdes { get; set; }
 
