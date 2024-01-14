@@ -1,5 +1,5 @@
 import { Guid } from 'guid-typescript';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Button } from '../../../components/UI/Button/Button';
 import { Modal } from '../../../components/UI/Modal/Modal';
 import { CategoryCreateForm, ICategoryCreateFormData } from '../components/Category/CategoryCreateForm/CategoryCreateForm';
@@ -9,13 +9,15 @@ import { getCategories } from '../http/categoryApi';
 import tablePageClasses from '../styles/TablePage.module.css';
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { CategoryDeleteForm } from '../components/Category/CategoryDeleteForm/CategoryDeleteForm';
+import { getCategoryFullName } from '../../utils/getCategoryFullName';
 
 export interface ICategory {
   id: string,
   name:string,
+  parentCategory?:ICategory,
 }
 
-const headColumns:string[] = ["#", "Назва"];
+const headColumns:string[] = ["#", "Назва", "Контроллери"];
 
 export const AdminCategories = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -37,17 +39,16 @@ export const AdminCategories = () => {
     setShowDeleteModal(true)
   };
 
-  const [categories, setCategories] = useState<ICategory[]>([
-    { id: "dssdf", name: "Test1" },
-    { id: "dssdf", name: "Test2" },
-    { id: "dssdf", name: "Test3" },
-    { id: "dssdf", name: "Test4" },
-    { id: "dssdf", name: "Test5" },
-  ]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
 
- /*  useEffect(() => {
-    fetchCategories()
-  }, []) */
+  useEffect(() => {
+    fetchCategories();
+  }, [])
+
+  const filteredCategories = useMemo<ICategory[]>(() =>
+    categories.map((category):ICategory => ({ id: category.id, name: getCategoryFullName(category) })),
+  [categories]
+);
 
   const fetchCategories = async () => {
     await getCategories().then((data) => setCategories(data));
@@ -60,7 +61,7 @@ export const AdminCategories = () => {
         show={showCreateModal}
         title="Створення категорії продукту"
       >
-        <CategoryCreateForm fetchCategories={fetchCategories} handleCloseCreateModal={handleCloseCreateModal}></CategoryCreateForm>
+        <CategoryCreateForm fetchCategories={fetchCategories} categories={categories} handleCloseCreateModal={handleCloseCreateModal}></CategoryCreateForm>
       </Modal>
       <Modal
         onClose={handleCloseEditModal}
@@ -89,11 +90,10 @@ export const AdminCategories = () => {
                 {headColumns?.map((item) => (
                   <th key={item}>{item}</th>
                 ))}
-                <th>Controlls</th>
               </tr>
             </thead>
             <tbody>
-              {categories?.map((row, rowIndex) => (
+              {filteredCategories?.map((row, rowIndex) => (
                 <tr key={rowIndex}>
                   {Object.values(row).map((value, colIndex) => (
                     <td key={colIndex}>{value}</td>
@@ -103,7 +103,7 @@ export const AdminCategories = () => {
                       <div className={tableWrapperCl.button}><Button type="button" variant='warning' onClick={() => handleShowEditModal(row)}>Редагувати</Button></div>
                       <div className={tableWrapperCl.button}><Button type="button" variant='danger' onClick={() => handleShowDeleteModal(row)}>Видалити</Button></div>
                     </div>
-                    </td>
+                  </td>
                 </tr>
               ))}
             </tbody>
