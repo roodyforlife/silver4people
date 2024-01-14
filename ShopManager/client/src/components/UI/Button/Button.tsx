@@ -1,5 +1,4 @@
 import React, {ReactNode} from 'react'
-import { PenSVG } from '../../../Admin/components/UI/PenSVG/PenSVG';
 import cl from './Button.module.css';
 
 interface IProps {

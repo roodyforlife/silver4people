@@ -3,7 +3,7 @@ import { ControllerRenderProps, FieldValues, Path } from 'react-hook-form'
 import cl from './Input.module.css';
 
 interface IProps <T extends FieldValues, TName extends Path<T>> {
-    field:ControllerRenderProps<T, TName>,
+    field?:ControllerRenderProps<T, TName>,
     inputType:InputType,
     label?:string,
 }

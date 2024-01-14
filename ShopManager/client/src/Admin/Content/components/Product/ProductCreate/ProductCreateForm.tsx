@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, ChangeEvent } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../../../../../components/UI/Button/Button';
 import { Input } from '../../../../../components/UI/Input/Input';
@@ -9,21 +9,43 @@ import { FileInput } from '../../UI/FileInput/FileInput';
 import { Guid } from "guid-typescript";
 import { Textarea } from '../../../../../components/UI/Textarea/Textarea';
 import { createProduct } from '../../../http/productApi';
-
-interface IImage {
-  id: Guid,
-  index:number,
-  file:File,
-}
+import { generateArticle } from '../../../../utils/generateArticle';
+import { getCategories } from '../../../http/categoryApi';
+import { ISelect } from '../../Category/CategoryCreateForm/CategoryCreateForm';
+import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
+import { Select } from '../../../../../components/UI/Selects/Select/Select';
+import { createImage } from '../../../http/imageApi';
+import { getSites } from '../../../http/siteApi';
+import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
 
 export interface IProductCreateFormData {
+  id: string,
   name:string,
+  published:boolean,
   description:string,
   purchasePrice:number,
   salePrice:number,
   trackNumber:string,
   location:string,
-  images:IImage[]
+  images:IImage[],
+  article:string,
+  categoryIdes:number[],
+  siteIdes:number[]
+}
+
+interface IImage {
+  id: string,
+  index:number,
+}
+
+interface ICategory {
+  id: string,
+  name:string,
+}
+
+interface ISite {
+  id: string,
+  name:string,
 }
 
 interface IProps {
@@ -37,8 +59,10 @@ interface FileInfo {
 }
 
 export const ProductCreateForm = ({fetchProducts, handleCloseCreateModal}:IProps) => {
-  const { handleSubmit, control, formState: {errors}, getValues } = useForm<IProductCreateFormData>()
+  const { handleSubmit, control, formState: {errors}, getValues, setValue } = useForm<IProductCreateFormData>()
   const [files, setFiles] = useState<FileInfo[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [sites, setSites] = useState<ISite[]>([]);
   
 const getFileListNode = (fileList: FileInfo[]): IItem[] => {
   if (fileList) {
@@ -88,14 +112,60 @@ const addMoreFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
   }
 };
 
-const onSubmit = async (data:IProductCreateFormData) => {
-  const imageArray:IImage[] = files.map(({file}, index) => { return {id: Guid.create(), index: index, file} });
-  data.images = imageArray;
-  
-  const formData = new FormData();
-  Object.keys(data).forEach(key => formData.append(key, (data as any)[key]));
-  await createProduct(data).then(() => {fetchProducts(); handleCloseCreateModal()})
+useEffect(() => {
+  const fetchData = async () => {
+    const categoriesData = await fetchCategories();
+    const sitesData = await fetchSites();
+    setCategories(categoriesData);
+    setSites(sitesData);
+  };
+
+  fetchData();
+}, []);
+
+const fetchCategories = async () => {
+  return await getCategories()
 }
+
+const fetchSites = async () => {
+  return await getSites();
+}
+
+const selectCategoryItems = useMemo<ISelect[]>(() => {
+  const selects: ISelect[] = categories.map((category) => {return {value: category.id, text: getCategoryFullName(category)}});
+  return [{ value: "0", text: "None" }, ...selects];
+}, [categories]);
+
+const selectSiteItems = useMemo<ISelect[]>(() => {
+  const selects: ISelect[] = sites.map((site) => {return {value: site.id, text: site.name}});
+  return [{ value: "0", text: "None" }, ...selects];
+}, [sites]);
+
+const onSubmit = async (data:IProductCreateFormData) => {
+  const imageArray: IImage[] = files.map((value, index) => {
+    return { id: Guid.create().toString(), index: index};
+  });
+
+  const formData:IProductCreateFormData = {
+    ...data,
+    id: Guid.create().toString(),
+    article: generateArticle(6),
+    images: imageArray
+  }
+
+  console.log(formData);
+
+  await createProduct(formData).then(() => {
+    files.map(({file}, index) => {
+      const formData = new FormData()
+      formData.append("file", file);
+        createImage(imageArray[index].id, formData).then(() => {
+        fetchProducts();
+        handleCloseCreateModal();
+      })
+    });
+  });
+};
 
   return (
     <div>
@@ -179,6 +249,16 @@ const onSubmit = async (data:IProductCreateFormData) => {
     <div className={formCl.item}>
       <Controller
         control={control}
+        name={'published'}
+        render={({ field }) => (
+          <CheckBox label={"Опублікувати?"} field={field}></CheckBox>
+        )}
+      ></Controller>
+      <p style={{color: 'red'}}>{errors.published?.message}</p>
+    </div>
+    <div className={formCl.item}>
+      <Controller
+        control={control}
         name={'trackNumber'}
         render={({ field }) => (
           <Input label={'Трек-номер'} inputType="text" field={field}></Input>
@@ -195,6 +275,26 @@ const onSubmit = async (data:IProductCreateFormData) => {
         )}
       ></Controller>
       <p style={{color: 'red'}}>{errors.location?.message}</p>
+    </div>
+    <div className={formCl.item}>
+      <Controller
+        control={control}
+        name={'categoryIdes'}
+        render={({ field }) => (
+          <Select label="Категорії" setValue={(value) => setValue('categoryIdes', [...value].map((item) => +item))} multiple={true} items={selectCategoryItems}></Select>
+        )}
+      ></Controller>
+      <p style={{color: 'red'}}>{errors.categoryIdes?.message}</p>
+    </div>
+    <div className={formCl.item}>
+      <Controller
+        control={control}
+        name={'siteIdes'}
+        render={({ field }) => (
+          <Select label="Сайти" setValue={(value) => setValue('siteIdes', [...value].map((item) => +item))} multiple={true} items={selectSiteItems}></Select>
+        )}
+      ></Controller>
+      <p style={{color: 'red'}}>{errors.siteIdes?.message}</p>
     </div>
     <div className={formCl.buttons}>
       <Button type="button" variant='secondary' onClick={handleCloseCreateModal}>Закрити</Button>
