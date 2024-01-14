@@ -25,8 +25,8 @@ namespace ShopManager.Server.Models
         public string Location { get; set; }
 
         public int SiteId { get; set; }
-        public Site Site { get; set; }
 
+        public List<Site> Sites { get; set; }
 
         public List<Image> Images { get; set; }
 

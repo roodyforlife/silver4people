@@ -23,7 +23,7 @@ namespace ShopManager.Server.Repositories
             return _appDbContext.Products
                 .Include(c => c.Categories)
                 .Include(c => c.Images)
-                .Include(c => c.Site)
+                .Include(c => c.Sites)
                 .FirstAsync(c => c.Id == id);
         }
     }

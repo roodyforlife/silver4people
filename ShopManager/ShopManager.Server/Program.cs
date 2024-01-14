@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SharpCraftStudio.Authorization.Services;
@@ -13,7 +14,10 @@ using ShopManager.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
-
+services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();

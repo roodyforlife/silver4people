@@ -27,7 +27,7 @@ namespace ShopManager.Server.Services
             }).ToList();
 
             var imageCreationTasks = productCreation.Images
-                .Select(c => _imageService.Save(c.File, c.Id)).ToArray();
+                .Select(c => _imageService.Save(c.FormFile.File, c.Id)).ToArray();
 
             Task.WaitAll(imageCreationTasks);
 

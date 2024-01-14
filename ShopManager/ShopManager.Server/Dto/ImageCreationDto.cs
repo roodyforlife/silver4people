@@ -6,6 +6,6 @@
 
         public int Index { get; set; }
 
-        public IFormFile File { get; set; }
+        public FormFileWrapper FormFile { get; set; }
     }
 }
