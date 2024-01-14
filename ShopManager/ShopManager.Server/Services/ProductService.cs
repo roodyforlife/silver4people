@@ -1,6 +1,7 @@
 ﻿using ShopManager.Server.Dto;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
+using ShopManager.Server.RequestSpecifications;
 
 namespace ShopManager.Server.Services
 {
@@ -47,9 +48,9 @@ namespace ShopManager.Server.Services
             await _productRepository.CreateAsync(product);
         }
 
-        public async Task<List<Product>> GetAllAsync()
+        public async Task<List<Product>> GetAllAsync(ISpecification<Product> specification)
         {
-            return await _productRepository.GetAllAsync();
+            return await _productRepository.GetAllAsync(specification);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ShopManager.Server.Dto;
 using ShopManager.Server.Models;
+using ShopManager.Server.RequestSpecifications;
 
 namespace ShopManager.Server.Interfaces
 {
@@ -7,6 +8,6 @@ namespace ShopManager.Server.Interfaces
     {
         Task CreateAsync(ProductCreationDto productCreation);
 
-        Task<List<Product>> GetAllAsync();
+        Task<List<Product>> GetAllAsync(ISpecification<Product> specification);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Dto;
 using ShopManager.Server.Interfaces;
+using ShopManager.Server.Requests;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,9 +19,9 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] AdminProductsRequest request)
         {
-            var products = await _productService.GetAllAsync();
+            var products = await _productService.GetAllAsync(request);
             return Ok(products);
         }
 
