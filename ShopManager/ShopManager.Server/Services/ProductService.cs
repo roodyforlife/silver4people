@@ -8,14 +8,13 @@ namespace ShopManager.Server.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly ISiteRepository _siteRepository;
-        private readonly IImageService _imageService;
         private readonly ICategoryRepository _categoryRepository;
 
-        public ProductService(IProductRepository repository, IImageService imageService, ICategoryRepository categoryRepository)
+        public ProductService(IProductRepository repository, ICategoryRepository categoryRepository, ISiteRepository siteRepository)
         {
             _productRepository = repository;
-            _imageService = imageService;
             _categoryRepository = categoryRepository;
+            _siteRepository = siteRepository;
         }
 
         public async Task CreateAsync(ProductCreationDto productCreation)
@@ -27,11 +26,6 @@ namespace ShopManager.Server.Services
                 Id = c.Id,
                 Index = c.Index
             }).ToList();
-
-            var imageCreationTasks = productCreation.Images
-                .Select(c => _imageService.Save(c.FormFile.File, c.Id)).ToArray();
-
-            Task.WaitAll(imageCreationTasks);
 
 
             var product = new Product()

@@ -17,8 +17,15 @@ namespace ShopManager.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var imageData = await _imageService.Get(id);
+            var imageData = await _imageService.GetAsync(id);
             return File(imageData, "image/webp");
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Create(Guid id, IFormFile file)
+        {
+            await _imageService.SaveAsync(file, id);
+            return Ok();
         }
     }
 }

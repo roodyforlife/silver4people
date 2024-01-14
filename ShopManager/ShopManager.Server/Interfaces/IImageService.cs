@@ -2,8 +2,8 @@
 {
     public interface IImageService
     {
-        Task Save(IFormFile formFile, Guid id);
+        Task SaveAsync(IFormFile formFile, Guid id);
 
-        Task<byte[]> Get(Guid id);
+        Task<byte[]> GetAsync(Guid id);
     }
 }

@@ -5,7 +5,5 @@
         public Guid Id { get; set; }
 
         public int Index { get; set; }
-
-        public FormFileWrapper FormFile { get; set; }
     }
 }

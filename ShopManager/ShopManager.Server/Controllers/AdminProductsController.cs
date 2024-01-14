@@ -25,7 +25,7 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] ProductCreationDto productCreationDto)
+        public async Task<IActionResult> Post(ProductCreationDto productCreationDto)
         {
             await _productService.CreateAsync(productCreationDto);
             return Ok();

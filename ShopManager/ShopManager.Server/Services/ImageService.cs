@@ -6,18 +6,18 @@ namespace ShopManager.Server.Services
 {
     public class ImageService : IImageService
     {
-        private readonly Assembly _imagesDirectory = typeof(ImagesFolderMark).Assembly;
+        private readonly string _imagesDirectory = Path.GetDirectoryName(typeof(ImagesFolderMark).Assembly.Location);
 
-        public async Task Save(IFormFile formFile, Guid id)
+        public async Task SaveAsync(IFormFile formFile, Guid id)
         {
-            var path = Path.Combine(_imagesDirectory.Location, id + ".webp");
+            var path = Path.Combine( _imagesDirectory, id + ".webp");
             using var file = File.Create(path);
             await formFile.CopyToAsync(file);
         }
 
-        public async Task<byte[]> Get(Guid id)
+        public async Task<byte[]> GetAsync(Guid id)
         {
-            var path = Path.Combine(_imagesDirectory.Location, id + ".webp");
+            var path = Path.Combine(_imagesDirectory, id + ".webp");
             using var streamReader = File.OpenRead(path);
             var data = new byte[streamReader.Length];
 
