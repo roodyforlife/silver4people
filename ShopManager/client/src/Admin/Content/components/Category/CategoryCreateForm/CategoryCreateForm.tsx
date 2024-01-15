@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '../../../../../components/UI/Button/Button'
 import { Input } from '../../../../../components/UI/Input/Input'
-import { Select } from '../../../../../components/UI/Selects/Select/Select';
+import { ISelect, Select } from '../../../../../components/UI/Selects/Select/Select';
 import formCl from '../../../../../styles/Form.module.css';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
 import { createCategory } from '../../../http/categoryApi';
@@ -14,11 +14,6 @@ export interface ICategoryCreateFormData {
     parentCategoryId:number,
   }
 
-export interface ISelect {
-  value:string,
-  text:string,
-}
-  
   interface IProps {
     fetchCategories: () => void,
     handleCloseCreateModal: () => void,

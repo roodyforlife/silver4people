@@ -11,12 +11,13 @@ import { Textarea } from '../../../../../components/UI/Textarea/Textarea';
 import { createProduct } from '../../../http/productApi';
 import { generateArticle } from '../../../../utils/generateArticle';
 import { getCategories } from '../../../http/categoryApi';
-import { ISelect } from '../../Category/CategoryCreateForm/CategoryCreateForm';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
-import { Select } from '../../../../../components/UI/Selects/Select/Select';
+import { ISelect, Select } from '../../../../../components/UI/Selects/Select/Select';
 import { createImage } from '../../../http/imageApi';
 import { getSites } from '../../../http/siteApi';
 import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
+import { getSelectsCategoryItems, getSelectsSiteItems } from '../../../../utils/SelectUtils/getSelectsItems';
+import { ISite } from '../../../pages/AdminSites';
 
 export interface IProductCreateFormData {
   id: string,
@@ -39,11 +40,6 @@ interface IImage {
 }
 
 interface ICategory {
-  id: string,
-  name:string,
-}
-
-interface ISite {
   id: string,
   name:string,
 }
@@ -132,13 +128,11 @@ const fetchSites = async () => {
 }
 
 const selectCategoryItems = useMemo<ISelect[]>(() => {
-  const selects: ISelect[] = categories.map((category) => {return {value: category.id, text: getCategoryFullName(category)}});
-  return [{ value: "0", text: "None" }, ...selects];
+  return getSelectsCategoryItems(categories);
 }, [categories]);
 
 const selectSiteItems = useMemo<ISelect[]>(() => {
-  const selects: ISelect[] = sites.map((site) => {return {value: site.id, text: site.name}});
-  return [{ value: "0", text: "None" }, ...selects];
+  return getSelectsSiteItems(sites);
 }, [sites]);
 
 const onSubmit = async (data:IProductCreateFormData) => {
@@ -152,8 +146,6 @@ const onSubmit = async (data:IProductCreateFormData) => {
     article: generateArticle(6),
     images: imageArray
   }
-
-  console.log(formData);
 
   await createProduct(formData).then(() => {
     files.map(({file}, index) => {

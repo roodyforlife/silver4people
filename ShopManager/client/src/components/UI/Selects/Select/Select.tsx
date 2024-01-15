@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ControllerRenderProps, FieldValues, Path, PathValue, useFormContext, UseFormSetValue } from 'react-hook-form';
-import { ICategoryCreateFormData, ISelect } from '../../../../Admin/Content/components/Category/CategoryCreateForm/CategoryCreateForm';
+import { ICategoryCreateFormData } from '../../../../Admin/Content/components/Category/CategoryCreateForm/CategoryCreateForm';
 import { CloseButton } from '../../CloseButton/CloseButton';
 import { Input } from '../../Input/Input';
 import cl from './Select.module.css';
@@ -10,6 +10,11 @@ interface IProps {
   label?:string,
   items:ISelect[],
   multiple:boolean,
+}
+
+export interface ISelect {
+  value:string,
+  text:string,
 }
 
 export const Select = ({setValue, label, items, multiple}:IProps) => {
