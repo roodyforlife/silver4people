@@ -1,5 +1,5 @@
-import React from 'react'
-import { Control, Controller, ControllerRenderProps, FieldValues, Path, PathValue } from 'react-hook-form';
+import React, {useEffect} from 'react'
+import { Control, Controller, ControllerRenderProps, FieldPath, FieldPathValue, FieldValues, KeepStateOptions, Path, PathValue, UseFormSetValue } from 'react-hook-form';
 import Select from 'react-select';
 import { DARK_GRAY_COLOR, GRAY_COLOR, MAIN_COLOR, RED_COLOR, } from '../../../Admin/consts'
 import { ISelect } from '../../../Admin/utils/SelectUtils/getSelectsItems'
@@ -11,6 +11,8 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
     label: string,
     control:Control<T, any>,
     name: Path<T>,
+    value?: FieldPathValue<T, TName>,
+    setValue?: UseFormSetValue<T>
   }
 
   const customStyles = {
@@ -36,12 +38,19 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
     }) 
 }
 
-export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({name, control, multiple = false, items, label}:IProps<T, TName>) => {
+export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({value, setValue, name, control, multiple = false, items, label}:IProps<T, TName>) => {
+
+    useEffect(() => {
+        if (setValue && value) {
+            setValue(name, value);
+          }
+    }, [items])
+
   return (
     <Controller
         control={control}
         name={name}
-        render={({ field}) => (
+        render={({ field }) => (
             <div className={cl.content}>
             <label>{label}</label>
             <Select
