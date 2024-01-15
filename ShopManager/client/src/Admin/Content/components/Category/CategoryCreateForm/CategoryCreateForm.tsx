@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '../../../../../components/UI/Button/Button'
+import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
 import { Input } from '../../../../../components/UI/Input/Input'
 import formCl from '../../../../../styles/Form.module.css';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
@@ -12,7 +13,12 @@ import cl from './CategoryCreateForm.module.css';
 export interface ICategoryCreateFormData {
     name:string,
     parentCategoryId:number,
-  }
+}
+
+export interface IForm {
+  name:string,
+  parentCategoryId:ISelect,
+}
 
   interface IProps {
     fetchCategories: () => void,
@@ -21,10 +27,13 @@ export interface ICategoryCreateFormData {
   }
 
 export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, categories}:IProps) => {
-    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<ICategoryCreateFormData>()
+    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>()
   
-    const onSubmit = async (data:ICategoryCreateFormData) => {
-      await createCategory(data).then(() => { fetchCategories(); handleCloseCreateModal(); })
+    const onSubmit = async (data:IForm) => {
+      await createCategory({...data, parentCategoryId: +data.parentCategoryId.value}).then(() => {
+        fetchCategories();
+        handleCloseCreateModal();
+      })
     }
 
     const selectItems = useMemo<ISelect[]>(() => {
@@ -56,13 +65,7 @@ export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, cat
         <p style={{color: 'red'}}>{errors.name?.message}</p>
       </div>
       <div className={formCl.item}>
-        {/* <Controller
-          control={control}
-          name={'parentCategoryId'}
-          render={({ field }) => (
-            <Select label="Батьківська категорія" setValue={(value) => setValue('parentCategoryId', +value[0])} multiple={false} items={selectItems}></Select>
-          )}
-        ></Controller> */}
+          <CustomSelect name="parentCategoryId" control={control} label={"Батьківська категорія"} multiple={false} items={selectItems}/>
         <p style={{color: 'red'}}>{errors.parentCategoryId?.message}</p>
       </div>
       <div className={formCl.buttons}>
