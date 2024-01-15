@@ -14,7 +14,7 @@ namespace ShopManager.Server.Requests
 
         private ISpecification<T> GetPaginationSpecification()
         {
-            var paginationSpecification = new PaginationSpecification<T>(Take, Skip);
+            var paginationSpecification = new PaginationSpecification<T>(Skip, Take);
             return paginationSpecification;
         }
 
