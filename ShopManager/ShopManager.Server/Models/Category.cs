@@ -8,5 +8,7 @@
 
         public int? ParentCategoryId { get; set; }
         public Category? ParentCategory { get; set; }
+
+        public List<Product> Products { get; set; }
     }
 }
