@@ -17,21 +17,38 @@ import { getSites } from '../../../http/siteApi';
 import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
 import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
 import { ISite } from '../../../pages/AdminSites';
+import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
 
 export interface IProductCreateFormData {
-  id: string,
-  name:string,
-  published:boolean,
-  description:string,
-  purchasePrice:number,
-  salePrice:number,
-  trackNumber:string,
-  location:string,
-  images:IImage[],
-  article:string,
-  categoryIdes:number[],
-  siteIdes:number[]
+  id: string;
+  name: string;
+  published: boolean;
+  description: string;
+  purchasePrice: number;
+  salePrice: number;
+  trackNumber: string;
+  location: string;
+  images: IImage[];
+  article: string;
+  categoryIdes: number[];
+  siteIdes: number[];
 }
+
+interface IForm {
+  id: string;
+  name: string;
+  published: boolean;
+  description: string;
+  purchasePrice: number;
+  salePrice: number;
+  trackNumber: string;
+  location: string;
+  images: IImage[];
+  article: string;
+  categoryIdes: ISelect[];
+  siteIdes: ISelect[];
+}
+
 
 interface IImage {
   id: string,
@@ -54,7 +71,7 @@ interface FileInfo {
 }
 
 export const ProductCreateForm = ({fetchProducts, handleCloseCreateModal}:IProps) => {
-  const { handleSubmit, control, formState: {errors}, getValues, setValue } = useForm<IProductCreateFormData>()
+  const { handleSubmit, control, formState: {errors}, getValues, setValue } = useForm<IForm>()
   const [files, setFiles] = useState<FileInfo[]>([])
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]);
@@ -134,13 +151,15 @@ const selectSiteItems = useMemo<ISelect[]>(() => {
   return getSelectsSiteItems(sites);
 }, [sites]);
 
-const onSubmit = async (data:IProductCreateFormData) => {
+const onSubmit = async (data:IForm) => {
   const imageArray: IImage[] = files.map((value, index) => {
     return { id: Guid.create().toString(), index: index};
   });
 
   const formData:IProductCreateFormData = {
     ...data,
+    categoryIdes: data.categoryIdes.map(({value}) => +value),
+    siteIdes: data.siteIdes.map(({value}) => +value),
     id: Guid.create().toString(),
     article: generateArticle(6),
     images: imageArray
@@ -268,24 +287,12 @@ const onSubmit = async (data:IProductCreateFormData) => {
       <p style={{color: 'red'}}>{errors.location?.message}</p>
     </div>
     <div className={formCl.item}>
-     {/*  <Controller
-        control={control}
-        name={'categoryIdes'}
-        render={({ field }) => (
-          <Select label="Категорії" setValue={(value) => setValue('categoryIdes', [...value].map((item) => +item))} multiple={true} items={selectCategoryItems}></Select>
-        )}
-      ></Controller> */}
+          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} items={selectCategoryItems}/>
       <p style={{color: 'red'}}>{errors.categoryIdes?.message}</p>
     </div>
     <div className={formCl.item}>
-      {/* <Controller
-        control={control}
-        name={'siteIdes'}
-        render={({ field }) => (
-          <Select label="Сайти" setValue={(value) => setValue('siteIdes', [...value].map((item) => +item))} multiple={true} items={selectSiteItems}></Select>
-        )}
-      ></Controller> */}
-      <p style={{color: 'red'}}>{errors.siteIdes?.message}</p>
+          <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} items={selectSiteItems}/>
+      <p style={{color: 'red'}}>{errors.siteIdes?.message}</p> 
     </div>
     <div className={formCl.buttons}>
       <Button type="button" variant='secondary' onClick={handleCloseCreateModal}>Закрити</Button>
