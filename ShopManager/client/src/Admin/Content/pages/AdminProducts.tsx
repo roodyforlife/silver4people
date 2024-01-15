@@ -15,12 +15,12 @@ import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { Pagination } from "../components/UI/Pagination/Pagination";
 import filtrationCl from '../styles/Filtration.module.css';
 import { Input } from "../../../components/UI/Input/Input";
-import { ISelect, Select } from "../../../components/UI/Selects/Select/Select";
 import { getCategories } from "../http/categoryApi";
 import { getSites } from "../http/siteApi";
-import { getSelectsCategoryItems, getSelectsSiteItems } from "../../utils/SelectUtils/getSelectsItems";
+import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from "../../utils/SelectUtils/getSelectsItems";
 import { ISite } from "./AdminSites";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
+import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
 
 export interface IProduct {
   id: string;
@@ -56,13 +56,13 @@ export interface IProductsRequest {
   searchString?:string,
 }
 
-interface IFiltration {
+interface IFiltration extends FieldValues{
   minPurchasePrice:number,
   maxPurchasePrice:number,
   minSalePrice:number,
   maxSalePrice:number,
-  categoryIdes:number[],
-  siteIdes:number[],
+  categoryIdes:ISelect[],
+  siteIdes:ISelect[],
   publishedFilter:PublishedFilterType,
   orderType:OrderType,
   searchString:string,
@@ -108,7 +108,18 @@ export const AdminProducts = () => {
   const [sites, setSites] = useState<ISite[]>([]); 
 
   const fetchProducts = async () => {
-    await getProducts({...getValues(), take: 20, skip: 0}).then((data) => setProducts(data.pageItems));
+    console.log(getValues())
+    /* const categoryIdes = getValues().categoryIdes.map(({ value }) => +value);
+    const siteIdes = getValues().siteIdes.map(({ value }) => +value);
+    
+    const requestData: IProductsRequest = {
+      ...getValues(),
+      categoryIdes: categoryIdes,
+      siteIdes: siteIdes, 
+      take: 20,
+      skip: 1,
+    };
+    await getProducts(requestData).then((data) => setProducts(data.pageItems)); */
   };
 
   const fetchCategories = async () => {
@@ -136,9 +147,7 @@ const onSubmit = async () => {
 }
 
   useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-    fetchSites();
+    fetchCategories().then(() => fetchSites().then(() => fetchProducts()));
   }, [])
 
   return (
@@ -184,18 +193,7 @@ const onSubmit = async () => {
         )}></Controller>
         </div>
         <div className={filtrationCl.item}>
-        <Controller
-        control={control}
-        name={'maxSalePrice'}
-        render={() => (
-          <Select label={"Категорії"} multiple={true} setValue={(val) => setValue("categoryIdes", val.map((item) => +item))} items={selectCategoryItems}></Select>
-        )}></Controller>
-        <Controller
-        control={control}
-        name={'maxSalePrice'}
-        render={() => (
-          <Select label={"Сайти"} multiple={true} setValue={(val) => setValue("siteIdes", val.map((item) => +item))} items={selectSiteItems}></Select>
-        )}></Controller>
+          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} items={selectCategoryItems}/>
         </div>
         <div className={filtrationCl.item}>
         <Controller

@@ -1,4 +1,5 @@
 import React, {ReactNode} from 'react'
+import { GRAY_COLOR, MAIN_COLOR, RED_COLOR, YELLOW_COLOR } from '../../../Admin/consts';
 import cl from './Button.module.css';
 
 interface IProps {
@@ -13,10 +14,10 @@ type ButtonColorType = "primary" | "secondary" | "danger" | "warning"
 
 export const Button = (props:IProps) => {
   const variantColors: Record<ButtonColorType, string> = {
-    primary: "rgb(124, 181, 255)",
-    secondary: "rgb(230, 230, 230)",
-    danger: "rgb(255, 124, 124)",
-    warning: "rgb(255, 231, 124)",
+    primary: MAIN_COLOR,
+    secondary: GRAY_COLOR,
+    danger: RED_COLOR,
+    warning: YELLOW_COLOR,
   };
 
   const backgroundColor = props.variant ? variantColors[props.variant] : "transparent";

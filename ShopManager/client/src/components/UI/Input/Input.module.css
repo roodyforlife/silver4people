@@ -1,3 +1,5 @@
+@import url("../../../styles/var.css");
+
 .input {
     width: 100%;
     display: flex;
@@ -11,7 +13,7 @@
 }
 
 .input input {
-    border: 1px solid rgb(180, 180, 180);
+    border: 1px solid var(--dark-gray-color);
     border-radius: 5px;
     height: 30px;
     padding: 0 10px;

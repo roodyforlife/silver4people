@@ -12,11 +12,10 @@ import { createProduct } from '../../../http/productApi';
 import { generateArticle } from '../../../../utils/generateArticle';
 import { getCategories } from '../../../http/categoryApi';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
-import { ISelect, Select } from '../../../../../components/UI/Selects/Select/Select';
 import { createImage } from '../../../http/imageApi';
 import { getSites } from '../../../http/siteApi';
 import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
-import { getSelectsCategoryItems, getSelectsSiteItems } from '../../../../utils/SelectUtils/getSelectsItems';
+import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
 import { ISite } from '../../../pages/AdminSites';
 
 export interface IProductCreateFormData {
@@ -269,23 +268,23 @@ const onSubmit = async (data:IProductCreateFormData) => {
       <p style={{color: 'red'}}>{errors.location?.message}</p>
     </div>
     <div className={formCl.item}>
-      <Controller
+     {/*  <Controller
         control={control}
         name={'categoryIdes'}
         render={({ field }) => (
           <Select label="Категорії" setValue={(value) => setValue('categoryIdes', [...value].map((item) => +item))} multiple={true} items={selectCategoryItems}></Select>
         )}
-      ></Controller>
+      ></Controller> */}
       <p style={{color: 'red'}}>{errors.categoryIdes?.message}</p>
     </div>
     <div className={formCl.item}>
-      <Controller
+      {/* <Controller
         control={control}
         name={'siteIdes'}
         render={({ field }) => (
           <Select label="Сайти" setValue={(value) => setValue('siteIdes', [...value].map((item) => +item))} multiple={true} items={selectSiteItems}></Select>
         )}
-      ></Controller>
+      ></Controller> */}
       <p style={{color: 'red'}}>{errors.siteIdes?.message}</p>
     </div>
     <div className={formCl.buttons}>
