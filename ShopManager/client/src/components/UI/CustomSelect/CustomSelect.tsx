@@ -41,16 +41,18 @@ export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({name
     <Controller
         control={control}
         name={name}
-        render={(field) => (
+        render={({ field}) => (
             <div className={cl.content}>
             <label>{label}</label>
             <Select
-                options={items}
+                options={items as PathValue<T, TName>}
                 isMulti={multiple}
                 styles={customStyles}
                 noOptionsMessage={() => "Нічого не знайдено"}
+                closeMenuOnSelect={!multiple}
+                hideSelectedOptions={false}
                 {...field}
-                ></Select>
+            ></Select>
             </div>
         )}></Controller>
   )
