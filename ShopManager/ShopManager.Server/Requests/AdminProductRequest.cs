@@ -34,8 +34,8 @@ namespace ShopManager.Server.Requests
             var filter = new FilterSpecification<Product>(product =>
                 product.PurchasePrice >= MinPurchasePrice && product.PurchasePrice <= MaxPurchasePrice &&
                 product.SalePrice >= MinSalePrice && product.SalePrice <= MaxSalePrice &&
-                (CategoryIdes.Length == 0 || product.Categories.Any(c => CategoryIdes.Contains(c.Id))) &&
-                (SiteIdes.Length == 0 || product.Sites.Any(c => SiteIdes.Contains(c.Id))));
+                (CategoryIdes == null || product.Categories.Any(c => CategoryIdes.Contains(c.Id))) &&
+                (SiteIdes == null || product.Sites.Any(c => SiteIdes.Contains(c.Id))));
 
             var publishedFilter = PublishedFilter == BoolFilter.All ? new FilterSpecification<Product>(_ => true) :
                  PublishedFilter == BoolFilter.True ? new FilterSpecification<Product>(product => product.Published) :
