@@ -193,7 +193,8 @@ const onSubmit = async () => {
         )}></Controller>
         </div>
         <div className={filtrationCl.item}>
-          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} items={selectCategoryItems}/>
+          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} value={selectCategoryItems} setValue={setValue} items={selectCategoryItems}/>
+          <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} value={selectSiteItems} setValue={setValue} items={selectSiteItems}/>
         </div>
         <div className={filtrationCl.item}>
         <Controller
