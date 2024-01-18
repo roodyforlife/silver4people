@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShopManager.Server.Models;
-using System.Security.Principal;
-using System;
-using System.Reflection.Emit;
 
 namespace ShopManager.Server
 {
