@@ -10,6 +10,5 @@ export const createProduct = async (productData:IProductCreateFormData) => {
 
 export const getProducts = async (request:IProductsRequest) => {
     const {data} = await $host.get(createLinkWithParameters('api/AdminProducts', request));
-    console.log(data)
     return data;
 }

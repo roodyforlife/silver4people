@@ -1,3 +1,5 @@
+import { makeAutoObservable } from "mobx";
+
 export interface User {
     name:string,
     role:string,
@@ -8,8 +10,9 @@ export default class UserStore {
     private _user: User;
 
     constructor() {
-        this._isAuthorize = true;
+        this._isAuthorize = false;
         this._user = {} as User;
+        makeAutoObservable(this);
     }
 
     setIsAuth(bool:boolean) {

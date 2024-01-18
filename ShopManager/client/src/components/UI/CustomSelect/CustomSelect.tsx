@@ -59,6 +59,7 @@ export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({valu
                 styles={customStyles}
                 noOptionsMessage={() => "Нічого не знайдено"}
                 closeMenuOnSelect={!multiple}
+                isClearable={true}
                 hideSelectedOptions={false}
                 {...field}
             ></Select>

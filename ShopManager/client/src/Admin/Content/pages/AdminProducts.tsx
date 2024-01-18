@@ -83,45 +83,38 @@ const headColumns: string[] = [
   "Місцезнаходження",
 ];
 
+const takeItems = 1;
+
 export const AdminProducts = () => {
   const { control, setValue, getValues } = useForm<IFiltration>();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const handleCloseCreateModal = () => setShowCreateModal(false);
   const handleShowCreateModal = () => setShowCreateModal(true);
-  const [pagesCount, setPagesCount] = useState<number>(100);
+  const [pagesCount, setPagesCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  /* const [searchForm, setSearchForm] = useState<IProductsRequest>({
-    minPurchasePrice: 0,
-    maxPurchasePrice: 0,
-    minSalePrice: 0,
-    maxSalePrice: 0,
-    categoryIdes: [],
-    siteIdes: [],
-    publishedFilter: 'All',
-    orderType: 'Ascending',
-    take: 20,
-    skip: 0,
-    searchString: ""}); */
 
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]); 
 
   const fetchProducts = async () => {
-    console.log(getValues())
-    /* const categoryIdes = getValues().categoryIdes.map(({ value }) => +value);
-    const siteIdes = getValues().siteIdes.map(({ value }) => +value);
-    
+    const categoryIdes = (getValues().categoryIdes ? getValues().categoryIdes?.map(({ value }) => +value) : []);
+    const siteIdes = (getValues().siteIdes ? getValues().siteIdes.map(({ value }) => +value) : []);
+
     const requestData: IProductsRequest = {
       ...getValues(),
       categoryIdes: categoryIdes,
       siteIdes: siteIdes, 
-      take: 20,
-      skip: 1,
+      take: 1,
+      skip: currentPage - 1,
     };
-    await getProducts(requestData).then((data) => setProducts(data.pageItems)); */
-  };
 
+    await getProducts(requestData).then((data) => {
+      setProducts(data.pageItems)
+      setPagesCount(data.itemsCount / takeItems);
+    });
+  };
+ 
   const fetchCategories = async () => {
     await getCategories().then((data) => setCategories(data)); 
   }
@@ -130,9 +123,13 @@ export const AdminProducts = () => {
     await getSites().then((data) => setSites(data));
   }
 
-  const setPage = (number:number) => {
+  const setPage = async (number:number) => {
     setCurrentPage(number);
   }
+
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage])
 
 const selectCategoryItems = useMemo<ISelect[]>(() => {
   return getSelectsCategoryItems(categories);
@@ -147,7 +144,7 @@ const onSubmit = async () => {
 }
 
   useEffect(() => {
-    fetchCategories().then(() => fetchSites().then(() => fetchProducts()));
+    Promise.all([fetchCategories(), fetchSites()]).then(() => fetchProducts());
   }, [])
 
   return (
@@ -193,8 +190,8 @@ const onSubmit = async () => {
         )}></Controller>
         </div>
         <div className={filtrationCl.item}>
-          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} value={selectCategoryItems} setValue={setValue} items={selectCategoryItems}/>
-          <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} value={selectSiteItems} setValue={setValue} items={selectSiteItems}/>
+          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} setValue={setValue} items={selectCategoryItems}/>
+          <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} setValue={setValue} items={selectSiteItems}/>
         </div>
         <div className={filtrationCl.item}>
         <Controller

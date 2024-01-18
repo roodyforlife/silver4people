@@ -158,8 +158,8 @@ const onSubmit = async (data:IForm) => {
 
   const formData:IProductCreateFormData = {
     ...data,
-    categoryIdes: data.categoryIdes.map(({value}) => +value),
-    siteIdes: data.siteIdes.map(({value}) => +value),
+    categoryIdes: data.categoryIdes?.map(({value}) => +value),
+    siteIdes: data.siteIdes?.map(({value}) => +value),
     id: Guid.create().toString(),
     article: generateArticle(6),
     images: imageArray

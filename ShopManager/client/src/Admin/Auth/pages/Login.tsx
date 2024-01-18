@@ -7,6 +7,8 @@ import mapJwtClaims from '../../../utils/mapJwtClaims';
 import { login } from '../http/authApi';
 import cl from '../styles/Login.module.css';
 import formCl from '../../../styles/Form.module.css';
+import { useNavigate } from 'react-router-dom';
+import { ADMIN_PRODUCTS_ROUTE } from '../../Content/consts';
 
 export interface LoginFormData {
     login: string;
@@ -15,13 +17,15 @@ export interface LoginFormData {
 
 export const Login = () => {
   const contextValue = useContext(Context);
+  const navigate = useNavigate();
   const user = contextValue!.user;
-    const { handleSubmit, control, formState: {errors}, getValues } = useForm<LoginFormData>()
+    const { handleSubmit, control, formState: {errors}, getValues, setError } = useForm<LoginFormData>()
     const onSubmit = async (data: LoginFormData) => {
       await login(data).then((data) => {
         user.setIsAuth(true);
         user.setUser(mapJwtClaims(data));
-      })
+        navigate(ADMIN_PRODUCTS_ROUTE);
+      }).catch(() => setError("password", {type: 'validate', message: "Невірний логін або пароль"}));
     }
 
   return (

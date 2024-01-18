@@ -30,7 +30,7 @@ export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, cat
     const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>()
   
     const onSubmit = async (data:IForm) => {
-      await createCategory({...data, parentCategoryId: +data.parentCategoryId.value}).then(() => {
+      await createCategory({...data, parentCategoryId: +data.parentCategoryId?.value}).then(() => {
         fetchCategories();
         handleCloseCreateModal();
       })

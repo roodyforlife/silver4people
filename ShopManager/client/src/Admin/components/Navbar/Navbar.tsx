@@ -1,5 +1,7 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useContext } from 'react'
 import { NavLink } from 'react-router-dom';
+import { Context } from '../../..';
+import { Button } from '../../../components/UI/Button/Button';
 import { ADMIN_CATEGORIES_ROUTE, ADMIN_PRODUCTS_ROUTE, ADMIN_USERS_ROUTE } from '../../Content/consts';
 import cl from './Navbar.module.css';
 
@@ -13,6 +15,14 @@ interface ILink {
 }
 
 export const Navbar = (props:IProps) => {
+    const contextValue = useContext(Context);
+    const user = contextValue!.user;
+
+    const signOut = () => {
+        localStorage.removeItem('token');
+        user.setIsAuth(false);
+    }
+
     const links:ILink[] = [
         {path: ADMIN_PRODUCTS_ROUTE, name: "Товари"},
         {path: ADMIN_CATEGORIES_ROUTE, name: "Категорії"},
@@ -22,9 +32,14 @@ export const Navbar = (props:IProps) => {
   return (
     <div className={cl.container}>
         <div className={cl.navbar}>
-            <nav>
-                {links.map(({path, name}) => <ul key={path}><NavLink to={path}>{name}</NavLink></ul>)}
-            </nav>
+            <div className={cl.item}>
+                <nav>
+                    {links.map(({path, name}) => <ul key={path}><NavLink to={path}>{name}</NavLink></ul>)}
+                </nav>
+            </div>
+            <div className={cl.item}>
+                <Button type='button' onClick={signOut} variant={"secondary"}>Вийти</Button>
+            </div>
         </div>
         <div className={cl.content}>
             {props.children}
