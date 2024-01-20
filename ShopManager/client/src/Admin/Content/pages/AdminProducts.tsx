@@ -24,6 +24,7 @@ import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADMIN_PRODUCTS_ROUTE } from "../consts";
 import { ProductEditForm } from "../components/Product/ProductEditForm/ProductEditForm";
+import { ProductDeleteForm } from "../components/Product/ProductDeleteForm/ProductDeleteForm";
 
 export interface IProduct {
   id: string;
@@ -98,6 +99,7 @@ export const AdminProducts = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editableProduct, setEditableProduct] = useState<IProduct>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletableSite, setDeletableSite] = useState<IProduct>();
   const [pagesCount, setPagesCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -115,6 +117,7 @@ export const AdminProducts = () => {
   
   const handleCloseEditModal = () => setShowEditModal(false);
   const handleShowDeleteModal = (product:IProduct) => {
+    setDeletableSite(product);
     setShowDeleteModal(true);
   }
   
@@ -138,10 +141,12 @@ export const AdminProducts = () => {
       skip: currentPage - 1,
     };
 
-    await getProducts(requestData).then((data) => {
-      setProducts(data.pageItems)
-      setPagesCount(Math.ceil(data.itemsCount / takeItems));
-    });
+    try {
+      await getProducts(requestData).then((data) => {
+        setProducts(data.pageItems)
+        setPagesCount(Math.ceil(data.itemsCount / takeItems));
+      });
+    } catch (error) {}
   };
  
   const fetchCategories = async () => {
@@ -213,6 +218,13 @@ const onSubmit = async () => {
         title="Редагування продукту"
       >
         <ProductEditForm fetchProducts={fetchProducts} handleCloseEditModal={handleCloseEditModal} product={editableProduct}></ProductEditForm>
+      </Modal>
+      <Modal
+        onClose={handleCloseDeleteModal}
+        show={showDeleteModal}
+        title="Видалення продукту"
+      >
+        <ProductDeleteForm fetchProducts={fetchProducts} handleCloseDeleteModal={handleCloseDeleteModal} product={deletableSite}></ProductDeleteForm>
       </Modal>
       <div className={tablePageClasses.content}>
         <div className={filtrationCl.item}>

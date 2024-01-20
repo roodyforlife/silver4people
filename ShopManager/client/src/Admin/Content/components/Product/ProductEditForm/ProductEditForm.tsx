@@ -16,11 +16,11 @@ import { getSites } from '../../../http/siteApi';
 import { ISite } from '../../../pages/AdminSites';
 import { ICategory } from '../../../pages/AdminCategories';
 import { REACT_APP_API_URL } from '../../../../../consts';
-import { editImage, getImage } from '../../../http/imageApi';
 import { convertImageLinkIntoFile } from '../../../../utils/convertImageLinkIntoFile';
 import { getFileListNode } from '../../../../utils/getFileListNode';
 import { Guid } from 'guid-typescript';
 import { editProduct } from '../../../http/productApi';
+import { createImage } from '../../../http/imageApi';
 
 export interface IProductEditFormData {
     id: string;
@@ -122,6 +122,21 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         
             setFiles(sortedFiles);
       }
+
+      const addMoreFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const additionalFiles = e.target.files;
+      
+        if (additionalFiles) {
+          const maxId = files.reduce((max, file) => (file.id > max ? file.id : max), 0);
+          const newFiles = Array.from(additionalFiles).map((file, index) => ({
+            id: maxId + index + 1,
+            file: file,
+          }));
+      
+          const updatedFiles = [...files, ...newFiles];
+          setFiles(updatedFiles);
+        }
+      };
       
       const fetchCategories = async () => {
         return await getCategories()
@@ -158,7 +173,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
             files.map(({file}, index) => {
               const formData = new FormData()
               formData.append("file", file);
-                editImage(imageArray[index].id, formData).then(() => {
+                createImage(imageArray[index].id, formData).then(() => {
                 fetchProducts();
                 handleCloseEditModal();
               })
@@ -209,9 +224,9 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           <p style={{color: 'red'}}>{errors.description?.message}</p>
         </div>
           <DragDropList items={getFileListNode(files as FileInfo[])} setItems={handleChangeList}></DragDropList>
-        {/* <div className={formCl.item}>
+        <div className={formCl.item}>
           <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
-        </div> */}
+        </div>
         <div className={formCl.item}>
           <Controller
             control={control}
@@ -286,7 +301,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         </div>
         <div className={formCl.buttons}>
           <Button type="button" variant='secondary' onClick={handleCloseEditModal}>Закрити</Button>
-          <Button type="submit" variant='primary'>Створити</Button>
+          <Button type="submit" variant='primary'>Редагувати</Button>
         </div>
       </form>
         </div>
