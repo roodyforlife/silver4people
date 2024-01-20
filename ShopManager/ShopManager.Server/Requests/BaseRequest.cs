@@ -25,11 +25,11 @@ namespace ShopManager.Server.Requests
         {
             return new PageResponse<T>()
             {
-                ItemsCount = await GetFilterSpecification()
-                    .Specify(GetOrderSpecification().Specify(query)).CountAsync(),
-                PageItems = await GetFilterSpecification()
+                ItemsCount = await GetOrderSpecification()
+                    .Specify(GetFilterSpecification().Specify(query)).CountAsync(),
+                PageItems = await GetPaginationSpecification()
                     .Specify(GetOrderSpecification()
-                        .Specify(GetPaginationSpecification().Specify(query))).ToListAsync()
+                        .Specify(GetFilterSpecification().Specify(query))).ToListAsync()
             };
         }
 
