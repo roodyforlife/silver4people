@@ -17,6 +17,7 @@ namespace ShopManager.Server.Repositories
         {
             return await request.Execute(_appDbContext.Products
                 .Include(c => c.Categories)
+                .Include(c => c.Sites)
                 .Include(c => c.Images));
         }
 
