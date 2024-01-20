@@ -14,12 +14,12 @@ export const AppRouter = observer(() => {
         {user.isAuth ?
             <Navbar>
               <Routes>
-                  {authRoutes.map(({path, Component}) => <Route path={path} key={path} element={<Component></Component>} /> )}
+                  {authRoutes.map(({path, Component}) => <Route path={path} key={path} element={<Component />} /> )}
               </Routes>
             </Navbar>
         :
         <Routes>
-          {publicRoutes.map(({path, Component}) => <Route path={path} element={<Component></Component>} key={path}/> )}
+          {publicRoutes.map(({path, Component}) => <Route path={path} element={<Component />} key={path}/> )}
         </Routes>       
         }
     </div>

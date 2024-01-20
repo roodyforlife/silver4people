@@ -2,7 +2,7 @@ import React, { ReactNode, useContext } from 'react'
 import { NavLink } from 'react-router-dom';
 import { Context } from '../../..';
 import { Button } from '../../../components/UI/Button/Button';
-import { ADMIN_CATEGORIES_ROUTE, ADMIN_PRODUCTS_ROUTE, ADMIN_USERS_ROUTE } from '../../Content/consts';
+import { ADMIN_CATEGORIES_ROUTE, ADMIN_PRODUCTS_ROUTE, ADMIN_SITES_ROUTE, ADMIN_USERS_ROUTE } from '../../Content/consts';
 import cl from './Navbar.module.css';
 
 interface IProps {
@@ -27,6 +27,7 @@ export const Navbar = (props:IProps) => {
         {path: ADMIN_PRODUCTS_ROUTE, name: "Товари"},
         {path: ADMIN_CATEGORIES_ROUTE, name: "Категорії"},
         {path: ADMIN_USERS_ROUTE, name: "Аккаунти"},
+        {path: ADMIN_SITES_ROUTE, name: "Сайти"},
     ]
 
   return (

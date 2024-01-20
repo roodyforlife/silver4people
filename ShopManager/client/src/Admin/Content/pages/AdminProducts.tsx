@@ -254,6 +254,8 @@ const onSubmit = async () => {
             Створити
           </Button>
         </div>
+        {products.length === 0 ? <div>Нічого не знайдено</div> :
+        <>
         <div className={tablePageClasses.pagination}>
           <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange}></Pagination>
         </div>
@@ -290,6 +292,8 @@ const onSubmit = async () => {
         <div className={tablePageClasses.pagination}>
           <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange}></Pagination>
         </div>
+        </>
+        }
       </div>
     </div>
   );
