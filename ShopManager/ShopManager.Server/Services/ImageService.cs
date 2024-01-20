@@ -25,5 +25,12 @@ namespace ShopManager.Server.Services
 
             return data;
         }
+
+
+        public async void Delete(Guid id)
+        {
+            var path = Path.Combine(_imagesDirectory, id + ".webp");
+            File.Delete(path);
+        }
     }
 }

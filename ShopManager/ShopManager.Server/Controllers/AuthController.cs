@@ -8,6 +8,7 @@ namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : Controller
     {
         private readonly ISignInService _signInService;
@@ -20,6 +21,7 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpPost("signIn")]
+        [AllowAnonymous]
         public async Task<IActionResult> SignIn(AdminSignInDto userSignInDto)
         {
             var token = await _signInService.SignIn(userSignInDto);

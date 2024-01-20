@@ -11,12 +11,14 @@ namespace ShopManager.Server.Services
         private readonly IProductRepository _productRepository;
         private readonly ISiteRepository _siteRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IImageService _imageService;
 
-        public ProductService(IProductRepository repository, ICategoryRepository categoryRepository, ISiteRepository siteRepository)
+        public ProductService(IProductRepository repository, ICategoryRepository categoryRepository, ISiteRepository siteRepository, IImageService imageService)
         {
             _productRepository = repository;
             _categoryRepository = categoryRepository;
             _siteRepository = siteRepository;
+            _imageService = imageService;
         }
 
         public async Task CreateAsync(ProductCreationDto productCreation)
@@ -52,6 +54,18 @@ namespace ShopManager.Server.Services
         public async Task<PageResponse<Product>> GetAllAsync(IPageRequest<Product> specification)
         {
             return await _productRepository.GetAllAsync(specification);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+
+            foreach (var image in product.Images)
+            {
+                _imageService.Delete(image.Id);
+            }
+
+            await _productRepository.DeleteAsync(product);
         }
     }
 }

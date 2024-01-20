@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Dto;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Requests;
@@ -9,6 +10,7 @@ namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AdminProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -28,6 +30,21 @@ namespace ShopManager.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(ProductCreationDto productCreationDto)
         {
+            await _productService.CreateAsync(productCreationDto);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _productService.DeleteAsync(id);
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Delete(ProductCreationDto productCreationDto)
+        {
+            await _productService.DeleteAsync(productCreationDto.Id);
             await _productService.CreateAsync(productCreationDto);
             return Ok();
         }

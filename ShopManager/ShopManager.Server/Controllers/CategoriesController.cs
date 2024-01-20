@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
 using ShopManager.Server.Services;
@@ -7,6 +8,7 @@ namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -17,6 +19,7 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _categoryService.GetAllAsync());

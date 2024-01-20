@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
@@ -8,6 +9,7 @@ namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SitesController : Controller
     {
         private readonly ISiteService _siteService;

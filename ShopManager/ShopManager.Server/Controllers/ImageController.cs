@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Interfaces;
 
 namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ImageController : Controller
     {
         private readonly IImageService _imageService;
@@ -15,6 +17,7 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(Guid id)
         {
             var imageData = await _imageService.GetAsync(id);
