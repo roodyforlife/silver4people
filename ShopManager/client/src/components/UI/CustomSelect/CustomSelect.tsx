@@ -12,7 +12,8 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
     control:Control<T, any>,
     name: Path<T>,
     value?: FieldPathValue<T, TName>,
-    setValue?: UseFormSetValue<T>
+    setValue?: UseFormSetValue<T>,
+    isClearable?: boolean,
   }
 
   const customStyles = {
@@ -38,7 +39,7 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
     }) 
 }
 
-export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({value, setValue, name, control, multiple = false, items, label}:IProps<T, TName>) => {
+export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({value, setValue, name, control, multiple = false, items, label, isClearable = false}:IProps<T, TName>) => {
 
     useEffect(() => {
         if (setValue && value) {
@@ -59,7 +60,7 @@ export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({valu
                 styles={customStyles}
                 noOptionsMessage={() => "Нічого не знайдено"}
                 closeMenuOnSelect={!multiple}
-                isClearable={true}
+                isClearable={isClearable}
                 hideSelectedOptions={false}
                 {...field}
             ></Select>

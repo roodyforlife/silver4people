@@ -21,6 +21,8 @@ import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from "../../uti
 import { ISite } from "./AdminSites";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ADMIN_PRODUCTS_ROUTE } from "../consts";
 
 export interface IProduct {
   id: string;
@@ -50,6 +52,7 @@ export interface IProductsRequest {
   categoryIdes:number[],
   siteIdes:number[],
   publishedFilter:PublishedFilterType,
+  order:OrderField,
   orderType:OrderType,
   take:number,
   skip:number,
@@ -63,12 +66,14 @@ interface IFiltration extends FieldValues{
   maxSalePrice:number,
   categoryIdes:ISelect[],
   siteIdes:ISelect[],
-  publishedFilter:PublishedFilterType,
-  orderType:OrderType,
+  publishedFilter:ISelect,
+  orderField:ISelect,
+  orderType:ISelect,
   searchString:string,
 }
 
 type PublishedFilterType = "All" | "True" | "False";
+type OrderField = "Name" | "PurchasePrice" | "SalePrice";
 type OrderType = "Ascending" | "Descending";
 
 const headColumns: string[] = [
@@ -96,22 +101,30 @@ export const AdminProducts = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]); 
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchProducts = async () => {
     const categoryIdes = (getValues().categoryIdes ? getValues().categoryIdes?.map(({ value }) => +value) : []);
     const siteIdes = (getValues().siteIdes ? getValues().siteIdes.map(({ value }) => +value) : []);
+    const publishedFilter:PublishedFilterType = (getValues().publishedFilter ? getValues().publishedFilter?.value : "All") as PublishedFilterType;
+    const orderField:OrderField = (getValues().orderField ? getValues().orderField?.value : "Name") as OrderField;
+    const orderType:OrderType = (getValues().orderType ? getValues().orderType?.value : "Ascending") as OrderType;
 
     const requestData: IProductsRequest = {
       ...getValues(),
       categoryIdes: categoryIdes,
       siteIdes: siteIdes, 
-      take: 1,
+      publishedFilter: publishedFilter,
+      order: orderField,
+      orderType: orderType,
+      take: takeItems,
       skip: currentPage - 1,
     };
 
     await getProducts(requestData).then((data) => {
       setProducts(data.pageItems)
-      setPagesCount(data.itemsCount / takeItems);
+      setPagesCount(Math.ceil(data.itemsCount / takeItems));
     });
   };
  
@@ -123,9 +136,15 @@ export const AdminProducts = () => {
     await getSites().then((data) => setSites(data));
   }
 
-  const setPage = async (number:number) => {
-    setCurrentPage(number);
+  const handlePageChange = async (number:number) => {
+    navigate(ADMIN_PRODUCTS_ROUTE + `?page=${number}`)
   }
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const pageNumber = queryParams.get('page');
+    setCurrentPage(pageNumber ? +pageNumber : 1);
+  }, [location.search]);
 
   useEffect(() => {
     fetchProducts();
@@ -139,12 +158,28 @@ const selectSiteItems = useMemo<ISelect[]>(() => {
   return getSelectsSiteItems(sites);
 }, [sites]);
 
+const selectPublishedItems = [
+  {value: "True", label: "Опубліковано"},
+  {value: "False", label: "Не опубліковано"},
+]
+
+const selectOrderFieldItems = [
+  {value: "Name", label: "Сортувати за назвою"},
+  {value: "PurchasePrice", label: "Сортувати за ціною покупки"},
+  {value: "SalePrice", label: "Сортувати за ціною продажу"},
+]
+
+const selectOrderTypeItems = [
+  {value: "Ascending", label: "За збільшенням"},
+  {value: "Descending", label: "За зменшенням"},
+]
+
 const onSubmit = async () => {
   fetchProducts()
 }
 
   useEffect(() => {
-    Promise.all([fetchCategories(), fetchSites()]).then(() => fetchProducts());
+    Promise.all([fetchCategories(), fetchSites()]);
   }, [])
 
   return (
@@ -190,8 +225,13 @@ const onSubmit = async () => {
         )}></Controller>
         </div>
         <div className={filtrationCl.item}>
-          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} setValue={setValue} items={selectCategoryItems}/>
-          <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} setValue={setValue} items={selectSiteItems}/>
+          <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} isClearable={true} setValue={setValue} items={selectCategoryItems}/>
+          <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} isClearable={true} setValue={setValue} items={selectSiteItems}/>
+        </div>
+        <div className={filtrationCl.item}>
+          <CustomSelect name="publishedFilter" control={control} label={"Статус публікації"} setValue={setValue} items={selectPublishedItems} isClearable={true}/>
+          <CustomSelect name="orderField" control={control} label={"Сортування за"} setValue={setValue} items={selectOrderFieldItems} value={getValues().orderField || selectOrderFieldItems[0]} />
+          <CustomSelect name="orderType" control={control} label={"Тип сортування"} setValue={setValue} items={selectOrderTypeItems} value={getValues().orderType || selectOrderTypeItems[0]} />
         </div>
         <div className={filtrationCl.item}>
         <Controller
@@ -215,7 +255,7 @@ const onSubmit = async () => {
           </Button>
         </div>
         <div className={tablePageClasses.pagination}>
-          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={setPage}></Pagination>
+          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange}></Pagination>
         </div>
         <TableWrapper>
           <table>
@@ -248,7 +288,7 @@ const onSubmit = async () => {
           </table>
         </TableWrapper>
         <div className={tablePageClasses.pagination}>
-          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={setPage}></Pagination>
+          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange}></Pagination>
         </div>
       </div>
     </div>
