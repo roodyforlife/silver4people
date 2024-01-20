@@ -5,7 +5,7 @@ import { MenuSlider } from '../MenuSlider/MenuSlider';
 
 export interface IItem {
     id:number,
-    content:ReactNode
+    content:JSX.Element
 }
 
 interface IProps {

@@ -18,6 +18,7 @@ import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
 import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
 import { ISite } from '../../../pages/AdminSites';
 import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
+import { getFileListNode } from '../../../../utils/getFileListNode';
 
 export interface IProductCreateFormData {
   id: string;
@@ -49,7 +50,6 @@ interface IForm {
   siteIdes: ISelect[];
 }
 
-
 interface IImage {
   id: string,
   index:number,
@@ -65,7 +65,7 @@ interface IProps {
   handleCloseCreateModal: () => void,
 }
 
-interface FileInfo {
+export interface FileInfo {
   id: number;
   file: File;
 }
@@ -75,27 +75,6 @@ export const ProductCreateForm = ({fetchProducts, handleCloseCreateModal}:IProps
   const [files, setFiles] = useState<FileInfo[]>([])
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]);
-  
-const getFileListNode = (fileList: FileInfo[]): IItem[] => {
-  if (fileList) {
-    const newPhotos: IItem[] = fileList.map((fileInfo) => ({
-      id: fileInfo.id,
-      content: (
-        <div className={cl.listItem} key={fileInfo.id}>
-          <div className={cl.image}>
-            <img src={URL.createObjectURL(fileInfo.file)} alt={`Image ${fileInfo.id}`} />
-          </div>
-          <div className={cl.imageName}>
-            <span>{fileInfo.file.name}</span>
-          </div>
-        </div>
-      ),
-    }));
-
-    return newPhotos;
-  }
-  return [];
-};
 
 const handleChangeList = (items:IItem[]) => {
   const updatedFiles = files.filter((file) => items.some((item) => item.id === file.id));

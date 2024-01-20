@@ -23,6 +23,7 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADMIN_PRODUCTS_ROUTE } from "../consts";
+import { ProductEditForm } from "../components/Product/ProductEditForm/ProductEditForm";
 
 export interface IProduct {
   id: string;
@@ -86,6 +87,7 @@ const headColumns: string[] = [
   "Ціна продажу",
   "Трек номер",
   "Місцезнаходження",
+  "Контроллери",
 ];
 
 const takeItems = 1;
@@ -93,16 +95,30 @@ const takeItems = 1;
 export const AdminProducts = () => {
   const { control, setValue, getValues } = useForm<IFiltration>();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const handleCloseCreateModal = () => setShowCreateModal(false);
-  const handleShowCreateModal = () => setShowCreateModal(true);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editableProduct, setEditableProduct] = useState<IProduct>();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [pagesCount, setPagesCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]); 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleCloseCreateModal = () => setShowCreateModal(false);
+  const handleShowCreateModal = () => setShowCreateModal(true);
+  const handleShowEditModal = (product:IProduct) => {
+    setEditableProduct(product);
+    setShowEditModal(true);
+  }
+  
+  const handleCloseEditModal = () => setShowEditModal(false);
+  const handleShowDeleteModal = (product:IProduct) => {
+    setShowDeleteModal(true);
+  }
+  
+  const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
   const fetchProducts = async () => {
     const categoryIdes = (getValues().categoryIdes ? getValues().categoryIdes?.map(({ value }) => +value) : []);
@@ -190,6 +206,13 @@ const onSubmit = async () => {
         title="Створення продукту"
       >
         <ProductCreateForm fetchProducts={fetchProducts} handleCloseCreateModal={handleCloseCreateModal}></ProductCreateForm>
+      </Modal>
+      <Modal
+        onClose={handleCloseEditModal}
+        show={showEditModal}
+        title="Редагування продукту"
+      >
+        <ProductEditForm fetchProducts={fetchProducts} handleCloseEditModal={handleCloseEditModal} product={editableProduct}></ProductEditForm>
       </Modal>
       <div className={tablePageClasses.content}>
         <div className={filtrationCl.item}>
@@ -284,6 +307,12 @@ const onSubmit = async () => {
                 <td>{row.salePrice}</td>
                 <td>{row.trackNumber}</td>
                 <td>{row.location}</td>
+                <td>
+                    <div className={tableWrapperCl.controlls}>
+                      <div className={tableWrapperCl.button}><Button type="button" variant='warning' onClick={() => handleShowEditModal(row)}>Редагувати</Button></div>
+                      <div className={tableWrapperCl.button}><Button type="button" variant='danger' onClick={() => handleShowDeleteModal(row)}>Видалити</Button></div>
+                    </div>
+                  </td>
               </tr>
             ))}
             </tbody>

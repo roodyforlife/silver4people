@@ -11,7 +11,7 @@ export const CheckBox = <T extends FieldValues, TName extends Path<T>>({label, f
   return (
     <>
     <label className={cl.container}>{label}
-        <input type="checkbox" {...field}/>
+        <input type="checkbox" checked={field?.value} {...field}/>
         <span className={cl.checkmark}></span>
     </label> 
     </>

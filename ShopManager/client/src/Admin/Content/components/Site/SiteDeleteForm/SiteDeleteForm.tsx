@@ -16,6 +16,10 @@ export const SiteDeleteForm = ({fetchSites, handleCloseDeleteModal, site}:IProps
             await deleteSite(site?.id).then(() => {
                 fetchSites();
                 handleCloseDeleteModal();
+            }).catch(({response}) => {
+                if (response.status === 400) {
+                    alert("Неможливо видалити сайт, тому що він прив'язаний до якогось товару");
+                }
             })
         }
     }
