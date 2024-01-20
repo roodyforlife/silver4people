@@ -22,7 +22,9 @@ services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
-services.AddControllers();
+services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddDbContext<AppDbContext>(options =>
