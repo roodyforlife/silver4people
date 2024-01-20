@@ -5,7 +5,7 @@ import { TableWrapper } from '../components/TableWrapper/TableWrapper';
 import { UserCreateForm } from '../components/User/UserCreate/UserCreateForm';
 import tablePageClasses from '../styles/TablePage.module.css';
 
-interface IUser {
+export interface IUser {
     id: string,
     email: string,
     name: string,
@@ -44,7 +44,7 @@ export const AdminUsers = () => {
           show={showCreateModal}
           title="Створення адміністратора"
         >
-            <UserCreateForm fetchUsers={fetchUsers}></UserCreateForm>
+            <UserCreateForm fetchUsers={fetchUsers} handleCloseCreateModal={handleCloseCreateModal}></UserCreateForm>
         </Modal>
         <div className={tablePageClasses.content}>
           <div className={tablePageClasses.createButton}>

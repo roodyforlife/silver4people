@@ -15,9 +15,10 @@ export interface IUserCreateFormData {
 
 interface IProps {
   fetchUsers: () => void
+  handleCloseCreateModal: () => void,
 }
 
-export const UserCreateForm = ({fetchUsers}:IProps) => {
+export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
   const { handleSubmit, control, formState: {errors}, getValues, setError, watch} = useForm<IUserCreateFormData>()
   
     const onSubmit = async (data:IUserCreateFormData) => {
@@ -116,7 +117,10 @@ export const UserCreateForm = ({fetchUsers}:IProps) => {
         ></Controller>
         <p style={{color: 'red'}}>{errors.confirmPassword?.message}</p>
       </div>
-      <Button type="submit">Створити</Button>
+      <div className={formCl.buttons}>
+        <Button type="button" onClick={handleCloseCreateModal} variant='secondary'>Закрити</Button>
+        <Button type="submit" variant='primary'>Створити</Button>
+      </div>
     </form>
       </div>
     )

@@ -10,6 +10,10 @@ import tablePageClasses from '../styles/TablePage.module.css';
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { CategoryDeleteForm } from '../components/Category/CategoryDeleteForm/CategoryDeleteForm';
 import { getCategoryFullName } from '../../utils/getCategoryFullName';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
+import { Input } from '../../../components/UI/Input/Input';
+import filtrationCl from '../styles/Filtration.module.css';
+import { ISelect } from '../../utils/SelectUtils/getSelectsItems';
 
 export interface ICategory {
   id: string,
@@ -17,9 +21,16 @@ export interface ICategory {
   parentCategory?:ICategory,
 }
 
+interface IFiltration extends FieldValues{
+  name: string,
+  orderField:ISelect,
+  orderType:ISelect,
+}
+
 const headColumns:string[] = ["#", "Назва", "Контроллери"];
 
 export const AdminCategories = () => {
+  const { control, getValues } = useForm<IFiltration>();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -45,10 +56,13 @@ export const AdminCategories = () => {
     fetchCategories();
   }, [])
 
-  const filteredCategories = useMemo<ICategory[]>(() =>
-    categories.map((category):ICategory => ({ id: category.id, name: getCategoryFullName(category) })),
-  [categories]
-);
+  const filteredCategories = useMemo<ICategory[]>(() => {
+    return categories.map((category):ICategory => ({ id: category.id, name: getCategoryFullName(category) })).filter((category) => category.name.includes(getValues().name));
+  }, [categories]);
+
+  const onSubmit = () => {
+
+  }
 
   const fetchCategories = async () => {
     await getCategories().then((data) => setCategories(data));
@@ -77,6 +91,24 @@ export const AdminCategories = () => {
       >
         <CategoryDeleteForm fetchCategories={fetchCategories} handleCloseDeleteModal={handleCloseDeleteModal} category={deletableCategory}></CategoryDeleteForm>
       </Modal>
+
+      <div className={tablePageClasses.content}>
+        <div className={filtrationCl.item}>
+        <Controller
+        control={control}
+        name={'name'}
+        defaultValue={""}
+        render={({ field }) => (
+          <Input label={"Назва"} inputType="text" {...field}></Input>
+        )}></Controller>
+        </div>
+        <div className={filtrationCl.item}>
+          <div className={filtrationCl.button}>
+            <Button type="button" variant="primary" onClick={onSubmit}>Знайти</Button>
+          </div>
+        </div>
+      </div>
+
       <div className={tablePageClasses.content}>
         <div className={tablePageClasses.createButton}>
           <Button onClick={handleShowCreateModal} type="button" variant="primary">
