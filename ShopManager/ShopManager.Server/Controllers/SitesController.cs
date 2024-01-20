@@ -30,7 +30,7 @@ namespace ShopManager.Server.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _siteService.TryDeleteAsync(id);
