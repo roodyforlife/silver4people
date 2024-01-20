@@ -22,10 +22,7 @@ services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
-
-services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddDbContext<AppDbContext>(options =>
@@ -46,11 +43,10 @@ services.AddScoped<ISignInService, SignInService>();
 services.AddScoped<IJwtService, JwtService>();
 services.AddScoped<ICategoryService, CategoryService>();
 services.AddScoped<IProductService, ProductService>();
-services.AddScoped<IRegisterService, AdminRegisterService>();
+services.AddScoped<IAdminService, AdminService>();
 services.AddScoped<AdminRegisterValidator>();
 services.AddSingleton<IImageService, ImageService>();
 services.AddSingleton(jwtOptions);
-
 
 services.Configure<IdentityOptions>(options =>
 {
@@ -118,7 +114,7 @@ app.Run();
 static async Task InitializeDefaultData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
-    var adminRegister = scope.ServiceProvider.GetRequiredService<IRegisterService>();
+    var adminRegister = scope.ServiceProvider.GetRequiredService<IAdminService>();
     var adminName = "admin";
     var adminPassword = "123456";
 

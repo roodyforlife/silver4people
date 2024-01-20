@@ -11,12 +11,12 @@ namespace ShopManager.Server.Controllers
     public class AuthController : Controller
     {
         private readonly ISignInService _signInService;
-        private readonly IRegisterService _registerService;
+        private readonly IAdminService _adminService;
 
-        public AuthController(ISignInService signInService, IRegisterService registerService)
+        public AuthController(ISignInService signInService, IAdminService registerService)
         {
             _signInService = signInService;
-            _registerService = registerService;
+            _adminService = registerService;
         }
 
         [HttpPost("signIn")]
@@ -29,14 +29,27 @@ namespace ShopManager.Server.Controllers
         [HttpPost("registerAdmin")]
         public async Task<IActionResult> Register(AdminRegisterDto userSignInDto)
         {
-            var result = await _registerService.RegisterAdmin(userSignInDto);
+            var result = await _adminService.RegisterAdmin(userSignInDto);
 
-            if(result.IsValid)
+            if (result.IsValid)
             {
                 return Ok();
             }
 
             return BadRequest(result);
+        }
+
+        [HttpDelete("{login}")]
+        public async Task<IActionResult> DeleteAdmin(string login)
+        {
+            await _adminService.DeleteAsync(login);
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _adminService.GetAllAsync());
         }
 
         [Authorize]

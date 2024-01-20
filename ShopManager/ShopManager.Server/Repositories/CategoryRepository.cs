@@ -10,9 +10,9 @@ namespace ShopManager.Server.Repositories
         {
         }
 
-        public async Task<bool> ProductCreatedForAsync(int id)
+        public async Task<bool> ProductCreatedForOrIsParentAsync(int id)
         {
-            return await _appDbContext.Categories.AnyAsync(s => s.Id == id && s.Products.Count > 0);
+            return await _appDbContext.Categories.Include(c => c.ParentCategory).AnyAsync(s => (s.Id == id && s.Products.Count > 0) || s.ParentCategory.Id == s.Id);
         }
 
         public async Task<List<Category>> GetAsync(int[] ides)

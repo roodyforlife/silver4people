@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ShopManager.Server.Dto;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
@@ -9,12 +10,12 @@ using System.Threading;
 
 namespace ShopManager.Server.Services
 {
-    public class AdminRegisterService : IRegisterService
+    public class AdminService : IAdminService
     {
         private readonly AdminRegisterValidator _validator;
         private readonly UserManager<Admin> _userManager;
 
-        public AdminRegisterService(AdminRegisterValidator validator, UserManager<Admin> userManager)
+        public AdminService(AdminRegisterValidator validator, UserManager<Admin> userManager)
         {
             _validator = validator;
             _userManager = userManager;
@@ -31,6 +32,20 @@ namespace ShopManager.Server.Services
             }
 
             return validationResult;
+        }
+
+        public async Task DeleteAsync(string login)
+        {
+            var admin = await _userManager.FindByNameAsync(login);
+            await _userManager.DeleteAsync(admin);
+        }
+
+        public async Task<List<AdminListResponse>> GetAllAsync()
+        {
+            var admins = await _userManager.Users
+                .Select(x => new AdminListResponse() { Login = x.UserName }).ToListAsync();
+
+            return admins;
         }
     }
 }

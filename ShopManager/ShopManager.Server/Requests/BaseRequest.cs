@@ -28,8 +28,8 @@ namespace ShopManager.Server.Requests
                 ItemsCount = await GetFilterSpecification()
                     .Specify(GetOrderSpecification().Specify(query)).CountAsync(),
                 PageItems = await GetFilterSpecification()
-                    .Specify(GetPaginationSpecification()
-                        .Specify(GetOrderSpecification().Specify(query))).ToListAsync()
+                    .Specify(GetOrderSpecification()
+                        .Specify(GetPaginationSpecification().Specify(query))).ToListAsync()
             };
         }
 

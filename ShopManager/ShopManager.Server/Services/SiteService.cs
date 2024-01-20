@@ -15,7 +15,7 @@ namespace ShopManager.Server.Services
 
         public async Task<bool> TryDeleteAsync(int id)
         {
-            var canBeDeleted = await _siteRepository.ProductCreatedForAsync(id);
+            var canBeDeleted = !await _siteRepository.ProductCreatedForAsync(id);
 
             if (canBeDeleted)
             {

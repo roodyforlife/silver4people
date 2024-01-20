@@ -19,7 +19,7 @@ namespace ShopManager.Server.Services
 
         public async Task<bool> TryDeleteAsync(int id)
         {
-            var canBeDeleted = await _categoryRepository.ProductCreatedForAsync(id);
+            var canBeDeleted = !await _categoryRepository.ProductCreatedForOrIsParentAsync(id);
 
             if (canBeDeleted)
             {
@@ -29,6 +29,11 @@ namespace ShopManager.Server.Services
             }
 
             return false;
+        }
+
+        public async Task EditAsync()
+        {
+
         }
 
         public async Task<List<Category>> GetAllAsync()
