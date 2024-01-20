@@ -6,6 +6,8 @@ namespace ShopManager.Server.Interfaces
     {
         Task CreateAsync(Site site);
 
+        Task<bool> TryDeleteAsync(int id);
+
         Task<List<Site>> GetAllAsync();
     }
 }

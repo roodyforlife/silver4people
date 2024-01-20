@@ -10,6 +10,11 @@ namespace ShopManager.Server.Repositories
         {
         }
 
+        public async Task<bool> ProductCreatedForAsync(int id)
+        {
+            return await _appDbContext.Sites.AnyAsync(s => s.Id == id && s.Products.Count > 0);
+        }
+
         public async Task<List<Site>> GetAsync(int[] ides)
         {
             return await _appDbContext.Sites

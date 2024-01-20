@@ -7,5 +7,7 @@ namespace ShopManager.Server.Interfaces
         Task CreateAsync(Category category);
 
         Task<List<Category>> GetAllAsync();
+
+        Task<bool> TryDeleteAsync(int id);
     }
 }

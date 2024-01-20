@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
+using ShopManager.Server.Services;
 
 namespace ShopManager.Server.Controllers
 {
@@ -26,6 +27,19 @@ namespace ShopManager.Server.Controllers
         {
             await _categoryService.CreateAsync(category);
             return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var success = await _categoryService.TryDeleteAsync(id);
+
+            if (success)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }
