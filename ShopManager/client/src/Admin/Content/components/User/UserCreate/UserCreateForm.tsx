@@ -7,8 +7,7 @@ import { Button } from '../../../../../components/UI/Button/Button';
 import { Input } from '../../../../../components/UI/Input/Input';
 
 export interface IUserCreateFormData {
-  email: string,
-  name:string,
+  login:string,
   password: string,
   confirmPassword: string,
 }
@@ -22,41 +21,19 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
   const { handleSubmit, control, formState: {errors}, getValues, setError, watch} = useForm<IUserCreateFormData>()
   
     const onSubmit = async (data:IUserCreateFormData) => {
-      await createUser(data).then(() => fetchUsers())
-    }
+      await createUser(data).then(() => {
+        fetchUsers();
+        handleCloseCreateModal();
+      });
+    } 
   
     return (
       <div>
         <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
-        <div className={formCl.item}>
-        <Controller
-          control={control}
-          name={'email'}
-          rules={{
-            required: "Введіть пошту адміністратора",
-            pattern: {
-              value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: 'Введіть правильно пошту',
-            },
-            maxLength: {
-              value: 30,
-              message: 'Максимальна довжина пошти повинна бути не більше 30'
-            },
-            minLength: {
-              value: 2,
-              message: 'Мінімальна довжина не повинна бути менша за 2'
-            },
-          }}
-          render={({ field }) => (
-            <Input label={"Пошта"} inputType="text" field={field}></Input>
-          )}
-        ></Controller>
-        <p style={{color: 'red'}}>{errors.email?.message}</p>
-      </div>
       <div className={formCl.item}>
         <Controller
           control={control}
-          name={'name'}
+          name={'login'}
           rules={{
             required: "Введіть ім'я адміністратора",
             maxLength: {
@@ -69,10 +46,10 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
             },
           }}
           render={({ field }) => (
-            <Input label={"Ім'я"} inputType="text" field={field}></Input>
+            <Input label={"Логін"} inputType="text" field={field}></Input>
           )}
         ></Controller>
-        <p style={{color: 'red'}}>{errors.name?.message}</p>
+        <p style={{color: 'red'}}>{errors.login?.message}</p>
       </div>
       <div className={formCl.item}>
         <Controller
