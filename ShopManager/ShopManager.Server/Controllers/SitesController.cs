@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
+using ShopManager.Server.Services;
 
 namespace ShopManager.Server.Controllers
 {
@@ -40,6 +41,14 @@ namespace ShopManager.Server.Controllers
             }
 
             return BadRequest();
+        }
+
+
+        [HttpPut]
+        public async Task<IActionResult> Edit(Site category)
+        {
+            await _siteService.EditAsync(category);
+            return Ok();
         }
     }
 }

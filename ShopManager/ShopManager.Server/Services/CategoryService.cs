@@ -17,6 +17,11 @@ namespace ShopManager.Server.Services
             await _categoryRepository.CreateAsync(category);
         }
 
+        public async Task EditAsync(Category category)
+        {
+            await _categoryRepository.EditAsync(category);
+        }
+
         public async Task<bool> TryDeleteAsync(int id)
         {
             var canBeDeleted = !await _categoryRepository.ProductCreatedForOrIsParentAsync(id);

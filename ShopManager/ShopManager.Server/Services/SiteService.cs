@@ -36,5 +36,10 @@ namespace ShopManager.Server.Services
         {
             return await _siteRepository.GetAllAsync();
         }
+
+        public async Task EditAsync(Site site)
+        {
+            await _siteRepository.EditAsync(site);
+        }
     }
 }

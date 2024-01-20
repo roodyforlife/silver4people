@@ -9,5 +9,7 @@ namespace ShopManager.Server.Interfaces
         Task<bool> TryDeleteAsync(int id);
 
         Task<List<Site>> GetAllAsync();
+
+        Task EditAsync(Site site);
     }
 }

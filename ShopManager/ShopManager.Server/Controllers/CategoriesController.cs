@@ -41,5 +41,12 @@ namespace ShopManager.Server.Controllers
 
             return BadRequest();
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Edit(Category category)
+        {
+            await _categoryService.EditAsync(category);
+            return Ok();
+        }
     }
 }
