@@ -22,8 +22,7 @@ export const SiteEditForm = ({fetchSites, handleCloseEditModal, site}:IProps) =>
   
     const onSubmit = async (data:ISiteEditFormData) => {
         if (site !== undefined) {
-            setValue("id", site.id);
-            await editSite(data).then(() => { fetchSites(); handleCloseEditModal(); })
+            await editSite({...data, id: site.id}).then(() => { fetchSites(); handleCloseEditModal(); })
         }
     }
   
@@ -42,8 +41,8 @@ export const SiteEditForm = ({fetchSites, handleCloseEditModal, site}:IProps) =>
                 message: 'Максимальна довжина категорії повинна бути не більше 20'
               },
               minLength: {
-                value: 5,
-                message: 'Мінімальна довжина не повинна бути менша за 5'
+                value: 3,
+                message: 'Мінімальна довжина не повинна бути менша за 3'
               },
             }}
             render={({ field }) => (

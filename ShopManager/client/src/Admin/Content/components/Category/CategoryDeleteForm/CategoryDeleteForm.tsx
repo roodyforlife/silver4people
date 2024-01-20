@@ -17,6 +17,10 @@ export const CategoryDeleteForm = ({fetchCategories, handleCloseDeleteModal, cat
             await deleteCategory(category?.id).then(() => {
                 fetchCategories();
                 handleCloseDeleteModal();
+            }).catch(({response}) => {
+                if (response.status === 400) {
+                    alert("Неможливо видалити категорії, тому що вона прив'язана до якогось товару, або дочірня категорія прив'язана до товару");
+                }
             })
         }
     }

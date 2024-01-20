@@ -20,12 +20,11 @@ export interface ICategoryEditFormData {
   }
 
 export const CategoryEditForm = ({fetchCategories, handleCloseEditModal, category}:IProps) => {
-    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<ICategoryEditFormData>()
+    const { handleSubmit, control, formState: {errors} } = useForm<ICategoryEditFormData>()
   
     const onSubmit = async (data:ICategoryEditFormData) => {
         if (category !== undefined) {
-            setValue("id", category.id);
-            await editCategory(data).then(() => { fetchCategories(); handleCloseEditModal(); })
+            await editCategory({...data, id: category.id}).then(() => { fetchCategories(); handleCloseEditModal(); })
         }
     }
   

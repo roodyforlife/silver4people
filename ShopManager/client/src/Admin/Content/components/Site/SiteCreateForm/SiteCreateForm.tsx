@@ -44,8 +44,8 @@ export const SiteCreateForm = ({fetchSites, handleCloseCreateModal}:IProps) => {
               message: 'Максимальна довжина категорії повинна бути не більше 20'
             },
             minLength: {
-              value: 5,
-              message: 'Мінімальна довжина не повинна бути менша за 5'
+              value: 3,
+              message: 'Мінімальна довжина не повинна бути менша за 3'
             },
           }}
           render={({ field }) => (
