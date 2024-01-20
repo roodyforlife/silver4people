@@ -6,7 +6,7 @@ import formCl from '../../../../../styles/Form.module.css';
 import cl from './ProductEditForm.module.css';
 import { Input } from '../../../../../components/UI/Input/Input';
 import { Textarea } from '../../../../../components/UI/Textarea/Textarea';
-import { DragDropList } from '../../UI/DragDropList/DragDropList';
+import { DragDropList, IItem } from '../../UI/DragDropList/DragDropList';
 import { FileInput } from '../../UI/FileInput/FileInput';
 import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
 import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
@@ -15,6 +15,12 @@ import { getCategories } from '../../../http/categoryApi';
 import { getSites } from '../../../http/siteApi';
 import { ISite } from '../../../pages/AdminSites';
 import { ICategory } from '../../../pages/AdminCategories';
+import { REACT_APP_API_URL } from '../../../../../consts';
+import { editImage, getImage } from '../../../http/imageApi';
+import { convertImageLinkIntoFile } from '../../../../utils/convertImageLinkIntoFile';
+import { getFileListNode } from '../../../../utils/getFileListNode';
+import { Guid } from 'guid-typescript';
+import { editProduct } from '../../../http/productApi';
 
 export interface IProductEditFormData {
     id: string;
@@ -66,15 +72,14 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
     const { handleSubmit, control, formState: {errors} } = useForm<IForm>({
         defaultValues: {
             ...product,
-            categoryIdes: product?.categories?.map(({id, name}) => { return { value: id, label: name } as ISelect }),
-            siteIdes: product?.sites?.map(({id, name}) => { return { value: id.toString(), label: name } as ISelect }),
+            categoryIdes: product?.categories ? getSelectsCategoryItems(product.categories) : [],
+            siteIdes: product?.sites ? getSelectsSiteItems(product.sites) : [],
         }
     });
-    const [files, setFiles] = useState<FileInfo[]>([])
+
+    const [files, setFiles] = useState<FileInfo[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [sites, setSites] = useState<ISite[]>([]);
-
-    console.log(product);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -86,6 +91,37 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
       
         fetchData();
       }, []);
+
+      useEffect(() => {
+        const fetchData = async () => {
+          if (product) {
+            const filesPromises = product.images.map(async ({ id, index }) => {
+              return {
+                file: await convertImageLinkIntoFile(`${REACT_APP_API_URL}api/Image/${id}`, `${id}.webp`),
+                id: index,
+              };
+            });
+      
+            const files = await Promise.all(filesPromises);
+            const sortedFiles = files.sort((a, b) => a.id - b.id);
+            setFiles(sortedFiles as FileInfo[]);
+          }
+        };
+      
+        fetchData();
+      }, [product?.images]);
+
+      const handleChangeList = (items:IItem[]) => {
+            const updatedFiles = files.filter((file) => items.some((item) => item.id === file.id));
+            const sortedFiles = [...updatedFiles].sort((a, b) => {
+              const idA = items.findIndex((item) => item.id === a.id);
+              const idB = items.findIndex((item) => item.id === b.id);
+        
+              return idA - idB;
+            });
+        
+            setFiles(sortedFiles);
+      }
       
       const fetchCategories = async () => {
         return await getCategories()
@@ -103,10 +139,34 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         return getSelectsSiteItems(sites);
       }, [sites]);
 
-    const onSubmit = () => {
+    const onSubmit = async (data:IForm) => {
+       if (product) {
+         const imageArray: IImage[] = files.map((value, index) => {
+            return { id: Guid.create().toString(), index: index};
+          });
+        
+          const formData:IProductEditFormData = {
+            ...data,
+            categoryIdes: data.categoryIdes?.map(({value}) => +value),
+            siteIdes: data.siteIdes?.map(({value}) => +value),
+            id: product.id,
+            article: product.article,
+            images: imageArray
+          }
 
+          await editProduct(formData).then(() => {
+            files.map(({file}, index) => {
+              const formData = new FormData()
+              formData.append("file", file);
+                editImage(imageArray[index].id, formData).then(() => {
+                fetchProducts();
+                handleCloseEditModal();
+              })
+            });
+          });
+       }
     }
-
+    
     return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
@@ -148,8 +208,8 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           ></Controller>
           <p style={{color: 'red'}}>{errors.description?.message}</p>
         </div>
-          {/* <DragDropList items={getFileListNode(files)} setItems={handleChangeList}></DragDropList>
-        <div className={formCl.item}>
+          <DragDropList items={getFileListNode(files as FileInfo[])} setItems={handleChangeList}></DragDropList>
+        {/* <div className={formCl.item}>
           <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
         </div> */}
         <div className={formCl.item}>
