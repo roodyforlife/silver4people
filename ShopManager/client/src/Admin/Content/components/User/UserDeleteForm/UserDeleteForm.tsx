@@ -19,21 +19,17 @@ export const UserDeleteForm = ({fetchUsers, handleCloseDeleteModal, user}:IProps
             setLoading(true);
             await deleteUser(user.login).then(() => {
                 fetchUsers();
-                toast.success("Адміністратор успішно видалений")
+                toast.success("Акаунт успішно видалений")
                 handleCloseDeleteModal();
             }).catch(({response}) => {
-                if (response.status === 400) {
-                    toast.error("Неможливо видалити категорії, тому що вона прив'язана до якогось товару, або дочірня категорія прив'язана до товару");
-                } else {
-                    toast.error("Щось пішло не так, спробуйте ще раз");
-                }
+                toast.error("Щось пішло не так, спробуйте ще раз");
             }).finally(() => setLoading(false));
         }
     }
 
   return (
     <>
-        <div className={formCl.item}>Ви дійсно хочете видалити адміністратора "{user?.login}"?</div>
+        <div className={formCl.item}>Ви дійсно хочете видалити акаунт "{user?.login}"?</div>
         <div className={formCl.buttons}>
             <Button type="button" onClick={handleCloseDeleteModal} variant='secondary'>Закрити</Button>
             <Button type="button" onClick={handleDelete} variant="danger" disabled={loading}>{loading ? "Завантаження..." : "Видалити"}</Button>

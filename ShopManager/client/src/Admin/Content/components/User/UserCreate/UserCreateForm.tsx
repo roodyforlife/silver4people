@@ -26,7 +26,7 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
       setLoading(true);
       await createUser(data).then(() => {
         fetchUsers();
-        toast.success("Адміністратор успішно створений")
+        toast.success("Акаунт успішно створений")
         handleCloseCreateModal();
       }).catch(() => {
         toast.error("Щось пішло не так, спробуйте ще раз");

@@ -8,13 +8,14 @@ import { authRoutes, publicRoutes } from '../../routes'
 export const AppRouter = observer(() => {
     const contextValue = useContext(Context);
     const user = contextValue!.user;
-    
   return (
     <div>
         {user.isAuth ?
             <Navbar>
               <Routes>
-                  {authRoutes.map(({path, Component}) => <Route path={path} key={path} element={<Component />} /> )}
+                  {authRoutes.map(({path, Component, roles}) => 
+                    roles && roles.includes(user.user.role) && <Route path={path} key={path} element={<Component />} />
+                  )}
               </Routes>
             </Navbar>
         :
