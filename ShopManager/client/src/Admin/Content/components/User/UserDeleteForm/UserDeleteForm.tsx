@@ -1,39 +1,39 @@
 import React, { useState } from 'react'
 import { Button } from '../../../../../components/UI/Button/Button';
-import { deleteCategory } from '../../../http/categoryApi';
-import { ICategory } from '../../../pages/AdminCategories';
-import cl from './CategoryDeleteForm.module.css';
 import formCl from '../../../../../styles/Form.module.css';
+import { IUser } from '../../../pages/AdminUsers';
+import { deleteUser } from '../../../http/userApi';
 import { toast } from 'react-toastify';
 
 interface IProps {
-    fetchCategories: () => void,
+    fetchUsers: () => void,
     handleCloseDeleteModal: () => void,
-    category?: ICategory
+    user?: IUser
 }
 
-export const CategoryDeleteForm = ({fetchCategories, handleCloseDeleteModal, category}:IProps) => {
+export const UserDeleteForm = ({fetchUsers, handleCloseDeleteModal, user}:IProps) => {
     const [loading, setLoading] = useState<boolean>(false);
+
     const handleDelete = async () => {
-        if (category) {
+        if (user) {
             setLoading(true);
-            await deleteCategory(category?.id).then(() => {
-                fetchCategories();
-                toast.success("Успішно видалено")
+            await deleteUser(user.login).then(() => {
+                fetchUsers();
+                toast.success("Адміністратор успішно видалений")
                 handleCloseDeleteModal();
             }).catch(({response}) => {
                 if (response.status === 400) {
                     toast.error("Неможливо видалити категорії, тому що вона прив'язана до якогось товару, або дочірня категорія прив'язана до товару");
                 } else {
-                    toast.error("Невідома помилка")
+                    toast.error("Щось пішло не так, спробуйте ще раз");
                 }
-            }).finally(() => setLoading(false))
+            }).finally(() => setLoading(false));
         }
     }
 
   return (
     <>
-        <div className={formCl.item}>Ви дійсно хочете видалити категорію "{category?.name}"?</div>
+        <div className={formCl.item}>Ви дійсно хочете видалити адміністратора "{user?.login}"?</div>
         <div className={formCl.buttons}>
             <Button type="button" onClick={handleCloseDeleteModal} variant='secondary'>Закрити</Button>
             <Button type="button" onClick={handleDelete} variant="danger" disabled={loading}>{loading ? "Завантаження..." : "Видалити"}</Button>

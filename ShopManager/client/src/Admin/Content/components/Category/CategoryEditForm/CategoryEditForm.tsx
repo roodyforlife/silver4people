@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import cl from './CategoryEditForm.module.css';
 import formCl from '../../../../../styles/Form.module.css';
@@ -7,6 +7,8 @@ import { Button } from '../../../../../components/UI/Button/Button';
 import { Guid } from 'guid-typescript';
 import { editCategory } from '../../../http/categoryApi';
 import { ICategory } from '../../../pages/AdminCategories';
+import { Loader } from '../../../../../components/UI/Loader/Loader';
+import { toast } from 'react-toastify';
 
 export interface ICategoryEditFormData {
     id: string,
@@ -20,11 +22,19 @@ export interface ICategoryEditFormData {
   }
 
 export const CategoryEditForm = ({fetchCategories, handleCloseEditModal, category}:IProps) => {
-    const { handleSubmit, control, formState: {errors} } = useForm<ICategoryEditFormData>()
+    const { handleSubmit, control, formState: {errors} } = useForm<ICategoryEditFormData>();
+    const [loading, setLoading] = useState<boolean>(false);
   
     const onSubmit = async (data:ICategoryEditFormData) => {
         if (category !== undefined) {
-            await editCategory({...data, id: category.id}).then(() => { fetchCategories(); handleCloseEditModal(); })
+            setLoading(true);
+            await editCategory({...data, id: category.id}).then(() => {
+                fetchCategories();
+                toast.success("Категорія успішно відредагована");
+                handleCloseEditModal();
+            }).catch(() => {
+              toast.error("Невідома помилка")
+            }).finally(() => setLoading(false));
         }
     }
   
@@ -55,7 +65,7 @@ export const CategoryEditForm = ({fetchCategories, handleCloseEditModal, categor
       </div>
       <div className={formCl.buttons}>
         <Button type="button" variant='secondary' onClick={handleCloseEditModal}>Закрити</Button>
-        <Button type="submit" variant='primary'>Редагувати</Button>
+        <Button type="submit" variant='primary' disabled={loading}>{loading ? "Завантаження..." : "Редагувати"}</Button>
       </div>
     </form>
       </div>

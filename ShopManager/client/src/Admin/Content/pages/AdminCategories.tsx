@@ -14,6 +14,7 @@ import { Controller, FieldValues, useForm } from 'react-hook-form';
 import { Input } from '../../../components/UI/Input/Input';
 import filtrationCl from '../styles/Filtration.module.css';
 import { ISelect } from '../../utils/SelectUtils/getSelectsItems';
+import { Loader } from '../../../components/UI/Loader/Loader';
 
 export interface ICategory {
   id: string,
@@ -36,6 +37,7 @@ export const AdminCategories = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editableCategory, setEditableCategory] = useState<ICategory>();
   const [deletableCategory, setDeletableCategory] = useState<ICategory>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleCloseCreateModal = () => setShowCreateModal(false);
   const handleShowCreateModal = () => setShowCreateModal(true);
@@ -65,11 +67,13 @@ export const AdminCategories = () => {
   }
 
   const fetchCategories = async () => {
-    await getCategories().then((data) => setCategories(data));
+    setLoading(true);
+    await getCategories().then((data) => setCategories(data)).finally(() => setLoading(false));
   }
 
   return (
     <div className={tablePageClasses.container}>
+      {loading && <Loader />}
       <Modal
         onClose={handleCloseCreateModal}
         show={showCreateModal}

@@ -6,7 +6,8 @@ interface IProps {
   type:ButtonType,
   variant?:ButtonColorType,
   children:ReactNode,
-  onClick?:() => void
+  onClick?:() => void,
+  disabled?: boolean,
 }
 
 type ButtonType = "submit" | "button";
@@ -27,6 +28,6 @@ export const Button = (props:IProps) => {
   };
 
   return (
-    <button onClick={props.onClick} style={buttonStyle} className={cl.button}>{props.children}</button>
+    <button onClick={props.onClick} style={buttonStyle} className={cl.button} disabled={props.disabled}>{props.children}</button>
   )
 }

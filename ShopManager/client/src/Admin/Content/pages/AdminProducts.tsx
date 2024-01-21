@@ -24,6 +24,8 @@ import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADMIN_PRODUCTS_ROUTE } from "../consts";
 import { ProductEditForm } from "../components/Product/ProductEditForm/ProductEditForm";
+import { ProductDeleteForm } from "../components/Product/ProductDeleteForm/ProductDeleteForm";
+import { Loader } from "../../../components/UI/Loader/Loader";
 
 export interface IProduct {
   id: string;
@@ -87,6 +89,7 @@ const headColumns: string[] = [
   "Ціна продажу",
   "Трек номер",
   "Місцезнаходження",
+  "Сайти",
   "Контроллери",
 ];
 
@@ -98,11 +101,14 @@ export const AdminProducts = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editableProduct, setEditableProduct] = useState<IProduct>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletableSite, setDeletableSite] = useState<IProduct>();
   const [pagesCount, setPagesCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]); 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -115,6 +121,7 @@ export const AdminProducts = () => {
   
   const handleCloseEditModal = () => setShowEditModal(false);
   const handleShowDeleteModal = (product:IProduct) => {
+    setDeletableSite(product);
     setShowDeleteModal(true);
   }
   
@@ -138,10 +145,12 @@ export const AdminProducts = () => {
       skip: currentPage - 1,
     };
 
-    await getProducts(requestData).then((data) => {
-      setProducts(data.pageItems)
-      setPagesCount(Math.ceil(data.itemsCount / takeItems));
-    });
+    try {
+      await getProducts(requestData).then((data) => {
+        setProducts(data.pageItems)
+        setPagesCount(Math.ceil(data.itemsCount / takeItems));
+      });
+    } catch (error) {}
   };
  
   const fetchCategories = async () => {
@@ -163,7 +172,13 @@ export const AdminProducts = () => {
   }, [location.search]);
 
   useEffect(() => {
-    fetchProducts();
+    setLoading(true);
+    Promise.all([fetchCategories(), fetchSites()]).finally(() => setLoading(false));
+  }, [])
+  
+  useEffect(() => {
+    setLoading(true);
+    fetchProducts().finally(() => setLoading(false));
   }, [currentPage])
 
 const selectCategoryItems = useMemo<ISelect[]>(() => {
@@ -194,12 +209,9 @@ const onSubmit = async () => {
   fetchProducts()
 }
 
-  useEffect(() => {
-    Promise.all([fetchCategories(), fetchSites()]);
-  }, [])
-
   return (
     <div className={tablePageClasses.container}>
+      {loading && <Loader></Loader>}
       <Modal
         onClose={handleCloseCreateModal}
         show={showCreateModal}
@@ -213,6 +225,13 @@ const onSubmit = async () => {
         title="Редагування продукту"
       >
         <ProductEditForm fetchProducts={fetchProducts} handleCloseEditModal={handleCloseEditModal} product={editableProduct}></ProductEditForm>
+      </Modal>
+      <Modal
+        onClose={handleCloseDeleteModal}
+        show={showDeleteModal}
+        title="Видалення продукту"
+      >
+        <ProductDeleteForm fetchProducts={fetchProducts} handleCloseDeleteModal={handleCloseDeleteModal} product={deletableSite}></ProductDeleteForm>
       </Modal>
       <div className={tablePageClasses.content}>
         <div className={filtrationCl.item}>
@@ -307,6 +326,7 @@ const onSubmit = async () => {
                 <td>{row.salePrice}</td>
                 <td>{row.trackNumber}</td>
                 <td>{row.location}</td>
+                <td>{row.sites.map((site) => site.name).join(", ")}</td>
                 <td>
                     <div className={tableWrapperCl.controlls}>
                       <div className={tableWrapperCl.button}><Button type="button" variant='warning' onClick={() => handleShowEditModal(row)}>Редагувати</Button></div>

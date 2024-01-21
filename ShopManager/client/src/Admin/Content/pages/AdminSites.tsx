@@ -8,6 +8,7 @@ import { Modal } from '../../../components/UI/Modal/Modal';
 import { SiteCreateForm } from '../components/Site/SiteCreateForm/SiteCreateForm';
 import { SiteDeleteForm } from '../components/Site/SiteDeleteForm/SiteDeleteForm';
 import { SiteEditForm } from '../components/Site/SiteEditForm/SiteEditForm';
+import { Loader } from '../../../components/UI/Loader/Loader';
 
 export interface ISite {
     id: number,
@@ -22,6 +23,7 @@ export const AdminSites = () => {
   const [showEditModal, setShowEditModal] = useState<boolean>(false)
   const [deletableSite, setDeletableSite] = useState<ISite>();
   const [editableSite, setEditableSite] = useState<ISite>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleCloseCreateModal = () => setShowCreateModal(false);
   const handleShowCreateModal = () => setShowCreateModal(true);
@@ -45,7 +47,11 @@ export const AdminSites = () => {
   );
 
   const fetchSites = async () => {
-    await getSites().then((data) => setSites(data));
+    setLoading(true);
+    await getSites()
+      .then((data) => setSites(data))
+      .catch(() => alert("Щось пішло не так, спробуйте ще раз"))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -54,6 +60,7 @@ export const AdminSites = () => {
 
   return (
     <div className={tablePageClasses.container}>
+    {loading && <Loader />}
       <Modal
         onClose={handleCloseCreateModal}
         show={showCreateModal}
