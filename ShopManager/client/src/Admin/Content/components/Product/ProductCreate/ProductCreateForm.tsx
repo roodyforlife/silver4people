@@ -19,6 +19,8 @@ import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../
 import { ISite } from '../../../pages/AdminSites';
 import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
 import { getFileListNode } from '../../../../utils/getFileListNode';
+import { Loader } from '../../../../../components/UI/Loader/Loader';
+import { toast } from 'react-toastify';
 
 export interface IProductCreateFormData {
   id: string;
@@ -71,7 +73,9 @@ export interface FileInfo {
 }
 
 export const ProductCreateForm = ({fetchProducts, handleCloseCreateModal}:IProps) => {
-  const { handleSubmit, control, formState: {errors}, getValues, setValue } = useForm<IForm>()
+  const { handleSubmit, control, formState: {errors}, getValues, setValue } = useForm<IForm>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [mainLoading, setMainLoading] = useState<boolean>(false);
   const [files, setFiles] = useState<FileInfo[]>([])
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]);
@@ -111,11 +115,12 @@ useEffect(() => {
     setSites(sitesData);
   };
 
-  fetchData();
+  setLoading(true);
+  fetchData().finally(() => setLoading(false));
 }, []);
 
 const fetchCategories = async () => {
-  return await getCategories()
+  return await getCategories();
 }
 
 const fetchSites = async () => {
@@ -131,6 +136,7 @@ const selectSiteItems = useMemo<ISelect[]>(() => {
 }, [sites]);
 
 const onSubmit = async (data:IForm) => {
+  setLoading(true);
   const imageArray: IImage[] = files.map((value, index) => {
     return { id: Guid.create().toString(), index: index};
   });
@@ -149,15 +155,19 @@ const onSubmit = async (data:IForm) => {
       const formData = new FormData()
       formData.append("file", file);
         createImage(imageArray[index].id, formData).then(() => {
+          toast.success("Продукт успішно створенний")
         fetchProducts();
         handleCloseCreateModal();
       })
     });
-  });
+  }).catch(() => {
+    toast.error("Щось пішло не так, спробуйте ще раз");
+  }).finally(() => setLoading(false));
 };
 
   return (
     <div>
+      {mainLoading && <Loader />}
       <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
     <div className={formCl.item}>
       <Controller
@@ -275,7 +285,7 @@ const onSubmit = async (data:IForm) => {
     </div>
     <div className={formCl.buttons}>
       <Button type="button" variant='secondary' onClick={handleCloseCreateModal}>Закрити</Button>
-      <Button type="submit" variant='primary'>Створити</Button>
+      <Button type="submit" variant='primary' disabled={loading}>{loading ? "Завантаження..." : "Створити"}</Button>
     </div>
   </form>
     </div>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { ISite } from '../../../pages/AdminSites'
 import formCl from '../../../../../styles/Form.module.css';
@@ -6,6 +6,7 @@ import cl from './SiteCreateForm.module.css'
 import { Input } from '../../../../../components/UI/Input/Input';
 import { Button } from '../../../../../components/UI/Button/Button';
 import { createSite } from '../../../http/siteApi';
+import { toast } from 'react-toastify';
 
 export interface ISiteCreateFormData {
     name:string,
@@ -21,13 +22,18 @@ export interface IForm {
   }
 
 export const SiteCreateForm = ({fetchSites, handleCloseCreateModal}:IProps) => {
-    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>()
+    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>();
+    const [loading, setLoading] = useState<boolean>(false);
   
     const onSubmit = async (data:IForm) => {
+      setLoading(true);
       await createSite(data).then(() => {
         fetchSites();
+        toast.success("Сайт успішно створено")
         handleCloseCreateModal();
-      })
+      }).catch(() => {
+        toast.error("Щось пішло не так, спробуйте ще раз")
+      }).finally(() => setLoading(false));
     }
   
     return (
@@ -56,7 +62,7 @@ export const SiteCreateForm = ({fetchSites, handleCloseCreateModal}:IProps) => {
       </div>
       <div className={formCl.buttons}>
         <Button type="button" onClick={handleCloseCreateModal} variant='secondary'>Закрити</Button>
-        <Button type="submit" variant='primary'>Створити</Button>
+        <Button type="submit" variant='primary' disabled={loading}>{loading ? "Завантаження..." : "Створити"}</Button>
       </div>
     </form>
       </div>

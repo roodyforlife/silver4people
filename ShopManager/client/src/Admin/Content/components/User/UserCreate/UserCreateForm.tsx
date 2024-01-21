@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { createUser } from '../../../http/userApi';
 import cl from './UserCreateForm.module.css'
 import formCl from '../../../../../styles/Form.module.css';
 import { Button } from '../../../../../components/UI/Button/Button';
 import { Input } from '../../../../../components/UI/Input/Input';
+import { toast } from 'react-toastify';
 
 export interface IUserCreateFormData {
   login:string,
@@ -18,13 +19,18 @@ interface IProps {
 }
 
 export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
-  const { handleSubmit, control, formState: {errors}, getValues, setError, watch} = useForm<IUserCreateFormData>()
+  const { handleSubmit, control, formState: {errors}, getValues, setError, watch} = useForm<IUserCreateFormData>();
+  const [loading, setLoading] = useState<boolean>(false);
   
     const onSubmit = async (data:IUserCreateFormData) => {
+      setLoading(true);
       await createUser(data).then(() => {
         fetchUsers();
+        toast.success("Адміністратор успішно створений")
         handleCloseCreateModal();
-      });
+      }).catch(() => {
+        toast.error("Щось пішло не так, спробуйте ще раз");
+      }).finally(() => setLoading(false));
     } 
   
     return (
@@ -96,7 +102,7 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
       </div>
       <div className={formCl.buttons}>
         <Button type="button" onClick={handleCloseCreateModal} variant='secondary'>Закрити</Button>
-        <Button type="submit" variant='primary'>Створити</Button>
+        <Button type="submit" variant='primary' disabled={loading}>{loading ? "Завантаження..." : "Створити"}</Button>
       </div>
     </form>
       </div>

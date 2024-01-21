@@ -7,6 +7,7 @@ import { getUsers } from '../http/userApi';
 import tablePageClasses from '../styles/TablePage.module.css';
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { UserDeleteForm } from '../components/User/UserDeleteForm/UserDeleteForm';
+import { Loader } from '../../../components/UI/Loader/Loader';
 
 export interface IUser {
   login: string,
@@ -22,6 +23,7 @@ export const AdminUsers = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deletableUser, setDeletableUser] = useState<IUser>();
     const [users, setUsers] = useState<IUser[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
   
     const handleCloseCreateModal = () => setShowCreateModal(false);
     const handleShowCreateModal = () => setShowCreateModal(true);
@@ -37,11 +39,16 @@ export const AdminUsers = () => {
     }, [])
   
     const fetchUsers = async () => {
-      await getUsers().then((data) => setUsers(data));
+      setLoading(true);
+      await getUsers()
+        .then((data) => setUsers(data))
+        .catch(() => alert("Щось пішло не так, спробуйте ще раз"))
+        .finally(() => setLoading(false));
     }
   
     return (
       <div className={tablePageClasses.container}>
+      {loading && <Loader />}
         <Modal
           onClose={handleCloseCreateModal}
           show={showCreateModal}

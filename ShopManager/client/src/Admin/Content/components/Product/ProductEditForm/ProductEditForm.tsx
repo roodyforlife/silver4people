@@ -21,6 +21,8 @@ import { getFileListNode } from '../../../../utils/getFileListNode';
 import { Guid } from 'guid-typescript';
 import { editProduct } from '../../../http/productApi';
 import { createImage } from '../../../http/imageApi';
+import { Loader } from '../../../../../components/UI/Loader/Loader';
+import { toast } from 'react-toastify';
 
 export interface IProductEditFormData {
     id: string;
@@ -77,6 +79,9 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         }
     });
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [mainLoading, setMainLoading] = useState<boolean>(false);
+    const [imageLoading, setImageLoading] = useState<boolean>(false);
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [sites, setSites] = useState<ISite[]>([]);
@@ -89,7 +94,8 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           setSites(sitesData);
         };
       
-        fetchData();
+        setMainLoading(true);
+        fetchData().finally(() => setMainLoading(false));
       }, []);
 
       useEffect(() => {
@@ -108,7 +114,8 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           }
         };
       
-        fetchData();
+        setImageLoading(true);
+        fetchData().finally(() => setImageLoading(false));
       }, [product?.images]);
 
       const handleChangeList = (items:IItem[]) => {
@@ -156,6 +163,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
 
     const onSubmit = async (data:IForm) => {
        if (product) {
+        setLoading(true);
          const imageArray: IImage[] = files.map((value, index) => {
             return { id: Guid.create().toString(), index: index};
           });
@@ -175,15 +183,19 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
               formData.append("file", file);
                 createImage(imageArray[index].id, formData).then(() => {
                 fetchProducts();
+                toast.success("Продукт успішно відредаговано")
                 handleCloseEditModal();
               })
             });
-          });
+          }).catch(() => {
+            toast.error("Щось пішло не так, спробуйте ще раз");
+          }).finally(() => setLoading(false));
        }
     }
     
     return (
         <div>
+          {mainLoading && <Loader />}
           <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
         <div className={formCl.item}>
           <Controller
@@ -223,7 +235,14 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           ></Controller>
           <p style={{color: 'red'}}>{errors.description?.message}</p>
         </div>
+        {imageLoading ?
+          <div className={cl.imageLoader}>
+            <Loader position='static' size={20}/>
+            <span>Завантаження фотографій...</span>
+          </div>
+          :
           <DragDropList items={getFileListNode(files as FileInfo[])} setItems={handleChangeList}></DragDropList>
+        }
         <div className={formCl.item}>
           <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
         </div>
@@ -301,7 +320,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         </div>
         <div className={formCl.buttons}>
           <Button type="button" variant='secondary' onClick={handleCloseEditModal}>Закрити</Button>
-          <Button type="submit" variant='primary'>Редагувати</Button>
+          <Button type="submit" variant='primary' disabled={loading}>{loading ? "Завантаження..." : "Редагувати"}</Button>
         </div>
       </form>
         </div>

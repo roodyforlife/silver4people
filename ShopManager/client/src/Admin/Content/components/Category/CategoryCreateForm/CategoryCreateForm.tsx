@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '../../../../../components/UI/Button/Button'
 import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
@@ -9,6 +9,7 @@ import { getSelectsCategoryItems, ISelect } from '../../../../utils/SelectUtils/
 import { createCategory } from '../../../http/categoryApi';
 import { ICategory } from '../../../pages/AdminCategories';
 import cl from './CategoryCreateForm.module.css';
+import { toast } from 'react-toastify';
 
 export interface ICategoryCreateFormData {
     name:string,
@@ -27,13 +28,18 @@ export interface IForm {
   }
 
 export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, categories}:IProps) => {
-    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>()
+    const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>();
+    const [loading, setLoading] = useState<boolean>(false);
   
     const onSubmit = async (data:IForm) => {
+      setLoading(true);
       await createCategory({...data, parentCategoryId: +data.parentCategoryId?.value}).then(() => {
         fetchCategories();
+        toast.success("Категорія успішно створена");
         handleCloseCreateModal();
-      })
+      }).catch(() => {
+        toast.error("Невідома помилка")
+      }).finally(() => setLoading(false))
     }
 
     const selectItems = useMemo<ISelect[]>(() => {
@@ -70,7 +76,7 @@ export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, cat
       </div>
       <div className={formCl.buttons}>
         <Button type="button" onClick={handleCloseCreateModal} variant='secondary'>Закрити</Button>
-        <Button type="submit" variant='primary'>Створити</Button>
+        <Button type="submit" variant='primary' disabled={loading}>{loading ? "Завантаження..." : "Створити"}</Button>
       </div>
     </form>
       </div>
