@@ -8,16 +8,16 @@ namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = Roles.Admin)]
     public class AuthController : Controller
     {
         private readonly ISignInService _signInService;
-        private readonly IAdminService _adminService;
+        private readonly IUserService _userService;
 
-        public AuthController(ISignInService signInService, IAdminService registerService)
+        public AuthController(ISignInService signInService, IUserService registerService)
         {
             _signInService = signInService;
-            _adminService = registerService;
+            _userService = registerService;
         }
 
         [HttpPost("signIn")]
@@ -28,10 +28,10 @@ namespace ShopManager.Server.Controllers
             return Ok(token);
         }
 
-        [HttpPost("registerAdmin")]
-        public async Task<IActionResult> Register(AdminRegisterDto userSignInDto)
+        [HttpPost("registerManager")]
+        public async Task<IActionResult> Register(UserRegisterDto userSignInDto)
         {
-            var result = await _adminService.RegisterAdmin(userSignInDto);
+            var result = await _userService.RegisterManager(userSignInDto);
 
             if (result.IsValid)
             {
@@ -44,14 +44,14 @@ namespace ShopManager.Server.Controllers
         [HttpDelete("{login}")]
         public async Task<IActionResult> DeleteAdmin(string login)
         {
-            await _adminService.DeleteAsync(login);
+            await _userService.DeleteAsync(login);
             return Ok();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _adminService.GetAllAsync());
+            return Ok(await _userService.GetAllAsync());
         }
 
         [Authorize]

@@ -3,9 +3,11 @@ using ShopManager.Server.Dto;
 
 namespace ShopManager.Server.Interfaces
 {
-    public interface IAdminService
+    public interface IUserService
     {
-        Task<ValidationResult> RegisterAdmin(AdminRegisterDto adminRegisterDto);
+        Task<ValidationResult> RegisterManager(UserRegisterDto adminRegisterDto);
+
+        Task<ValidationResult> RegisterAdmin(UserRegisterDto adminRegisterDto);
 
         Task DeleteAsync(string login);
 

@@ -1,6 +1,6 @@
 ﻿namespace ShopManager.Server.Dto
 {
-    public class AdminRegisterDto
+    public class UserRegisterDto
     {
         public string Login { get; set; }
 

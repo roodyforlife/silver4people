@@ -16,9 +16,9 @@ namespace ShopManager.Server.Authorization.Services
             _jwtOptions = jwtOptions;
         }
 
-        public string CreateToken(string userName)
+        public string CreateToken(string userName, string role)
         {
-            var claims = GetClaims(userName);
+            var claims = GetClaims(userName, role);
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var signingCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
@@ -29,11 +29,12 @@ namespace ShopManager.Server.Authorization.Services
             return stringToken;
         }
 
-        private List<Claim> GetClaims(string userName)
+        private List<Claim> GetClaims(string userName, string role)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Role, role)
             };
 
             return claims;

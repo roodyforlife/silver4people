@@ -45,7 +45,7 @@ services.AddScoped<ISignInService, SignInService>();
 services.AddScoped<IJwtService, JwtService>();
 services.AddScoped<ICategoryService, CategoryService>();
 services.AddScoped<IProductService, ProductService>();
-services.AddScoped<IAdminService, AdminService>();
+services.AddScoped<IUserService, UserService>();
 services.AddScoped<AdminRegisterValidator>();
 services.AddSingleton<IImageService, ImageService>();
 services.AddSingleton(jwtOptions);
@@ -116,12 +116,23 @@ app.Run();
 static async Task InitializeDefaultData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
-    var adminRegister = scope.ServiceProvider.GetRequiredService<IAdminService>();
+    var adminRegister = scope.ServiceProvider.GetRequiredService<IUserService>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var adminName = "admin";
     var adminPassword = "123456";
 
 
-    await adminRegister.RegisterAdmin(new ShopManager.Server.Dto.AdminRegisterDto()
+    if (!await roleManager.RoleExistsAsync(Roles.Admin))
+    {
+        await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+    }
+
+    if (!await roleManager.RoleExistsAsync(Roles.Manager))
+    {
+        await roleManager.CreateAsync(new IdentityRole(Roles.Manager));
+    }
+
+    await adminRegister.RegisterManager(new ShopManager.Server.Dto.UserRegisterDto()
     {
         ConfirmPassword = adminPassword,
         Login = adminName,

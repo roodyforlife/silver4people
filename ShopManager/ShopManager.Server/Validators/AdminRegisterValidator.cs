@@ -6,7 +6,7 @@ using ShopManager.Server.Models;
 
 namespace ShopManager.Server.Validators
 {
-    public class AdminRegisterValidator : AbstractValidator<AdminRegisterDto>
+    public class AdminRegisterValidator : AbstractValidator<UserRegisterDto>
     {
         public AdminRegisterValidator(UserManager<Admin> userManager)
         {

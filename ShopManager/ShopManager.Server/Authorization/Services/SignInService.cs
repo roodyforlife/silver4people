@@ -31,7 +31,8 @@ namespace SharpCraftStudio.Authorization.Services
 
             if (userCanSignIn)
             {
-                var token = _jwtService.CreateToken(user.UserName);
+                var role = await _userManager.GetRolesAsync(user);
+                var token = _jwtService.CreateToken(user.UserName, role.First());
                 return token;
             }
 

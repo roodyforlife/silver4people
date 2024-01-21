@@ -10,18 +10,19 @@ using System.Threading;
 
 namespace ShopManager.Server.Services
 {
-    public class AdminService : IAdminService
+    public class UserService : IUserService
     {
         private readonly AdminRegisterValidator _validator;
         private readonly UserManager<Admin> _userManager;
+        private readonly RoleManager<Admin> _roleManager;
 
-        public AdminService(AdminRegisterValidator validator, UserManager<Admin> userManager)
+        public UserService(AdminRegisterValidator validator, UserManager<Admin> userManager)
         {
             _validator = validator;
             _userManager = userManager;
         }
 
-        public async Task<ValidationResult> RegisterAdmin(AdminRegisterDto adminRegisterDto)
+        public async Task<ValidationResult> RegisterAdmin(UserRegisterDto adminRegisterDto)
         {
             var validationResult = await _validator.ValidateAsync(adminRegisterDto);
 
@@ -29,6 +30,29 @@ namespace ShopManager.Server.Services
             {
                 var user = new Admin() { UserName = adminRegisterDto.Login };
                 var result = await _userManager.CreateAsync(user, adminRegisterDto.Password);
+
+                if(result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.Admin);
+                }
+            }
+
+            return validationResult;
+        }
+
+        public async Task<ValidationResult> RegisterManager(UserRegisterDto adminRegisterDto)
+        {
+            var validationResult = await _validator.ValidateAsync(adminRegisterDto);
+
+            if (validationResult.IsValid)
+            {
+                var user = new Admin() { UserName = adminRegisterDto.Login };
+                var result = await _userManager.CreateAsync(user, adminRegisterDto.Password);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, Roles.Manager);
+                }
             }
 
             return validationResult;
