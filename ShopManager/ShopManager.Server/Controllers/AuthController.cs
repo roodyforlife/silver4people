@@ -54,7 +54,7 @@ namespace ShopManager.Server.Controllers
             return Ok(await _userService.GetAllAsync());
         }
 
-        [Authorize]
+        [Authorize($"{Roles.Admin},${Roles.Manager}")]
         [HttpPost("checkToken")]
         public IActionResult CheckToken()
         {
