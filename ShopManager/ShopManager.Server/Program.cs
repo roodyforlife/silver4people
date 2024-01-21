@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SharpCraftStudio.Authorization.Services;
 using ShopManager.Server;
 using ShopManager.Server.Authorization;
 using ShopManager.Server.Authorization.Interfaces;

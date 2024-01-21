@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpCraftStudio.Authorization.Services
+namespace ShopManager.Server.Authorization.Services
 {
     internal class SignInService : ISignInService
     {
