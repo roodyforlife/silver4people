@@ -115,7 +115,7 @@ app.Run();
 static async Task InitializeDefaultData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
-    var adminRegister = scope.ServiceProvider.GetRequiredService<IUserService>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Admin>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var adminName = "admin";
     var adminPassword = "123456";
@@ -131,10 +131,10 @@ static async Task InitializeDefaultData(IServiceProvider serviceProvider)
         await roleManager.CreateAsync(new IdentityRole(Roles.Manager));
     }
 
-    await adminRegister.RegisterManager(new ShopManager.Server.Dto.UserRegisterDto()
+    if(!await userManager.Users.AnyAsync(c => c.UserName == adminName))
     {
-        ConfirmPassword = adminPassword,
-        Login = adminName,
-        Password = adminPassword
-    });
+        var user = new Admin() { UserName = adminName }; 
+        await userManager.CreateAsync(user, adminPassword);
+        await userManager.AddToRoleAsync(user, Roles.Admin);
+    }
 };

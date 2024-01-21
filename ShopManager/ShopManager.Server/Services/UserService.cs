@@ -22,24 +22,6 @@ namespace ShopManager.Server.Services
             _userManager = userManager;
         }
 
-        public async Task<ValidationResult> RegisterAdmin(UserRegisterDto adminRegisterDto)
-        {
-            var validationResult = await _validator.ValidateAsync(adminRegisterDto);
-
-            if (validationResult.IsValid)
-            {
-                var user = new Admin() { UserName = adminRegisterDto.Login };
-                var result = await _userManager.CreateAsync(user, adminRegisterDto.Password);
-
-                if(result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, Roles.Admin);
-                }
-            }
-
-            return validationResult;
-        }
-
         public async Task<ValidationResult> RegisterManager(UserRegisterDto adminRegisterDto)
         {
             var validationResult = await _validator.ValidateAsync(adminRegisterDto);
