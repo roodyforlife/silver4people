@@ -33,8 +33,8 @@ namespace ShopManager.Server.Authorization.Services
         {
             var claims = new List<Claim>
             {
-                new Claim("Name", userName),
-                new Claim("Role", role)
+                new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Role, role)
             };
 
             return claims;
