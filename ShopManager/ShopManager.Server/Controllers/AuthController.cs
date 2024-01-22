@@ -7,8 +7,8 @@ using ShopManager.Server.Interfaces;
 namespace ShopManager.Server.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     [Authorize(Roles = Roles.Admin)]
+    [ApiController]
     public class AuthController : Controller
     {
         private readonly ISignInService _signInService;

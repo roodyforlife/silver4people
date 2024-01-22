@@ -2,7 +2,7 @@ import { $authhost, $host } from '../../../http';
 import { IUserCreateFormData } from '../components/User/UserCreate/UserCreateForm';
 
 export const createUser = async (userData:IUserCreateFormData) => {
-    const { data } = await $authhost.post('api/Auth/registerAdmin', userData);
+    const { data } = await $authhost.post('api/Auth/registerManager', userData);
     return data;
 }
 

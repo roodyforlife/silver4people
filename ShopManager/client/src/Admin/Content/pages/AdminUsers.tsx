@@ -52,7 +52,7 @@ export const AdminUsers = () => {
         <Modal
           onClose={handleCloseCreateModal}
           show={showCreateModal}
-          title="Створення адміністратора"
+          title="Створення акаунту"
         >
           <UserCreateForm fetchUsers={fetchUsers} handleCloseCreateModal={handleCloseCreateModal}></UserCreateForm>
         </Modal>

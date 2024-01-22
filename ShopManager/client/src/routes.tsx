@@ -7,20 +7,22 @@ import { AdminCategories } from "./Admin/Content/pages/AdminCategories";
 import { AdminProducts } from "./Admin/Content/pages/AdminProducts";
 import { AdminSites } from "./Admin/Content/pages/AdminSites";
 import { AdminUsers } from "./Admin/Content/pages/AdminUsers";
-import { MAIN_ROUTE, NO_ROUTE } from "./consts";
+import { ADMIN_ROLE, MAIN_ROUTE, MANAGER_ROLE, NO_ROUTE } from "./consts";
 
 interface RouteData {
     path: string,
-    Component: ComponentType
+    Component: ComponentType,
+    roles?:string[],
 }
 
+
 export const authRoutes: RouteData[] = [
-    { path: NO_ROUTE, Component: () => <Navigate to={ADMIN_PRODUCTS_ROUTE} /> },
-    { path: MAIN_ROUTE, Component: AdminProducts },
-    { path: ADMIN_PRODUCTS_ROUTE, Component: AdminProducts},
-    { path: ADMIN_CATEGORIES_ROUTE, Component: AdminCategories},
-    { path: ADMIN_USERS_ROUTE, Component: AdminUsers},
-    { path: ADMIN_SITES_ROUTE, Component: AdminSites},
+    { path: NO_ROUTE, Component: () => <Navigate to={ADMIN_PRODUCTS_ROUTE} />, roles: [ADMIN_ROLE, MANAGER_ROLE]},
+    { path: MAIN_ROUTE, Component: AdminProducts, roles: [ADMIN_ROLE, MANAGER_ROLE]},
+    { path: ADMIN_PRODUCTS_ROUTE, Component: AdminProducts, roles: [ADMIN_ROLE, MANAGER_ROLE]},
+    { path: ADMIN_CATEGORIES_ROUTE, Component: AdminCategories, roles: [ADMIN_ROLE, MANAGER_ROLE]},
+    { path: ADMIN_USERS_ROUTE, Component: AdminUsers, roles: [ADMIN_ROLE, MANAGER_ROLE]},
+    { path: ADMIN_SITES_ROUTE, Component: AdminSites, roles: [ADMIN_ROLE, MANAGER_ROLE]},
 ];
 
 export const publicRoutes: RouteData[] = [
