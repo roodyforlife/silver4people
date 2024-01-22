@@ -37,7 +37,7 @@ namespace ShopManager.Server.Repositories
 
         public async Task<List<Category>> GetWithoutParentCategories()
         {
-            return await _appDbContext.Categories.Where(c => c.Id == null).ToListAsync();
+            return await _appDbContext.Categories.Where(c => c.ParentCategoryId == null).ToListAsync();
         }
     }
 }

@@ -29,6 +29,8 @@ namespace ShopManager.Server.Requests
             var search = new FilterSpecification<Product>(product => string.IsNullOrEmpty(lowerSearchString) ||
                 product.Name.ToLower().Contains(lowerSearchString) ||
                 product.TrackNumber.ToLower().Contains(lowerSearchString) ||
+                product.Article.ToLower().Contains(lowerSearchString) ||
+                product.Location.ToLower().Contains(lowerSearchString) ||
                 product.Description.ToLower().Contains(lowerSearchString));
 
             var filter = new FilterSpecification<Product>(product =>

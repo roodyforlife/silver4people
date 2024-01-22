@@ -11,5 +11,7 @@ namespace ShopManager.Server.Interfaces
         Task<bool> TryDeleteAsync(int id);
 
         Task EditAsync(Category category);
+
+        Task<List<Category>> GetWithoutParent();
     }
 }

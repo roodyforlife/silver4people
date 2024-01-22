@@ -25,6 +25,14 @@ namespace ShopManager.Server.Controllers
             return Ok(await _categoryService.GetAllAsync());
         }
 
+        [HttpGet("withoutParent")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetWithoutParent()
+        {
+            return Ok(await _categoryService.GetWithoutParent());
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Create(Category category)
         {

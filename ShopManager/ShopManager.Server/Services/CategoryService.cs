@@ -36,14 +36,14 @@ namespace ShopManager.Server.Services
             return false;
         }
 
-        public async Task EditAsync()
-        {
-
-        }
-
         public async Task<List<Category>> GetAllAsync()
         {
             return await _categoryRepository.GetAllAsync();
+        }
+
+        public async Task<List<Category>> GetWithoutParent()
+        {
+            return await _categoryRepository.GetWithoutParentCategories();
         }
     }
 }
