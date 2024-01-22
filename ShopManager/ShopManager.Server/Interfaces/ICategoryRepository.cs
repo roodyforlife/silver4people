@@ -6,5 +6,7 @@ namespace ShopManager.Server.Interfaces
     {
         Task<bool> ProductCreatedForOrIsParentAsync(int id);
         Task<List<Category>> GetAsync(int[] ides);
+
+        Task<List<Category>> GetWithoutParentCategories();
     }
 }

@@ -34,5 +34,10 @@ namespace ShopManager.Server.Repositories
             return await _appDbContext.Categories
                 .Include(c => c.ParentCategory).FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<List<Category>> GetWithoutParentCategories()
+        {
+            return await _appDbContext.Categories.Where(c => c.Id == null).ToListAsync();
+        }
     }
 }
