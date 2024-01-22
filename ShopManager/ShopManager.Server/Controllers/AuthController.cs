@@ -42,9 +42,16 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpDelete("{login}")]
-        public async Task<IActionResult> DeleteAdmin(string login)
+        public async Task<IActionResult> DeleteManager(string login)
         {
             await _userService.DeleteAsync(login);
+            return Ok();
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordDto request)
+        {
+            await _userService.UpdateAdminPassword(request.Login, request.CurrentPassword, request.NewPassword);
             return Ok();
         }
 

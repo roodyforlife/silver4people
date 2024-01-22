@@ -42,16 +42,39 @@ namespace ShopManager.Server.Services
 
         public async Task DeleteAsync(string login)
         {
-            var admin = await _userManager.FindByNameAsync(login);
-            await _userManager.DeleteAsync(admin);
+            var user = await _userManager.FindByNameAsync(login);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.Any(c => c == Roles.Admin))
+            {
+                throw new InvalidOperationException();
+            }
+
+            await _userManager.DeleteAsync(user);
         }
 
         public async Task<List<AdminListResponse>> GetAllAsync()
         {
-            var admins = await _userManager.Users
-                .Select(x => new AdminListResponse() { Login = x.UserName }).ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
+            var result = new List<AdminListResponse>();
 
-            return admins;
+            foreach (var user in users)
+            {
+                result.Add(new AdminListResponse()
+                {
+                    Login = user.UserName,
+                    Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
+                });
+            }
+
+            return result;
+        }
+
+        public async Task UpdateAdminPassword(string login, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByNameAsync(login);
+
+            await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
     }
 }

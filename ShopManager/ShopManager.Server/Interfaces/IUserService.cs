@@ -10,5 +10,7 @@ namespace ShopManager.Server.Interfaces
         Task DeleteAsync(string login);
 
         Task<List<AdminListResponse>> GetAllAsync();
+
+        Task UpdateAdminPassword(string login, string currentPassword, string newPassword);
     }
 }

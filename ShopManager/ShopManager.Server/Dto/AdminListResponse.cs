@@ -3,5 +3,7 @@
     public class AdminListResponse
     {
         public string Login { get; set; }
+
+        public string Role { get; set; }
     }
 }
