@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react'
-import { GRAY_COLOR, MAIN_COLOR, RED_COLOR, YELLOW_COLOR } from '../../../Admin/consts';
+import { GRAY_COLOR, MAIN_COLOR, RED_COLOR, YELLOW_COLOR } from '../../../consts';
 import cl from './Button.module.css';
 
 interface IProps {

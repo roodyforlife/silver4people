@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Button } from "../../../components/UI/Button/Button";
+import { Button } from "../../components/UI/Button/Button";
 import { Modal } from "../../../components/UI/Modal/Modal";
 import { REACT_APP_API_URL } from "../../../consts";
 import { generateArticle } from "../../utils/generateArticle";
@@ -14,18 +14,18 @@ import { ICategory } from "./AdminCategories";
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { Pagination } from "../components/UI/Pagination/Pagination";
 import filtrationCl from '../styles/Filtration.module.css';
-import { Input } from "../../../components/UI/Input/Input";
+import { Input } from "../../components/UI/Input/Input";
 import { getCategories } from "../http/categoryApi";
 import { getSites } from "../http/siteApi";
 import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from "../../utils/SelectUtils/getSelectsItems";
 import { ISite } from "./AdminSites";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
+import { CustomSelect } from "../../components/UI/CustomSelect/CustomSelect";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADMIN_PRODUCTS_ROUTE } from "../consts";
 import { ProductEditForm } from "../components/Product/ProductEditForm/ProductEditForm";
 import { ProductDeleteForm } from "../components/Product/ProductDeleteForm/ProductDeleteForm";
-import { Loader } from "../../../components/UI/Loader/Loader";
+import { Loader } from "../../components/UI/Loader/Loader";
 
 export interface IProduct {
   id: string;
@@ -93,7 +93,7 @@ const headColumns: string[] = [
   "Контроллери",
 ];
 
-const takeItems = 1;
+const takeItems = 100;
 
 export const AdminProducts = () => {
   const { control, setValue, getValues } = useForm<IFiltration>();
@@ -195,9 +195,11 @@ const selectPublishedItems = [
 ]
 
 const selectOrderFieldItems = [
-  {value: "Name", label: "Сортувати за назвою"},
+  {value: "CreateDate", label: "Сортувати за датою створення"},
   {value: "PurchasePrice", label: "Сортувати за ціною покупки"},
   {value: "SalePrice", label: "Сортувати за ціною продажу"},
+  {value: "EditDate", label: "Сортувати за датою редагування"},
+  {value: "Name", label: "Сортувати за назвою"},
 ]
 
 const selectOrderTypeItems = [

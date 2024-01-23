@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '../../../../../components/UI/Button/Button';
+import { Button } from '../../../../components/UI/Button/Button';
 import { deleteCategory } from '../../../http/categoryApi';
 import { ICategory } from '../../../pages/AdminCategories';
 import cl from './CategoryDeleteForm.module.css';

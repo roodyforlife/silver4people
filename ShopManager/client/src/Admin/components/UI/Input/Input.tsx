@@ -6,6 +6,7 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
     field?:ControllerRenderProps<T, TName>,
     inputType:InputType,
     label?:string,
+    disabled?: boolean,
 }
 
 type InputType = "password" | "text" | "number";
@@ -14,7 +15,7 @@ export const Input = <T extends FieldValues, TName extends Path<T>>(props:IProps
   return (
     <div className={cl.input}>
       <label>{props.label}</label>
-      <input type={props.inputType} {...props.field}></input>
+      <input type={props.inputType} disabled={props.disabled} {...props.field}></input>
     </div>
   )
 }

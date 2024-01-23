@@ -1,0 +1,42 @@
+@import url("../../styles/var.css");
+
+.wrapper {
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 5px;
+    max-width: 300px;
+}
+
+.content {
+
+}
+
+.header {
+    background: var(--dark-gr-color);
+    padding: 10px;
+}
+
+.items {
+    background: var(--light-gray-color)
+}
+
+.item {
+    padding: 10px;
+}
+
+.item a {
+    color: black;
+}
+
+.item a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 850px) {
+    .wrapper {
+        display: block;
+        width: 100%;
+        max-width: none;
+    }
+}

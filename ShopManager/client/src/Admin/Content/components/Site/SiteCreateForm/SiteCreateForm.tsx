@@ -3,8 +3,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { ISite } from '../../../pages/AdminSites'
 import formCl from '../../../../../styles/Form.module.css';
 import cl from './SiteCreateForm.module.css'
-import { Input } from '../../../../../components/UI/Input/Input';
-import { Button } from '../../../../../components/UI/Button/Button';
+import { Input } from '../../../../components/UI/Input/Input';
+import { Button } from '../../../../components/UI/Button/Button';
 import { createSite } from '../../../http/siteApi';
 import { toast } from 'react-toastify';
 

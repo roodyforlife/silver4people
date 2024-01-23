@@ -1,26 +1,28 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from '../../../../../components/UI/Button/Button';
-import { Input } from '../../../../../components/UI/Input/Input';
+import { Button } from '../../../../components/UI/Button/Button';
+import { Input } from '../../../../components/UI/Input/Input';
 import cl from './ProductCreateForm.module.css';
 import formCl from '../../../../../styles/Form.module.css';
 import { DragDropList, IItem } from '../../UI/DragDropList/DragDropList';
 import { FileInput } from '../../UI/FileInput/FileInput';
 import { Guid } from "guid-typescript";
-import { Textarea } from '../../../../../components/UI/Textarea/Textarea';
+import { Textarea } from '../../../../components/UI/Textarea/Textarea';
 import { createProduct } from '../../../http/productApi';
 import { generateArticle } from '../../../../utils/generateArticle';
 import { getCategories } from '../../../http/categoryApi';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
 import { createImage } from '../../../http/imageApi';
 import { getSites } from '../../../http/siteApi';
-import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
+import { CheckBox } from '../../../../components/UI/Checkbox/CheckBox';
 import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
 import { ISite } from '../../../pages/AdminSites';
-import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
+import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
 import { getFileListNode } from '../../../../utils/getFileListNode';
-import { Loader } from '../../../../../components/UI/Loader/Loader';
+import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
+import { getChildrenCategories } from '../../../../utils/childrenCategory';
+import { ICategory } from '../../../pages/AdminCategories';
 
 export interface IProductCreateFormData {
   id: string;
@@ -55,11 +57,6 @@ interface IForm {
 interface IImage {
   id: string,
   index:number,
-}
-
-interface ICategory {
-  id: string,
-  name:string,
 }
 
 interface IProps {
@@ -111,12 +108,12 @@ useEffect(() => {
   const fetchData = async () => {
     const categoriesData = await fetchCategories();
     const sitesData = await fetchSites();
-    setCategories(categoriesData);
+    setCategories(getChildrenCategories(categoriesData) as ICategory[]);
     setSites(sitesData);
   };
 
-  setLoading(true);
-  fetchData().finally(() => setLoading(false));
+  setMainLoading(true);
+  fetchData().finally(() => setMainLoading(false));
 }, []);
 
 const fetchCategories = async () => {
@@ -155,11 +152,11 @@ const onSubmit = async (data:IForm) => {
       const formData = new FormData()
       formData.append("file", file);
         createImage(imageArray[index].id, formData).then(() => {
-          toast.success("Продукт успішно створенний")
         fetchProducts();
         handleCloseCreateModal();
       })
     });
+    toast.success("Продукт успішно створенний")
   }).catch(() => {
     toast.error("Щось пішло не так, спробуйте ще раз");
   }).finally(() => setLoading(false));

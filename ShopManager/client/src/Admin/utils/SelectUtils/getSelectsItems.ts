@@ -8,7 +8,7 @@ export interface ISelect {
 }
 
 export const getSelectsCategoryItems = (categories:ICategory[]):ISelect[] => {
-    const selects: ISelect[] = categories.map((category) => {return {value: category.id, label: getCategoryFullName(category)}});
+    const selects: ISelect[] = categories.map((category) => {return {value: category.id.toString(), label: getCategoryFullName(category)}});
     return selects;
 }
 

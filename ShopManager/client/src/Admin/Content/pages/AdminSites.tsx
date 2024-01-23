@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Button } from '../../../components/UI/Button/Button';
+import { Button } from '../../components/UI/Button/Button';
 import { TableWrapper } from '../components/TableWrapper/TableWrapper';
 import tablePageClasses from '../styles/TablePage.module.css';
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
@@ -8,7 +8,7 @@ import { Modal } from '../../../components/UI/Modal/Modal';
 import { SiteCreateForm } from '../components/Site/SiteCreateForm/SiteCreateForm';
 import { SiteDeleteForm } from '../components/Site/SiteDeleteForm/SiteDeleteForm';
 import { SiteEditForm } from '../components/Site/SiteEditForm/SiteEditForm';
-import { Loader } from '../../../components/UI/Loader/Loader';
+import { Loader } from '../../components/UI/Loader/Loader';
 
 export interface ISite {
     id: number,
