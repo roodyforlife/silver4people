@@ -26,7 +26,7 @@ namespace ShopManager.Server.Dto
 
         public int[] CategoryIdes { get; set; }
 
-        public DateTime? EditionDate { get; set; }
+        public DateTime EditionDate { get; set; }
 
         public DateTime CreationDate { get; set; }
 

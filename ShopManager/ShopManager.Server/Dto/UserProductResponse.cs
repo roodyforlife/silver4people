@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ShopManager.Server.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace ShopManager.Server.Models
+namespace ShopManager.Server.Dto
 {
-    public class Product
+    public class UserProductResponse
     {
-        [Key]
         public Guid Id { get; set; }
 
         public string Name { get; set; }
@@ -12,23 +12,15 @@ namespace ShopManager.Server.Models
         [MaxLength(2000)]
         public string Description { get; set; }
 
-        public string Article { get;set; }
-
-        public bool Published { get; set; }
+        public string Article { get; set; }
 
         public int PurchasePrice { get; set; }
 
         public int SalePrice { get; set; }
 
-        public string TrackNumber { get; set; }
-
-        public string Location { get; set; }
-
         public DateTime CreationDate { get; set; }
 
         public DateTime EditionDate { get; set; }
-
-        public List<Site> Sites { get; set; }
 
         public List<Image> Images { get; set; }
 
