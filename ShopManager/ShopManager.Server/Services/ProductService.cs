@@ -34,6 +34,7 @@ namespace ShopManager.Server.Services
 
             var product = new Product()
             {
+                CreationDate = productCreation.CreationDate,
                 Id = productCreation.Id,
                 Name = productCreation.Name,
                 Description = productCreation.Description,
@@ -47,6 +48,11 @@ namespace ShopManager.Server.Services
                 Sites = sites,
                 Images = images,
             };
+
+            if(await _productRepository.ArticleExists(product.Article))
+            {
+                throw new InvalidOperationException("З цим артикулом вже створено продукт");
+            }
 
             await _productRepository.CreateAsync(product);
         }
@@ -66,6 +72,11 @@ namespace ShopManager.Server.Services
             }
 
             await _productRepository.DeleteAsync(product);
+        }
+
+        public async Task<string> GenerateArticle()
+        {
+            return await _productRepository.GenerateArticle();
         }
     }
 }

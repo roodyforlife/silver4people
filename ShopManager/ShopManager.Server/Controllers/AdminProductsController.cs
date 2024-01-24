@@ -23,8 +23,21 @@ namespace ShopManager.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] AdminProductsRequest request)
         {
-            var products = await _productService.GetAllAsync(request);
-            return Ok(products);
+            try
+            {
+                var products = await _productService.GetAllAsync(request);
+                return Ok(products);
+            }
+            catch(InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("article")]
+        public async Task<string> GenerateArticle()
+        {
+            return await _productService.GenerateArticle();
         }
 
         [HttpPost]

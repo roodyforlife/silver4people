@@ -26,6 +26,8 @@ namespace ShopManager.Server.Dto
 
         public int[] CategoryIdes { get; set; }
 
+        public DateTime CreationDate { get; set; }
+
         public List<ImageCreationDto> Images { get; set; }
     }
 }

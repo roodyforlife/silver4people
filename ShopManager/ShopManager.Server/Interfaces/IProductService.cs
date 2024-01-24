@@ -9,6 +9,8 @@ namespace ShopManager.Server.Interfaces
     {
         Task CreateAsync(ProductCreationDto productCreation);
 
+        Task<string> GenerateArticle();
+
         Task<PageResponse<Product>> GetAllAsync(IPageRequest<Product> specification);
 
         Task DeleteAsync(Guid id);

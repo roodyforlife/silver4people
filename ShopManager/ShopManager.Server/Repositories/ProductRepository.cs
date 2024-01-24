@@ -21,12 +21,36 @@ namespace ShopManager.Server.Repositories
                 .Include(c => c.Images));
         }
 
+        public async Task<string> GenerateArticle()
+        {
+            string newArticle;
+
+            do
+            {
+                newArticle = GenerateRandomArticle();
+            }
+            while (await ArticleExists(newArticle));
+
+            return newArticle;
+        }
+
         public override Task<List<Product>> GetAllAsync()
         {
             return _appDbContext.Products
                 .Include(c => c.Categories)
                 .Include(c => c.Images)
                 .ToListAsync();
+        }
+
+        private string GenerateRandomArticle()
+        {
+            Random rand = new Random();
+            return rand.Next(100000, 999999).ToString();
+        }
+
+        public async Task<bool> ArticleExists(string article)
+        {
+            return await _appDbContext.Products.AnyAsync(p => p.Article == article);
         }
 
         public override Task<Product> GetByIdAsync(Guid id)
