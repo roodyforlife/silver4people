@@ -17,7 +17,12 @@ export const getCategories = async () => {
     return data;
 }
 
-export const deleteCategory = async (id:string) => {
+export const getCategoriesWithoutParent = async () => {
+    const {data} = await $authhost.get('api/Categories/withoutParent');
+    return data;
+}
+
+export const deleteCategory = async (id:number) => {
     const { data } = await $authhost.delete('api/Categories/' + id);
     return data;
 }

@@ -50,6 +50,11 @@ namespace ShopManager.Server.Services
                 Images = images,
             };
 
+            if(await _productRepository.ArticleExists(product.Article))
+            {
+                throw new InvalidOperationException("З цим артикулом вже створено продукт");
+            }
+
             await _productRepository.CreateAsync(product);
         }
 
@@ -68,6 +73,11 @@ namespace ShopManager.Server.Services
             }
 
             await _productRepository.DeleteAsync(product);
+        }
+
+        public async Task<string> GenerateArticle()
+        {
+            return await _productRepository.GenerateArticle();
         }
     }
 }

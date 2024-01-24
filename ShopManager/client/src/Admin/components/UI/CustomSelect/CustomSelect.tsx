@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react'
 import { Control, Controller, ControllerRenderProps, FieldPath, FieldPathValue, FieldValues, KeepStateOptions, Path, PathValue, UseFormSetValue } from 'react-hook-form';
 import Select from 'react-select';
-import { DARK_GRAY_COLOR, GRAY_COLOR, MAIN_COLOR, RED_COLOR, } from '../../../Admin/consts'
-import { ISelect } from '../../../Admin/utils/SelectUtils/getSelectsItems'
+import { DARK_GRAY_COLOR, GRAY_COLOR, MAIN_COLOR, RED_COLOR, } from '../../../consts'
+import { ISelect } from '../../../utils/SelectUtils/getSelectsItems'
 import cl from './CustomSelect.module.css';
 
 interface IProps <T extends FieldValues, TName extends Path<T>> {

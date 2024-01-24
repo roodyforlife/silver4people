@@ -1,7 +1,4 @@
 .content {
-    width: 100vw;
-    height: 100vh;
-    background: rgb(245, 245, 245);
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -14,6 +11,8 @@
     border-radius: 5px;
     padding: 20px;
     min-width: 500px;
+    border: 1px solid rgb(245, 245, 245);
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.08);
 }
 
 h1 {

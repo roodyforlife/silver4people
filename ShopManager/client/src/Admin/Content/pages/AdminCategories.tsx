@@ -1,6 +1,6 @@
 import { Guid } from 'guid-typescript';
 import React, { useState, useEffect, useMemo } from 'react'
-import { Button } from '../../../components/UI/Button/Button';
+import { Button } from '../../components/UI/Button/Button';
 import { Modal } from '../../../components/UI/Modal/Modal';
 import { CategoryCreateForm, ICategoryCreateFormData } from '../components/Category/CategoryCreateForm/CategoryCreateForm';
 import { CategoryEditForm } from '../components/Category/CategoryEditForm/CategoryEditForm';
@@ -11,27 +11,27 @@ import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { CategoryDeleteForm } from '../components/Category/CategoryDeleteForm/CategoryDeleteForm';
 import { getCategoryFullName } from '../../utils/getCategoryFullName';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
-import { Input } from '../../../components/UI/Input/Input';
+import { Input } from '../../components/UI/Input/Input';
 import filtrationCl from '../styles/Filtration.module.css';
 import { ISelect } from '../../utils/SelectUtils/getSelectsItems';
-import { Loader } from '../../../components/UI/Loader/Loader';
+import { Loader } from '../../components/UI/Loader/Loader';
+import { CustomSelect } from '../../components/UI/CustomSelect/CustomSelect';
 
 export interface ICategory {
-  id: string,
+  id: number,
   name:string,
+  parentCategoryId?:number,
   parentCategory?:ICategory,
 }
 
 interface IFiltration extends FieldValues{
-  name: string,
-  orderField:ISelect,
-  orderType:ISelect,
+  name: string
 }
 
 const headColumns:string[] = ["#", "Назва", "Контроллери"];
 
 export const AdminCategories = () => {
-  const { control, getValues } = useForm<IFiltration>();
+  const { handleSubmit, control, setValue, getValues} = useForm<IFiltration>();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -53,22 +53,23 @@ export const AdminCategories = () => {
   };
 
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
     fetchCategories();
   }, [])
 
-  const filteredCategories = useMemo<ICategory[]>(() => {
-    return categories.map((category):ICategory => ({ id: category.id, name: getCategoryFullName(category) })).filter((category) => category.name.includes(getValues().name));
-  }, [categories]);
-
-  const onSubmit = () => {
-
+  const onSubmit = async (data:IFiltration) => {
+    const stringFiltration = categories.filter((category) => category.name.toLocaleLowerCase().includes(data.name.toLocaleLowerCase()));
+    setFilteredCategories(stringFiltration)
   }
 
   const fetchCategories = async () => {
     setLoading(true);
-    await getCategories().then((data) => setCategories(data)).finally(() => setLoading(false));
+    await getCategories().then((data) => {
+      setCategories(data)
+      setFilteredCategories(data);
+    }).finally(() => setLoading(false));
   }
 
   return (
@@ -79,7 +80,7 @@ export const AdminCategories = () => {
         show={showCreateModal}
         title="Створення категорії продукту"
       >
-        <CategoryCreateForm fetchCategories={fetchCategories} categories={categories} handleCloseCreateModal={handleCloseCreateModal}></CategoryCreateForm>
+        <CategoryCreateForm fetchCategories={fetchCategories} handleCloseCreateModal={handleCloseCreateModal}></CategoryCreateForm>
       </Modal>
       <Modal
         onClose={handleCloseEditModal}
@@ -97,20 +98,24 @@ export const AdminCategories = () => {
       </Modal>
 
       <div className={tablePageClasses.content}>
-        <div className={filtrationCl.item}>
-        <Controller
-        control={control}
-        name={'name'}
-        defaultValue={""}
-        render={({ field }) => (
-          <Input label={"Назва"} inputType="text" {...field}></Input>
-        )}></Controller>
-        </div>
-        <div className={filtrationCl.item}>
-          <div className={filtrationCl.button}>
-            <Button type="button" variant="primary" onClick={onSubmit}>Знайти</Button>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={filtrationCl.item}>
+          <Controller
+          control={control}
+          name={'name'}
+          defaultValue={""}
+          render={({ field }) => (
+            <Input label={"Назва"} inputType="text" field={field}></Input>
+          )}></Controller>
           </div>
+          <div className={filtrationCl.item}>
         </div>
+          <div className={filtrationCl.item}>
+            <div className={filtrationCl.button}>
+              <Button type="submit" variant="primary">Знайти</Button>
+            </div>
+          </div>
+        </form>
       </div>
 
       <div className={tablePageClasses.content}>
@@ -131,9 +136,8 @@ export const AdminCategories = () => {
             <tbody>
               {filteredCategories?.map((row, rowIndex) => (
                 <tr key={rowIndex}>
-                  {Object.values(row).map((value, colIndex) => (
-                    <td key={colIndex}>{value}</td>
-                  ))}
+                  <td>{row.id}</td>
+                  <td>{getCategoryFullName(row)}</td>
                   <td>
                     <div className={tableWrapperCl.controlls}>
                       <div className={tableWrapperCl.button}><Button type="button" variant='warning' onClick={() => handleShowEditModal(row)}>Редагувати</Button></div>

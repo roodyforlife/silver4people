@@ -1,15 +1,16 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Button } from '../../../../../components/UI/Button/Button'
-import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
-import { Input } from '../../../../../components/UI/Input/Input'
+import { Button } from '../../../../components/UI/Button/Button'
+import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
+import { Input } from '../../../../components/UI/Input/Input'
 import formCl from '../../../../../styles/Form.module.css';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
 import { getSelectsCategoryItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
-import { createCategory } from '../../../http/categoryApi';
+import { createCategory, getCategoriesWithoutParent } from '../../../http/categoryApi';
 import { ICategory } from '../../../pages/AdminCategories';
 import cl from './CategoryCreateForm.module.css';
 import { toast } from 'react-toastify';
+import { Loader } from '../../../../components/UI/Loader/Loader';
 
 export interface ICategoryCreateFormData {
     name:string,
@@ -24,11 +25,12 @@ export interface IForm {
   interface IProps {
     fetchCategories: () => void,
     handleCloseCreateModal: () => void,
-    categories:ICategory[],
   }
 
-export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, categories}:IProps) => {
+export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal}:IProps) => {
     const { handleSubmit, control, formState: {errors}, getValues, setValue} = useForm<IForm>();
+    const [categories, setCategories] = useState<ICategory[]>([])
+    const [mainLoading, setMainLoading] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
   
     const onSubmit = async (data:IForm) => {
@@ -45,9 +47,19 @@ export const CategoryCreateForm = ({fetchCategories, handleCloseCreateModal, cat
     const selectItems = useMemo<ISelect[]>(() => {
       return getSelectsCategoryItems(categories);
     }, [categories]);
+
+    const fetchChildrenCategories = async () => {
+      setMainLoading(true);
+      await getCategoriesWithoutParent().then((data) => setCategories(data)).finally(() => setMainLoading(false));
+    }
+
+    useEffect(() => {
+      fetchChildrenCategories();
+    }, [])
   
     return (
       <div>
+        {mainLoading && <Loader />}
         <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
       <div className={formCl.item}>
         <Controller

@@ -4,13 +4,13 @@ import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../
 import { IProduct } from '../../../pages/AdminProducts'
 import formCl from '../../../../../styles/Form.module.css';
 import cl from './ProductEditForm.module.css';
-import { Input } from '../../../../../components/UI/Input/Input';
-import { Textarea } from '../../../../../components/UI/Textarea/Textarea';
+import { Input } from '../../../../components/UI/Input/Input';
+import { Textarea } from '../../../../components/UI/Textarea/Textarea';
 import { DragDropList, IItem } from '../../UI/DragDropList/DragDropList';
 import { FileInput } from '../../UI/FileInput/FileInput';
-import { CheckBox } from '../../../../../components/UI/Checkbox/CheckBox';
-import { CustomSelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
-import { Button } from '../../../../../components/UI/Button/Button';
+import { CheckBox } from '../../../../components/UI/Checkbox/CheckBox';
+import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
+import { Button } from '../../../../components/UI/Button/Button';
 import { getCategories } from '../../../http/categoryApi';
 import { getSites } from '../../../http/siteApi';
 import { ISite } from '../../../pages/AdminSites';
@@ -21,7 +21,7 @@ import { getFileListNode } from '../../../../utils/getFileListNode';
 import { Guid } from 'guid-typescript';
 import { editProduct } from '../../../http/productApi';
 import { createImage } from '../../../http/imageApi';
-import { Loader } from '../../../../../components/UI/Loader/Loader';
+import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
 
 export interface IProductEditFormData {
@@ -90,7 +90,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         const fetchData = async () => {
           const categoriesData = await fetchCategories();
           const sitesData = await fetchSites();
-          setCategories(categoriesData);
+          setCategories(categoriesData.filter((category:ICategory) => category.parentCategory));
           setSites(sitesData);
         };
       
@@ -183,10 +183,10 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
               formData.append("file", file);
                 createImage(imageArray[index].id, formData).then(() => {
                 fetchProducts();
-                toast.success("Продукт успішно відредаговано")
                 handleCloseEditModal();
               })
             });
+            toast.success("Продукт успішно відредаговано");
           }).catch(() => {
             toast.error("Щось пішло не так, спробуйте ще раз");
           }).finally(() => setLoading(false));

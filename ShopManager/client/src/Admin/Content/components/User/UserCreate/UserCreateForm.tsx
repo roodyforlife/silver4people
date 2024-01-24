@@ -3,8 +3,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { createUser } from '../../../http/userApi';
 import cl from './UserCreateForm.module.css'
 import formCl from '../../../../../styles/Form.module.css';
-import { Button } from '../../../../../components/UI/Button/Button';
-import { Input } from '../../../../../components/UI/Input/Input';
+import { Button } from '../../../../components/UI/Button/Button';
+import { Input } from '../../../../components/UI/Input/Input';
 import { toast } from 'react-toastify';
 
 export interface IUserCreateFormData {
@@ -41,14 +41,14 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
           control={control}
           name={'login'}
           rules={{
-            required: "Введіть ім'я адміністратора",
+            required: "Введіть логін",
             maxLength: {
-              value: 20,
-              message: 'Максимальна довжина імені повинна бути не більше 20'
+              value: 10,
+              message: 'Максимальна довжина логіну повинна бути не більше 10'
             },
             minLength: {
-              value: 2,
-              message: 'Мінімальна довжина не повинна бути менша за 2'
+              value: 5,
+              message: 'Мінімальна довжина не повинна бути менша за 5'
             },
           }}
           render={({ field }) => (
@@ -64,8 +64,8 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
           rules={{
             required: "Введіть пароль",
             maxLength: {
-              value: 20,
-              message: 'Максимальна довжина паролю повинна бути не більше 20'
+              value: 15,
+              message: 'Максимальна довжина паролю повинна бути не більше 15'
             },
             minLength: {
               value: 6,
@@ -85,8 +85,8 @@ export const UserCreateForm = ({fetchUsers, handleCloseCreateModal}:IProps) => {
           rules={{
             required: "Введіть пароль",
             maxLength: {
-              value: 20,
-              message: 'Максимальна довжина паролю повинна бути не більше 20'
+              value: 15,
+              message: 'Максимальна довжина паролю повинна бути не більше 15'
             },
             minLength: {
               value: 6,

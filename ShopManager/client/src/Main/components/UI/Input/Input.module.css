@@ -1,0 +1,28 @@
+@import url("../../../styles/var.css");
+
+.input {
+    border-radius: 1000px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    height: 30px;
+}
+
+.input input {
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    font-size: 14px;
+    background: var(--light-gray-color);
+}
+
+.searchButton {
+    height: 100%;
+    padding: 0 10px;
+    background: black;
+    color: white;
+}
+
+.searchButton:hover {
+    opacity: .8;
+}

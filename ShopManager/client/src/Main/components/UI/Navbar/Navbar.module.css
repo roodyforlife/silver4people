@@ -1,0 +1,51 @@
+@import url("../../../styles/var.css");
+
+body {
+    background: white;
+    font-family: "Suisse Int'l","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.wrapper {
+}
+
+.wrapper main {
+    max-width: 1280px;
+    padding: 20px 0;
+    margin: 0 auto;
+}
+
+.header {
+    background: var(--dark-gr-color);
+    border-bottom: 1px solid var(--light-gray-color);
+}
+
+.headerContent {
+    max-width: 1280px;
+    padding: 20px 0;
+    margin: 0 auto;
+}
+
+.headerContent nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.headerItem {
+    
+}
+
+.logotype {
+
+}
+
+.searchBar {
+    width: 300px;
+}
+
+@media (max-width: 1280px) {
+    .headerContent, .wrapper main{
+        padding: 20px 10px;
+    }
+}
