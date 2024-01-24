@@ -59,7 +59,7 @@ namespace ShopManager.Server.Requests
                 case OrderField.CreationDate:
                     return new OrderSpecification<Product, object>(OrderType, product => product.CreationDate);
                 case OrderField.EditionDate:
-                    return new OrderSpecification<Product, object>(OrderType, product => product.CreationDate);
+                    return new OrderSpecification<Product, object>(OrderType, product => product.EditionDate);
             }
 
             throw new NotImplementedException();
