@@ -70,11 +70,13 @@ namespace ShopManager.Server.Services
             return result;
         }
 
-        public async Task UpdateAdminPassword(string login, string currentPassword, string newPassword)
+        public async Task<IdentityResult> UpdateAdminPassword(string login, string currentPassword, string newPassword)
         {
             var user = await _userManager.FindByNameAsync(login);
 
-            await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+            return result;
         }
     }
 }

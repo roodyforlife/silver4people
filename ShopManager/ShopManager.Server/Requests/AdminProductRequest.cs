@@ -56,6 +56,10 @@ namespace ShopManager.Server.Requests
                     return new OrderSpecification<Product, object>(OrderType, product => product.Name);
                 case OrderField.PurchasePrice:
                     return new OrderSpecification<Product, object>(OrderType, product => product.PurchasePrice);
+                case OrderField.CreationDate:
+                    return new OrderSpecification<Product, object>(OrderType, product => product.CreationDate);
+                case OrderField.EditionDate:
+                    return new OrderSpecification<Product, object>(OrderType, product => product.CreationDate);
             }
 
             throw new NotImplementedException();
@@ -65,7 +69,9 @@ namespace ShopManager.Server.Requests
         {
             Name,
             PurchasePrice,
-            SalePrice
+            SalePrice,
+            CreationDate,
+            EditionDate,
         }
     }
 }

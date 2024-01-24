@@ -34,6 +34,8 @@ namespace ShopManager.Server.Services
 
             var product = new Product()
             {
+                EditionDate = productCreation.EditionDate,
+                CreationDate = productCreation.CreationDate,
                 Id = productCreation.Id,
                 Name = productCreation.Name,
                 Description = productCreation.Description,

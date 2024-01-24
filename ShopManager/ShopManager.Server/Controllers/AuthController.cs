@@ -51,8 +51,13 @@ namespace ShopManager.Server.Controllers
         [HttpPatch]
         public async Task<IActionResult> UpdatePassword(UpdatePasswordDto request)
         {
-            await _userService.UpdateAdminPassword(request.Login, request.CurrentPassword, request.NewPassword);
-            return Ok();
+            var result = await _userService.UpdateAdminPassword(request.Login, request.CurrentPassword, request.NewPassword);
+
+            if(result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpGet]

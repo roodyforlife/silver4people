@@ -24,7 +24,9 @@ namespace ShopManager.Server.Models
 
         public string Location { get; set; }
 
-        public DateTime CreatinDate { get; set; }
+        public DateTime CreationDate { get; set; }
+
+        public DateTime? EditionDate { get; set; }
 
         public List<Site> Sites { get; set; }
 

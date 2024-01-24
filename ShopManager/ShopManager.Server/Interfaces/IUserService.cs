@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Identity;
 using ShopManager.Server.Dto;
 
 namespace ShopManager.Server.Interfaces
@@ -11,6 +12,6 @@ namespace ShopManager.Server.Interfaces
 
         Task<List<AdminListResponse>> GetAllAsync();
 
-        Task UpdateAdminPassword(string login, string currentPassword, string newPassword);
+        Task<IdentityResult> UpdateAdminPassword(string login, string currentPassword, string newPassword);
     }
 }
