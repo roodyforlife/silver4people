@@ -18,8 +18,10 @@ namespace ShopManager.Server.Requests
                 product.Description.ToLower().Contains(lowerSearchString));
 
 
-            return new FilterSpecification<Product>(product => product.Published &&
+            var filter = new FilterSpecification<Product>(product => product.Published &&
                 (CategoryIdes == null || product.Categories.Any(c => CategoryIdes.Contains(c.Id) || CategoryIdes.Any(i => i == c.ParentCategoryId))));
+
+            return new AndSpecification<Product>(filter, search);
         }
 
         public override ISpecification<Product> GetOrderSpecification()
