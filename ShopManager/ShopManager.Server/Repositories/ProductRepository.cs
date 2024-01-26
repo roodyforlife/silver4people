@@ -14,7 +14,7 @@ namespace ShopManager.Server.Repositories
 
         public async Task<int> GetProfit(IPageRequest<Product> request)
         {
-            return await request.GetQueryableWithoutPagination(_appDbContext.Products).Where(c => c.SalePrice > 0).SumAsync(c => c.SalePrice - c.PurchasePrice);
+            return await request.GetQueryableWithoutPagination(_appDbContext.Products).Where(c => c.SalePrice > 0 && c.IsSaled).SumAsync(c => c.SalePrice - c.PurchasePrice);
         }
 
         public async Task<PageResponse<Product>> GetAllAsync(IPageRequest<Product> request)
