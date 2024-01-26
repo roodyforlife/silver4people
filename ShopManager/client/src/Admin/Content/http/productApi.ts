@@ -1,5 +1,5 @@
 import { $authhost, $host } from '../../../http';
-import { createLinkWithParameters } from '../../utils/createLinkWithParameters';
+import { createLinkWithParameters } from '../../../utils/createLinkWithParameters';
 import { IProductCreateFormData } from '../components/Product/ProductCreate/ProductCreateForm';
 import { IProductEditFormData } from '../components/Product/ProductEditForm/ProductEditForm';
 import { IProductsRequest } from '../pages/AdminProducts';
@@ -16,6 +16,11 @@ export const editProduct = async (productData:IProductEditFormData) => {
 
 export const getProducts = async (request:IProductsRequest) => {
     const {data} = await $authhost.get(createLinkWithParameters('api/AdminProducts', request));
+    return data;
+}
+
+export const generateArticle = async () => {
+    const {data} = await $authhost.get('api/AdminProducts/article');
     return data;
 }
 

@@ -1,11 +1,11 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Button } from '../../../../components/UI/Button/Button'
-import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
-import { Input } from '../../../../components/UI/Input/Input'
+import { Button } from '../../../../../components/UI/Button/Button'
+import { CustomSelect, ISelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
+import { Input } from '../../../../../components/UI/Input/Input'
 import formCl from '../../../../../styles/Form.module.css';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
-import { getSelectsCategoryItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
+import { getSelectsCategoryItems } from '../../../../utils/SelectUtils/getSelectsItems';
 import { createCategory, getCategoriesWithoutParent } from '../../../http/categoryApi';
 import { ICategory } from '../../../pages/AdminCategories';
 import cl from './CategoryCreateForm.module.css';

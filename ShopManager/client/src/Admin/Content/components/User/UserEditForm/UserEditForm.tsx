@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from '../../../../components/UI/Button/Button';
-import { Input } from '../../../../components/UI/Input/Input';
+import { Button } from '../../../../../components/UI/Button/Button';
+import { Input } from '../../../../../components/UI/Input/Input';
 import { IUser } from '../../../pages/AdminUsers';
 import formCl from '../../../../../styles/Form.module.css';
 import cl from './UserEditForm.module.css';

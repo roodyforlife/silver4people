@@ -18,3 +18,9 @@
 .pagination {
     margin: 20px 0;
 }
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -2,15 +2,15 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import cl from './CategoryEditForm.module.css';
 import formCl from '../../../../../styles/Form.module.css';
-import { Input } from '../../../../components/UI/Input/Input';
-import { Button } from '../../../../components/UI/Button/Button';
+import { Input } from '../../../../../components/UI/Input/Input';
+import { Button } from '../../../../../components/UI/Button/Button';
 import { Guid } from 'guid-typescript';
 import { editCategory, getCategoriesWithoutParent } from '../../../http/categoryApi';
 import { ICategory } from '../../../pages/AdminCategories';
 import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
-import { getSelectsCategoryItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
-import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
+import { getSelectsCategoryItems } from '../../../../utils/SelectUtils/getSelectsItems';
+import { CustomSelect, ISelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
 
 export interface ICategoryEditFormData {
     id: number,

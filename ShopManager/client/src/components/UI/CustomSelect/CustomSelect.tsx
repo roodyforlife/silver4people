@@ -1,9 +1,13 @@
 import React, {useEffect} from 'react'
 import { Control, Controller, ControllerRenderProps, FieldPath, FieldPathValue, FieldValues, KeepStateOptions, Path, PathValue, UseFormSetValue } from 'react-hook-form';
 import Select from 'react-select';
-import { DARK_GRAY_COLOR, GRAY_COLOR, MAIN_COLOR, RED_COLOR, } from '../../../consts'
-import { ISelect } from '../../../utils/SelectUtils/getSelectsItems'
+import { DARK_GRAY_COLOR, GRAY_COLOR, MAIN_COLOR, RED_COLOR, } from '../../../Admin/consts'
 import cl from './CustomSelect.module.css';
+
+export interface ISelect {
+    value: string,
+    label: string
+}
 
 interface IProps <T extends FieldValues, TName extends Path<T>> {
     multiple?: boolean;
@@ -55,6 +59,7 @@ export const CustomSelect = <T extends FieldValues, TName extends Path<T>>({valu
             <div className={cl.content}>
             <label>{label}</label>
             <Select
+                className={cl.select}
                 options={items as PathValue<T, TName>}
                 isMulti={multiple}
                 styles={customStyles}

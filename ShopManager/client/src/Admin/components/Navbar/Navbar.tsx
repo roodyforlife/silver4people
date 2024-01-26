@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext } from 'react'
 import { NavLink } from 'react-router-dom';
 import { Context } from '../../..';
-import { Button } from '../UI/Button/Button';
+import { Button } from '../../../components/UI/Button/Button';
 import { ADMIN_ROLE, MANAGER_ROLE } from '../../../consts';
 import { ADMIN_CATEGORIES_ROUTE, ADMIN_PRODUCTS_ROUTE, ADMIN_SITES_ROUTE, ADMIN_USERS_ROUTE } from '../../Content/consts';
 import cl from './Navbar.module.css';

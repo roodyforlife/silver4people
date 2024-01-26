@@ -1,23 +1,22 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from '../../../../components/UI/Button/Button';
-import { Input } from '../../../../components/UI/Input/Input';
+import { Button } from '../../../../../components/UI/Button/Button';
+import { Input } from '../../../../../components/UI/Input/Input';
 import cl from './ProductCreateForm.module.css';
 import formCl from '../../../../../styles/Form.module.css';
 import { DragDropList, IItem } from '../../UI/DragDropList/DragDropList';
 import { FileInput } from '../../UI/FileInput/FileInput';
 import { Guid } from "guid-typescript";
 import { Textarea } from '../../../../components/UI/Textarea/Textarea';
-import { createProduct } from '../../../http/productApi';
-import { generateArticle } from '../../../../utils/generateArticle';
+import { createProduct, generateArticle } from '../../../http/productApi';
 import { getCategories } from '../../../http/categoryApi';
 import { getCategoryFullName } from '../../../../utils/getCategoryFullName';
 import { createImage } from '../../../http/imageApi';
 import { getSites } from '../../../http/siteApi';
 import { CheckBox } from '../../../../components/UI/Checkbox/CheckBox';
-import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
+import { getSelectsCategoryItems, getSelectsSiteItems } from '../../../../utils/SelectUtils/getSelectsItems';
 import { ISite } from '../../../pages/AdminSites';
-import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
+import { CustomSelect, ISelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
 import { getFileListNode } from '../../../../utils/getFileListNode';
 import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
@@ -37,6 +36,8 @@ export interface IProductCreateFormData {
   article: string;
   categoryIdes: number[];
   siteIdes: number[];
+  creationDate: string,
+  editionDate: string,
 }
 
 interface IForm {
@@ -137,14 +138,17 @@ const onSubmit = async (data:IForm) => {
   const imageArray: IImage[] = files.map((value, index) => {
     return { id: Guid.create().toString(), index: index};
   });
+  const dateNow = new Date();
 
   const formData:IProductCreateFormData = {
     ...data,
     categoryIdes: data.categoryIdes?.map(({value}) => +value),
     siteIdes: data.siteIdes?.map(({value}) => +value),
     id: Guid.create().toString(),
-    article: generateArticle(6),
-    images: imageArray
+    article: await generateArticle(),
+    images: imageArray,
+    creationDate: dateNow.toUTCString(),
+    editionDate: dateNow.toUTCString(),
   }
 
   await createProduct(formData).then(() => {
@@ -154,7 +158,7 @@ const onSubmit = async (data:IForm) => {
         createImage(imageArray[index].id, formData).then(() => {
         fetchProducts();
         handleCloseCreateModal();
-      })
+      })  
     });
     toast.success("Продукт успішно створенний")
   }).catch(() => {
@@ -206,7 +210,17 @@ const onSubmit = async (data:IForm) => {
     </div>
       <DragDropList items={getFileListNode(files)} setItems={handleChangeList}></DragDropList>
     <div className={formCl.item}>
-      <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
+    <Controller
+        control={control}
+        name={'images'}
+        rules={{
+          validate: () => files.length > 0 ? undefined : "Додайте хочаб одну фотографію"
+        }}
+        render={({ field }) => (
+          <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
+        )}
+      ></Controller>
+      <p style={{color: 'red'}}>{errors.images?.message}</p>
     </div>
     <div className={formCl.item}>
       <Controller

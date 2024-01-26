@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { deleteProduct } from '../../../http/productApi'
 import { IProduct } from '../../../pages/AdminProducts'
 import formCl from '../../../../../styles/Form.module.css';
-import { Button } from '../../../../components/UI/Button/Button';
+import { Button } from '../../../../../components/UI/Button/Button';
 import { toast } from 'react-toastify';
 
 interface IProps {

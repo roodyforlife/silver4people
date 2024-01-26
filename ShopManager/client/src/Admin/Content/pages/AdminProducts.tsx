@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Button } from "../../components/UI/Button/Button";
+import { Button } from "../../../components/UI/Button/Button";
 import { Modal } from "../../../components/UI/Modal/Modal";
 import { REACT_APP_API_URL } from "../../../consts";
-import { generateArticle } from "../../utils/generateArticle";
 import {
   IProductCreateFormData,
   ProductCreateForm,
@@ -12,20 +11,21 @@ import { getProducts } from "../http/productApi";
 import tablePageClasses from "../styles/TablePage.module.css";
 import { ICategory } from "./AdminCategories";
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
-import { Pagination } from "../components/UI/Pagination/Pagination";
+import { Pagination } from "../../../components/UI/Pagination/Pagination";
 import filtrationCl from '../styles/Filtration.module.css';
-import { Input } from "../../components/UI/Input/Input";
+import { Input } from "../../../components/UI/Input/Input";
 import { getCategories } from "../http/categoryApi";
 import { getSites } from "../http/siteApi";
-import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from "../../utils/SelectUtils/getSelectsItems";
+import { getSelectsCategoryItems, getSelectsSiteItems } from "../../utils/SelectUtils/getSelectsItems";
 import { ISite } from "./AdminSites";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { CustomSelect } from "../../components/UI/CustomSelect/CustomSelect";
+import { CustomSelect, ISelect } from "../../../components/UI/CustomSelect/CustomSelect";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADMIN_PRODUCTS_ROUTE } from "../consts";
 import { ProductEditForm } from "../components/Product/ProductEditForm/ProductEditForm";
 import { ProductDeleteForm } from "../components/Product/ProductDeleteForm/ProductDeleteForm";
 import { Loader } from "../../components/UI/Loader/Loader";
+import formatDateToYYYYMMDD from "../../../utils/formatDateToYYYYMMDD";
 
 export interface IProduct {
   id: string;
@@ -57,9 +57,12 @@ export interface IProductsRequest {
   publishedFilter:PublishedFilterType,
   order:OrderField,
   orderType:OrderType,
+  saledFilter: SaledFilterType,
   take:number,
   skip:number,
   searchString?:string,
+  dateFrom: string,
+  dateTo: string,
 }
 
 interface IFiltration extends FieldValues{
@@ -70,19 +73,22 @@ interface IFiltration extends FieldValues{
   categoryIdes:ISelect[],
   siteIdes:ISelect[],
   publishedFilter:ISelect,
+  saledFilter:ISelect,
   orderField:ISelect,
   orderType:ISelect,
   searchString:string,
+  dateFrom: string,
+  dateTo: string,
 }
 
 type PublishedFilterType = "All" | "True" | "False";
+type SaledFilterType = "All" | "True" | "False";
 type OrderField = "Name" | "PurchasePrice" | "SalePrice";
 type OrderType = "Ascending" | "Descending";
 
 const headColumns: string[] = [
   "Картинка",
   "Назва",
-  "Опис",
   "Артикуль",
   "Опубліковано",
   "Ціна закупки",
@@ -90,10 +96,12 @@ const headColumns: string[] = [
   "Трек номер",
   "Місцезнаходження",
   "Сайти",
+  "+",
   "Контроллери",
 ];
 
 const takeItems = 100;
+const maxTextLength = 20
 
 export const AdminProducts = () => {
   const { control, setValue, getValues } = useForm<IFiltration>();
@@ -131,6 +139,7 @@ export const AdminProducts = () => {
     const categoryIdes = (getValues().categoryIdes ? getValues().categoryIdes?.map(({ value }) => +value) : []);
     const siteIdes = (getValues().siteIdes ? getValues().siteIdes.map(({ value }) => +value) : []);
     const publishedFilter:PublishedFilterType = (getValues().publishedFilter ? getValues().publishedFilter?.value : "All") as PublishedFilterType;
+    const saledFilter:SaledFilterType = (getValues().saledFilter ? getValues().saledFilter?.value : "All") as SaledFilterType;
     const orderField:OrderField = (getValues().orderField ? getValues().orderField?.value : "Name") as OrderField;
     const orderType:OrderType = (getValues().orderType ? getValues().orderType?.value : "Ascending") as OrderType;
 
@@ -139,6 +148,7 @@ export const AdminProducts = () => {
       categoryIdes: categoryIdes,
       siteIdes: siteIdes, 
       publishedFilter: publishedFilter,
+      saledFilter: saledFilter,
       order: orderField,
       orderType: orderType,
       take: takeItems,
@@ -194,11 +204,16 @@ const selectPublishedItems = [
   {value: "False", label: "Не опубліковано"},
 ]
 
+const selectSaledItems = [
+  {value: "True", label: "Продано"},
+  {value: "False", label: "Не продано"},
+]
+
 const selectOrderFieldItems = [
-  {value: "CreateDate", label: "Сортувати за датою створення"},
+  {value: "CreationDate", label: "Сортувати за датою створення"},
+  {value: "EditionDate", label: "Сортувати за датою редагування"},
   {value: "PurchasePrice", label: "Сортувати за ціною покупки"},
   {value: "SalePrice", label: "Сортувати за ціною продажу"},
-  {value: "EditDate", label: "Сортувати за датою редагування"},
   {value: "Name", label: "Сортувати за назвою"},
 ]
 
@@ -269,11 +284,28 @@ const onSubmit = async () => {
         )}></Controller>
         </div>
         <div className={filtrationCl.item}>
+        <Controller
+        control={control}
+        name={'dateFrom'}
+        defaultValue={"0001-01-01"}
+        render={({ field }) => (
+          <Input label={"Дата (від)"} inputType="date" field={field}></Input>
+        )}></Controller>
+        <Controller
+        control={control}
+        name={'dateTo'}
+        defaultValue={formatDateToYYYYMMDD(new Date())}
+        render={({ field }) => (
+          <Input label={"Дата (до)"} inputType="date" field={field}></Input>
+        )}></Controller>
+        </div>
+        <div className={filtrationCl.item}>
           <CustomSelect name="categoryIdes" control={control} label={"Категорії"} multiple={true} isClearable={true} setValue={setValue} items={selectCategoryItems}/>
           <CustomSelect name="siteIdes" control={control} label={"Сайти"} multiple={true} isClearable={true} setValue={setValue} items={selectSiteItems}/>
         </div>
         <div className={filtrationCl.item}>
           <CustomSelect name="publishedFilter" control={control} label={"Статус публікації"} setValue={setValue} items={selectPublishedItems} isClearable={true}/>
+          <CustomSelect name="saledFilter" control={control} label={"Статус продажу"} setValue={setValue} items={selectSaledItems} isClearable={true}/>
           <CustomSelect name="orderField" control={control} label={"Сортування за"} setValue={setValue} items={selectOrderFieldItems} value={getValues().orderField || selectOrderFieldItems[0]} />
           <CustomSelect name="orderType" control={control} label={"Тип сортування"} setValue={setValue} items={selectOrderTypeItems} value={getValues().orderType || selectOrderTypeItems[0]} />
         </div>
@@ -293,15 +325,18 @@ const onSubmit = async () => {
         </div>
       </div>
       <div className={tablePageClasses.content}>
-        <div className={tablePageClasses.createButton}>
-          <Button onClick={handleShowCreateModal} type="button" variant='primary'>
-            Створити
-          </Button>
+        <div className={tablePageClasses.info}>
+          <div className={tablePageClasses.createButton}>
+            <Button onClick={handleShowCreateModal} type="button" variant='primary'>
+              Створити
+            </Button>
+          </div>
+          <div className={tablePageClasses.total}><h4>Total: 425</h4></div>
         </div>
         {products.length === 0 ? <div>Нічого не знайдено</div> :
         <>
         <div className={tablePageClasses.pagination}>
-          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange}></Pagination>
+          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange} color={{backgroundColor: "rgb(124, 181, 255)", color: "white"}}></Pagination>
         </div>
         <TableWrapper>
           <table>
@@ -320,15 +355,15 @@ const onSubmit = async () => {
                     <img src={`${REACT_APP_API_URL}api/Image/${(row.images.find((image) => image.index === 0))?.id}`} alt="" />
                   </div>
                 </td>
-                <td>{row.name}</td>
-                <td>{row.description}</td>
+                <td>{row.name.length > maxTextLength ? row.name.substring(0, maxTextLength) + "..." : row.name}</td>
                 <td>{row.article}</td>
                 <td>{row.published ? "Так" : "Ні"}</td>
                 <td>{row.purchasePrice}</td>
                 <td>{row.salePrice}</td>
-                <td>{row.trackNumber}</td>
+                <td>{row.trackNumber.length > maxTextLength ? row.trackNumber.substring(0, maxTextLength) + "..." : row.trackNumber}</td>
                 <td>{row.location}</td>
                 <td>{row.sites.map((site) => site.name).join(", ")}</td>
+                <td>{row.salePrice - row.purchasePrice}</td>
                 <td>
                     <div className={tableWrapperCl.controlls}>
                       <div className={tableWrapperCl.button}><Button type="button" variant='warning' onClick={() => handleShowEditModal(row)}>Редагувати</Button></div>
@@ -341,7 +376,7 @@ const onSubmit = async () => {
           </table>
         </TableWrapper>
         <div className={tablePageClasses.pagination}>
-          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange}></Pagination>
+          <Pagination pagesCount={pagesCount} currentPage={currentPage} setPage={handlePageChange} color={{backgroundColor: "rgb(124, 181, 255)", color: "white"}}></Pagination>
         </div>
         </>
         }

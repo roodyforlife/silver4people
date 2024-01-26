@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react'
-import { Input } from '../Input/Input';
 import cl from './Navbar.module.css';
 
 interface IProps {
@@ -18,14 +17,9 @@ export const Navbar = ({children}:IProps) => {
                         </div>
                     </div>
                     <div className={cl.headerItem}>
-                        <div className={cl.searchBar}>
-                            <form action="">
-                                <Input type='search' />
-                            </form>
-                        </div>
-                    </div>
-                    <div className={cl.headerItem}>
                         <div className={cl.information}>
+                            <h4>Telegram: unknown</h4>
+                            <h4>Telegram: unknown</h4>
                             <h4>Telegram: unknown</h4>
                         </div>
                     </div>

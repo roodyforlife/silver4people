@@ -1,8 +1,8 @@
 import React, {useContext} from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { Context } from '../../..';
-import { Button } from '../../components/UI/Button/Button';
-import { Input } from '../../components/UI/Input/Input';
+import { Button } from '../../../components/UI/Button/Button';
+import { Input } from '../../../components/UI/Input/Input';
 import mapJwtClaims from '../../../utils/mapJwtClaims';
 import { login } from '../http/authApi';
 import cl from '../styles/Login.module.css';

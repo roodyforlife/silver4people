@@ -5,11 +5,17 @@ interface IProps {
     pagesCount:number,
     currentPage:number,
     setPage: (pageNumber:number) => void,
+    color: IColor,
+}
+
+interface IColor {
+    backgroundColor: string,
+    color: string
 }
 
 const viewItemsNumber = 2;
 
-export const Pagination = ({pagesCount, currentPage, setPage}:IProps) => {   
+export const Pagination = ({pagesCount, currentPage, setPage, color}:IProps) => {   
     const pageNumbers = Array.from({ length: pagesCount }, (_, index) => index + 1);
 
     let displayedPages: number[] = [];
@@ -26,13 +32,17 @@ export const Pagination = ({pagesCount, currentPage, setPage}:IProps) => {
         displayedPages = pageNumbers;
     }
 
+    if (pagesCount <= 1) {
+        return null;
+    }
+
     return (
         <div className={cl.content}>
             <div className={cl.items}>
                 {displayedPages.map((number, index) => (
                     <React.Fragment key={index}>
                         {index > 0 && number - displayedPages[index - 1] > 1 && <div className={cl.item}>...</div>}
-                        <div className={[cl.item, currentPage === number ? cl.active : ''].join(' ')} onClick={() => setPage(number)}>{number}</div>
+                        <div className={cl.item} style={(currentPage === number) ? color : undefined} onClick={() => setPage(number)}>{number}</div>
                     </React.Fragment>
                 ))}
             </div>
