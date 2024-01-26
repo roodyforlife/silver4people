@@ -1,0 +1,58 @@
+@import url("../../../styles/var.css");
+
+.wrapper {
+
+}
+
+.container {
+
+}
+
+.mainImage {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    margin-bottom: 20px;
+    background: var(--dark-gr-color);
+}
+
+.mainImage img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.item {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    background: var(--dark-gr-color);
+    cursor: zoom-in;
+}
+
+.item.active {
+    border: 1px solid #000;
+}
+
+.item img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

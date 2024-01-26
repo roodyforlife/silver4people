@@ -34,7 +34,9 @@ export interface IProduct {
   id: string;
   name: string;
   article: string,
+  description: string,
   images: IImage[],
+  categories: ICategory[],
 }
 
 export interface IProductResponse {
@@ -159,6 +161,7 @@ export const MainPage = () => {
               <Controller
                 control={control}
                 name={"searchString"}
+                defaultValue={""}
                 render={({ field }) => (
                   <Input label={"Назва"} inputType="text" field={field}></Input>
                 )}

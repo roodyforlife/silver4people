@@ -28,6 +28,10 @@
     gap: 10px;
 }
 
+.controlls.flDirCol {
+    flex-direction: column;
+}
+
 .image {
     width: 100px;
     height: 100px;

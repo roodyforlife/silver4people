@@ -33,6 +33,7 @@ export interface IProduct {
   description: string;
   article: string;
   published: boolean;
+  isSaled: boolean,
   purchasePrice: number;
   salePrice: number;
   trackNumber: string;
@@ -61,8 +62,8 @@ export interface IProductsRequest {
   take:number,
   skip:number,
   searchString?:string,
-  dateFrom: string,
-  dateTo: string,
+  minEditionDate: string,
+  maxEditionDate: string,
 }
 
 interface IFiltration extends FieldValues{
@@ -77,8 +78,8 @@ interface IFiltration extends FieldValues{
   orderField:ISelect,
   orderType:ISelect,
   searchString:string,
-  dateFrom: string,
-  dateTo: string,
+  minEditionDate: string,
+  maxEditionDate: string,
 }
 
 type PublishedFilterType = "All" | "True" | "False";
@@ -89,14 +90,15 @@ type OrderType = "Ascending" | "Descending";
 const headColumns: string[] = [
   "Картинка",
   "Назва",
-  "Артикуль",
-  "Опубліковано",
+  "Арт.",
+  "Опублік.",
+  "Продано",
   "Ціна закупки",
   "Ціна продажу",
-  "Трек номер",
-  "Місцезнаходження",
-  "Сайти",
   "+",
+  "Трек номер",
+  "Локація",
+  "Сайти",
   "Контроллери",
 ];
 
@@ -116,6 +118,7 @@ export const AdminProducts = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [sites, setSites] = useState<ISite[]>([]); 
   const [loading, setLoading] = useState<boolean>(false);
+  const [profit, setProfit] = useState<number>(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -157,8 +160,9 @@ export const AdminProducts = () => {
 
     try {
       await getProducts(requestData).then((data) => {
-        setProducts(data.pageItems)
-        setPagesCount(Math.ceil(data.itemsCount / takeItems));
+        setProducts(data.pageInfo.pageItems)
+        setPagesCount(Math.ceil(data.pageInfo.itemsCount / takeItems));
+        setProfit(data.profit);
       });
     } catch (error) {}
   };
@@ -226,6 +230,11 @@ const onSubmit = async () => {
   fetchProducts()
 }
 
+const getNextDay = () => {
+  const dateNow = new Date();
+  return new Date(dateNow.setDate(dateNow.getDate() + 1));
+};
+
   return (
     <div className={tablePageClasses.container}>
       {loading && <Loader></Loader>}
@@ -286,15 +295,15 @@ const onSubmit = async () => {
         <div className={filtrationCl.item}>
         <Controller
         control={control}
-        name={'dateFrom'}
+        name={'minEditionDate'}
         defaultValue={"0001-01-01"}
         render={({ field }) => (
           <Input label={"Дата (від)"} inputType="date" field={field}></Input>
         )}></Controller>
         <Controller
         control={control}
-        name={'dateTo'}
-        defaultValue={formatDateToYYYYMMDD(new Date())}
+        name={'maxEditionDate'}
+        defaultValue={formatDateToYYYYMMDD(getNextDay())}
         render={({ field }) => (
           <Input label={"Дата (до)"} inputType="date" field={field}></Input>
         )}></Controller>
@@ -331,7 +340,7 @@ const onSubmit = async () => {
               Створити
             </Button>
           </div>
-          <div className={tablePageClasses.total}><h4>Total: 425</h4></div>
+          <div className={tablePageClasses.total}><h4>Total: {profit}</h4></div>
         </div>
         {products.length === 0 ? <div>Нічого не знайдено</div> :
         <>
@@ -358,14 +367,15 @@ const onSubmit = async () => {
                 <td>{row.name.length > maxTextLength ? row.name.substring(0, maxTextLength) + "..." : row.name}</td>
                 <td>{row.article}</td>
                 <td>{row.published ? "Так" : "Ні"}</td>
+                <td>{row.isSaled ? "Так" : "Ні"}</td>
                 <td>{row.purchasePrice}</td>
                 <td>{row.salePrice}</td>
+                <td>{row.salePrice - row.purchasePrice}</td>
                 <td>{row.trackNumber.length > maxTextLength ? row.trackNumber.substring(0, maxTextLength) + "..." : row.trackNumber}</td>
                 <td>{row.location}</td>
                 <td>{row.sites.map((site) => site.name).join(", ")}</td>
-                <td>{row.salePrice - row.purchasePrice}</td>
                 <td>
-                    <div className={tableWrapperCl.controlls}>
+                    <div className={[tableWrapperCl.controlls, tableWrapperCl.flDirCol].join(' ')}>
                       <div className={tableWrapperCl.button}><Button type="button" variant='warning' onClick={() => handleShowEditModal(row)}>Редагувати</Button></div>
                       <div className={tableWrapperCl.button}><Button type="button" variant='danger' onClick={() => handleShowDeleteModal(row)}>Видалити</Button></div>
                     </div>
