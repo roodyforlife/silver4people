@@ -23,7 +23,6 @@ namespace ShopManager.Server.Controllers
 
             var products = result.PageItems.Select(c => new UserProductResponse
             {
-                Description = c.Description,
                 CreationDate = c.CreationDate,
                 EditionDate = c.EditionDate,
                 Article = c.Article,

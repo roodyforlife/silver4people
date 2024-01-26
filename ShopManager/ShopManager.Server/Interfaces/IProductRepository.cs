@@ -11,5 +11,7 @@ namespace ShopManager.Server.Interfaces
         Task<string> GenerateArticle();
 
         Task<bool> ArticleExists(string article);
+
+        Task<int> GetProfit(IPageRequest<Product> request);
     }
 }

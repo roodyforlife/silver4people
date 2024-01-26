@@ -14,6 +14,8 @@ namespace ShopManager.Server.Dto
 
         public bool Published { get; set; }
 
+        public bool IsSaled { get; set; }
+
         public int PurchasePrice { get; set; }
 
         public int SalePrice { get; set; }

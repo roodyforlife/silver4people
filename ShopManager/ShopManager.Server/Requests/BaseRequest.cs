@@ -21,6 +21,7 @@ namespace ShopManager.Server.Requests
         public abstract ISpecification<T> GetOrderSpecification();
         public abstract ISpecification<T> GetFilterSpecification();
 
+
         public async Task<PageResponse<T>> Execute(IQueryable<T> query)
         {
             return new PageResponse<T>()
@@ -31,6 +32,12 @@ namespace ShopManager.Server.Requests
                     .Specify(GetOrderSpecification()
                         .Specify(GetFilterSpecification().Specify(query))).ToListAsync()
             };
+        }
+
+        public IQueryable<T> GetQueryableWithoutPagination(IQueryable<T> query)
+        {
+            return GetOrderSpecification()
+                    .Specify(GetFilterSpecification().Specify(query));
         }
 
         public OrderType OrderType { get; set; }

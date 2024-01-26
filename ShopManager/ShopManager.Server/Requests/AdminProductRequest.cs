@@ -8,6 +8,12 @@ namespace ShopManager.Server.Requests
     {
         public BoolFilter PublishedFilter { get; set; }
 
+        public BoolFilter IsSaled {  get; set; }
+
+        public DateTime? MinEditionDate { get; set; }
+
+        public DateTime? MaxEditionDate { get; set; }
+
         public int MinPurchasePrice { get; set; }
 
         public int MaxPurchasePrice { get; set; }
@@ -34,6 +40,8 @@ namespace ShopManager.Server.Requests
                 product.Description.ToLower().Contains(lowerSearchString));
 
             var filter = new FilterSpecification<Product>(product =>
+                (MinEditionDate == null || product.EditionDate >= MinEditionDate) &&
+                (MaxEditionDate == null || product.EditionDate <= MaxEditionDate) &&
                 product.PurchasePrice >= MinPurchasePrice && product.PurchasePrice <= MaxPurchasePrice &&
                 product.SalePrice >= MinSalePrice && product.SalePrice <= MaxSalePrice &&
                 (CategoryIdes == null || product.Categories.Any(c => CategoryIdes.Contains(c.Id) || CategoryIdes.Any(i => i == c.ParentCategoryId))) &&
@@ -43,7 +51,13 @@ namespace ShopManager.Server.Requests
                  PublishedFilter == BoolFilter.True ? new FilterSpecification<Product>(product => product.Published) :
                  new FilterSpecification<Product>(product => !product.Published);
 
-            return new AndSpecification<Product>(publishedFilter, new AndSpecification<Product>(filter, search));
+            var saledFilter = IsSaled == BoolFilter.All ? new FilterSpecification<Product>(_ => true) :
+                 IsSaled == BoolFilter.True ? new FilterSpecification<Product>(product => product.IsSaled) :
+                 new FilterSpecification<Product>(product => !product.IsSaled);
+
+            var boolFilters = new AndSpecification<Product>(saledFilter, publishedFilter);
+
+            return new AndSpecification<Product>(boolFilters, new AndSpecification<Product>(filter, search));
         }
 
         public override ISpecification<Product> GetOrderSpecification()

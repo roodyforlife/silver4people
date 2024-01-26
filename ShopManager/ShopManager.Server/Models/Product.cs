@@ -24,6 +24,8 @@ namespace ShopManager.Server.Models
 
         public string Location { get; set; }
 
+        public bool IsSaled { get; set; }
+
         public DateTime CreationDate { get; set; }
 
         public DateTime EditionDate { get; set; }

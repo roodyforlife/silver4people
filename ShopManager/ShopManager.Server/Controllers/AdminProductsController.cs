@@ -26,7 +26,12 @@ namespace ShopManager.Server.Controllers
             try
             {
                 var products = await _productService.GetAllAsync(request);
-                return Ok(products);
+                var profit = await _productService.GetProfitAsync(request);
+                return Ok(new AdminProductsResponse()
+                {
+                    PageInfo = products,
+                    Profit = profit
+                });
             }
             catch(InvalidOperationException e)
             {

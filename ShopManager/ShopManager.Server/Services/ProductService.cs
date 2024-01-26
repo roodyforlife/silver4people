@@ -21,6 +21,11 @@ namespace ShopManager.Server.Services
             _imageService = imageService;
         }
 
+        public async Task<int> GetProfitAsync(IPageRequest<Product> specification)
+        {
+            return await _productRepository.GetProfit(specification);
+        }
+
         public async Task CreateAsync(ProductCreationDto productCreation)
         {
             var categories = await _categoryRepository.GetAsync(productCreation.CategoryIdes);
@@ -34,6 +39,7 @@ namespace ShopManager.Server.Services
 
             var product = new Product()
             {
+                IsSaled = productCreation.IsSaled,
                 EditionDate = productCreation.EditionDate,
                 CreationDate = productCreation.CreationDate,
                 Id = productCreation.Id,
