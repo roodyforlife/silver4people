@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Button } from '../../components/UI/Button/Button';
+import { Button } from '../../../components/UI/Button/Button';
 import { TableWrapper } from '../components/TableWrapper/TableWrapper';
 import tablePageClasses from '../styles/TablePage.module.css';
 import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';

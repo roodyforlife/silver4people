@@ -3,8 +3,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { createUser } from '../../../http/userApi';
 import cl from './UserCreateForm.module.css'
 import formCl from '../../../../../styles/Form.module.css';
-import { Button } from '../../../../components/UI/Button/Button';
-import { Input } from '../../../../components/UI/Input/Input';
+import { Button } from '../../../../../components/UI/Button/Button';
+import { Input } from '../../../../../components/UI/Input/Input';
 import { toast } from 'react-toastify';
 
 export interface IUserCreateFormData {

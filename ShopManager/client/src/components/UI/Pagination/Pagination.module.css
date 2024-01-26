@@ -19,7 +19,3 @@
     cursor: pointer;
     user-select: none;
 }
-
-.active {
-    background: rgb(124, 181, 255);
-}

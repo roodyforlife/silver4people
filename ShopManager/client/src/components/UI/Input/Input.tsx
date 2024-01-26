@@ -9,7 +9,7 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
     disabled?: boolean,
 }
 
-type InputType = "password" | "text" | "number";
+type InputType = "password" | "text" | "number" | "date";
 
 export const Input = <T extends FieldValues, TName extends Path<T>>(props:IProps<T, TName>) => {
   return (

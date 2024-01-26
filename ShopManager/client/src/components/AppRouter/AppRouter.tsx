@@ -28,7 +28,7 @@ export const AppRouter = observer(() => {
                   }
                 />
               )
-          )}
+        )}
 
         {publicRoutes.map(({ path, Component }) => (
           <Route

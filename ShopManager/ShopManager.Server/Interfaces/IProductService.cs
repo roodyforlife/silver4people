@@ -15,6 +15,8 @@ namespace ShopManager.Server.Interfaces
 
         Task DeleteAsync(Guid id);
 
+        Task<Product> GetAsync(Guid id);
+
         Task<int> GetProfitAsync(IPageRequest<Product> specification);
     }
 }

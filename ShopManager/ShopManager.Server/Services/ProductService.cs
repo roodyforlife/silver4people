@@ -64,6 +64,11 @@ namespace ShopManager.Server.Services
             await _productRepository.CreateAsync(product);
         }
 
+        public async Task<Product> GetAsync(Guid id)
+        {
+            return await _productRepository.GetByIdAsync(id);
+        }
+
         public async Task<PageResponse<Product>> GetAllAsync(IPageRequest<Product> specification)
         {
             return await _productRepository.GetAllAsync(specification);

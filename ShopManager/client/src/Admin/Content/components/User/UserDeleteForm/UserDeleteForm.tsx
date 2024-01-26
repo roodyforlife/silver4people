@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '../../../../components/UI/Button/Button';
+import { Button } from '../../../../../components/UI/Button/Button';
 import formCl from '../../../../../styles/Form.module.css';
 import { IUser } from '../../../pages/AdminUsers';
 import { deleteUser } from '../../../http/userApi';

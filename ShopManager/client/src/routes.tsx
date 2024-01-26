@@ -10,7 +10,9 @@ import { AdminSites } from "./Admin/Content/pages/AdminSites";
 import { AdminUsers } from "./Admin/Content/pages/AdminUsers";
 import { ADMIN_ROLE, MAIN_ROUTE, MANAGER_ROLE, NO_ROUTE } from "./consts";
 import { Navbar } from "./Main/components/UI/Navbar/Navbar";
+import { PRODUCT_ROUTE } from "./Main/consts";
 import { MainPage } from "./Main/pages/MainPage/MainPage";
+import { Product } from "./Main/pages/Product/Product";
 
 interface RouteData {
     path: string,
@@ -27,6 +29,7 @@ export const authRoutes: RouteData[] = [
 
 export const publicRoutes: RouteData[] = [
     { path: MAIN_ROUTE, Component: MainPage },
+    { path: PRODUCT_ROUTE + `/:id`, Component: Product },
     { path: LOGIN_ROUTE, Component: Login },
     { path: NO_ROUTE, Component: () => <Navigate to={MAIN_ROUTE} /> },
 ];

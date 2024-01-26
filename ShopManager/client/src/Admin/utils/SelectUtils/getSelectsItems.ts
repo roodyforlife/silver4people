@@ -1,11 +1,7 @@
+import { ISelect } from "../../../components/UI/CustomSelect/CustomSelect";
 import { ICategory } from "../../Content/pages/AdminCategories";
 import { ISite } from "../../Content/pages/AdminSites";
 import { getCategoryFullName } from "../getCategoryFullName";
-
-export interface ISelect {
-    value: string,
-    label: string
-}
 
 export const getSelectsCategoryItems = (categories:ICategory[]):ISelect[] => {
     const selects: ISelect[] = categories.map((category) => {return {value: category.id.toString(), label: getCategoryFullName(category)}});

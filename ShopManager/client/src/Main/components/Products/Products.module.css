@@ -39,7 +39,37 @@
 }
 
 .infoTitle {
+    font-size: 16px;
+}
 
+.article {
+}
+
+.title {
+
+}
+
+.dots {
+    position: absolute;
+    bottom: 10%;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: black;
+}
+
+.dot.active {
+    background: white;
+}
+
+.notFound {
+    width: 100%;
 }
 
 @media (max-width: 800px) {

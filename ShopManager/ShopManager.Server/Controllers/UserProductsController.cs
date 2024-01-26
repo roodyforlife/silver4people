@@ -17,6 +17,32 @@ namespace ShopManager.Server.Controllers
             _productService = productService;
         }
 
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var product = await _productService.GetAsync(id);
+
+            if(product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new UserProductResponse
+            {
+                Description = product.Description,
+                CreationDate = product.CreationDate,
+                EditionDate = product.EditionDate,
+                Article = product.Article,
+                Categories = product.Categories,
+                Id = product.Id,
+                Images = product.Images,
+                Name = product.Name,
+                PurchasePrice = product.PurchasePrice,
+                SalePrice = product.SalePrice,
+            });
+        }
+
         public async Task<IActionResult> Index([FromQuery] UserProductsRequest request)
         {
             var result = (await _productService.GetAllAsync(request));

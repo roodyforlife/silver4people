@@ -1,6 +1,6 @@
 import { Guid } from 'guid-typescript';
 import React, { useState, useEffect, useMemo } from 'react'
-import { Button } from '../../components/UI/Button/Button';
+import { Button } from '../../../components/UI/Button/Button';
 import { Modal } from '../../../components/UI/Modal/Modal';
 import { CategoryCreateForm, ICategoryCreateFormData } from '../components/Category/CategoryCreateForm/CategoryCreateForm';
 import { CategoryEditForm } from '../components/Category/CategoryEditForm/CategoryEditForm';
@@ -11,11 +11,9 @@ import tableWrapperCl from '../components/TableWrapper/TableWrapper.module.css';
 import { CategoryDeleteForm } from '../components/Category/CategoryDeleteForm/CategoryDeleteForm';
 import { getCategoryFullName } from '../../utils/getCategoryFullName';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
-import { Input } from '../../components/UI/Input/Input';
+import { Input } from '../../../components/UI/Input/Input';
 import filtrationCl from '../styles/Filtration.module.css';
-import { ISelect } from '../../utils/SelectUtils/getSelectsItems';
 import { Loader } from '../../components/UI/Loader/Loader';
-import { CustomSelect } from '../../components/UI/CustomSelect/CustomSelect';
 
 export interface ICategory {
   id: number,

@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { getSelectsCategoryItems, getSelectsSiteItems, ISelect } from '../../../../utils/SelectUtils/getSelectsItems';
+import { getSelectsCategoryItems, getSelectsSiteItems } from '../../../../utils/SelectUtils/getSelectsItems';
 import { IProduct } from '../../../pages/AdminProducts'
 import formCl from '../../../../../styles/Form.module.css';
 import cl from './ProductEditForm.module.css';
-import { Input } from '../../../../components/UI/Input/Input';
+import { Input } from '../../../../../components/UI/Input/Input';
 import { Textarea } from '../../../../components/UI/Textarea/Textarea';
 import { DragDropList, IItem } from '../../UI/DragDropList/DragDropList';
 import { FileInput } from '../../UI/FileInput/FileInput';
 import { CheckBox } from '../../../../components/UI/Checkbox/CheckBox';
-import { CustomSelect } from '../../../../components/UI/CustomSelect/CustomSelect';
-import { Button } from '../../../../components/UI/Button/Button';
+import { CustomSelect, ISelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
+import { Button } from '../../../../../components/UI/Button/Button';
 import { getCategories } from '../../../http/categoryApi';
 import { getSites } from '../../../http/siteApi';
 import { ISite } from '../../../pages/AdminSites';
@@ -37,6 +37,7 @@ export interface IProductEditFormData {
     article: string;
     categoryIdes: number[];
     siteIdes: number[];
+    editionDate: string,
   }
 
   interface IForm {
@@ -52,6 +53,7 @@ export interface IProductEditFormData {
     article: string;
     categoryIdes: ISelect[];
     siteIdes: ISelect[];
+    isSaled: boolean,
   }
 
   interface IImage {
@@ -71,7 +73,7 @@ interface FileInfo {
   }
 
 export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:IProps) => {
-    const { handleSubmit, control, formState: {errors} } = useForm<IForm>({
+    const { handleSubmit, control, formState: {errors}, setError } = useForm<IForm>({
         defaultValues: {
             ...product,
             categoryIdes: product?.categories ? getSelectsCategoryItems(product.categories) : [],
@@ -167,6 +169,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
          const imageArray: IImage[] = files.map((value, index) => {
             return { id: Guid.create().toString(), index: index};
           });
+          const dateNow = new Date();
         
           const formData:IProductEditFormData = {
             ...data,
@@ -174,7 +177,8 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
             siteIdes: data.siteIdes?.map(({value}) => +value),
             id: product.id,
             article: product.article,
-            images: imageArray
+            images: imageArray,
+            editionDate: dateNow.toUTCString(),
           }
 
           await editProduct(formData).then(() => {
@@ -244,8 +248,18 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           <DragDropList items={getFileListNode(files as FileInfo[])} setItems={handleChangeList}></DragDropList>
         }
         <div className={formCl.item}>
+    <Controller
+        control={control}
+        name={'images'}
+        rules={{
+          validate: () => files.length > 0 ? undefined : "Додайте хочаб одну фотографію"
+        }}
+        render={() => (
           <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
-        </div>
+        )}
+      ></Controller>
+      <p style={{color: 'red'}}>{errors.images?.message}</p>
+    </div>
         <div className={formCl.item}>
           <Controller
             control={control}
@@ -289,6 +303,16 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
             )}
           ></Controller>
           <p style={{color: 'red'}}>{errors.published?.message}</p>
+        </div>
+        <div className={formCl.item}>
+          <Controller
+            control={control}
+            name={'isSaled'}
+            render={({ field }) => (
+              <CheckBox label={"Продано"} field={field}></CheckBox>
+            )}
+          ></Controller>
+          <p style={{color: 'red'}}>{errors.isSaled?.message}</p>
         </div>
         <div className={formCl.item}>
           <Controller

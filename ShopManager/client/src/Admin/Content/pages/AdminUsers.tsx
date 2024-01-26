@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from '../../components/UI/Button/Button';
+import { Button } from '../../../components/UI/Button/Button';
 import { Modal } from '../../../components/UI/Modal/Modal';
 import { TableWrapper } from '../components/TableWrapper/TableWrapper';
 import { UserCreateForm } from '../components/User/UserCreate/UserCreateForm';
