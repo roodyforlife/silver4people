@@ -39,6 +39,16 @@ body {
 .logotype{
     width: 50px;
     height: 50px;
+    position: relative;
+}
+
+.logotype img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .searchBar {
@@ -60,6 +70,16 @@ body {
 }
 
 .infoItemIcon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+.infoItemIcon img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
     width: 20px;
     height: 20px;
 }

@@ -62,6 +62,7 @@ export const Products = (({ products }: IProps) => {
                         : item.images.find(({ index }) => index === 0)?.id
                     }`}
                     alt="Продукт"
+                    loading="lazy"
                   />
                   {(item.images.length > 1 && mouseEnterProductId === item.id && !isMobile) && (
                     <div className={cl.dots}>

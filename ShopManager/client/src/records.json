@@ -1,0 +1,25 @@
+{
+    "contacts": [
+        {
+            "text": "silver4woman",
+            "icon": "assets/images/instagram_icon.png",
+            "link": "https://www.instagram.com/silver4woman/"
+        },
+        {
+            "text": "kirksfolly_ua",
+            "icon": "assets/images/instagram_icon.png",
+            "link": "https://www.instagram.com/kirksfolly_ua/"
+        },
+        {
+            "text": "silverforpeople",
+            "icon": "assets/images/instagram_icon.png",
+            "link": "https://www.instagram.com/silverforpeople/"
+        },
+        {
+            "text": "m9tvey",
+            "icon": "assets/images/telegram_icon.png",
+            "link": "https://t.me/m9tvey"
+        }
+    ],
+    "logotype": "assets/images/logotype.png"
+}

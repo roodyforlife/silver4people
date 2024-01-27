@@ -51,21 +51,24 @@
 
 .dots {
     position: absolute;
-    bottom: 10%;
+    bottom: 5%;
     display: flex;
     width: 100%;
     justify-content: space-around;
+    opacity: .5;
 }
 
 .dot {
-    width: 5px;
-    height: 5px;
+    width: 7.5px;
+    height: 7.5px;
     border-radius: 50%;
     background: black;
+    border: 1px solid white;
 }
 
 .dot.active {
     background: white;
+    border: 1px solid black;
 }
 
 .notFound {

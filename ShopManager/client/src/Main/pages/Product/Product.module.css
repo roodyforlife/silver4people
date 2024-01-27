@@ -61,4 +61,14 @@
         flex-direction: column;
         gap: 20px;
     }
+    
+    .title {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 370px) {
+    .title {
+        font-size: 10px;
+    }
 }

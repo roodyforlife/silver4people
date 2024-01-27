@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import { Loader } from "../../../Admin/components/UI/Loader/Loader";
 import { MAIN_ROUTE, REACT_APP_API_URL } from "../../../consts";
 import { ImageSlider } from "../../components/UI/ImageSlider/ImageSlider";
 import { getProduct } from "../../http/productApi";
@@ -8,6 +9,7 @@ import cl from "./Product.module.css";
 
 export const Product = () => {
   const [product, setProduct] = useState<IProduct>();
+  const [loading, setLoading] = useState<boolean>(true);
   const params = useParams();
 
   useEffect(() => {
@@ -26,13 +28,15 @@ export const Product = () => {
   }, [product]);
 
   const fetchProduct = async () => {
+    setLoading(true);
     if (params.id) {
-      await getProduct(params.id).then((data) => setProduct(data));
+      await getProduct(params.id).then((data) => setProduct(data)).finally(() => setLoading(false));
     }
   };
 
   return (
     <div className={cl.wrapper}>
+      {loading && <Loader />}
       <div className={cl.container}>
         <div className={cl.content}>
           <div className={cl.title}>
@@ -52,7 +56,7 @@ export const Product = () => {
             <div className={cl.infoContent}>
               <div className={cl.tiles}>
                 {product?.categories.map((category) => (
-                  <NavLink to={MAIN_ROUTE + `?category=${category.id}`}>
+                  <NavLink to={MAIN_ROUTE + `?category=${category.id}`} key={category.id}>
                     <div className={cl.tile}>{category.name}</div>
                   </NavLink>
                 ))}

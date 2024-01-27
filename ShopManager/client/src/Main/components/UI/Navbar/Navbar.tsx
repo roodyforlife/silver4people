@@ -1,39 +1,12 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { InstagramSVG } from "../../../../components/UI/SVGs/InstagramSVG/InstagramSVG";
-import { LogotypeSVG } from "../../../../components/UI/SVGs/LogotypeSVG/LogotypeSVG";
-import { TelegramSVG } from "../../../../components/UI/SVGs/TelegramSVG/TelegramSVG";
-import { MAIN_ROUTE } from "../../../../consts";
+import { MAIN_ROUTE, REACT_APP_API_URL } from "../../../../consts";
 import cl from "./Navbar.module.css";
+import records from '../../../../records.json';
 
 interface IProps {
   children: ReactNode;
 }
-
-interface IContact {
-  link: string;
-  icon: ReactNode;
-  text: string;
-}
-
-const contacts: IContact[] = [
-  {
-    text: "silver4woman",
-    icon: <InstagramSVG />,
-    link: "https://www.instagram.com/silver4woman/",
-  },
-  {
-    text: "kirksfolly_ua",
-    icon: <InstagramSVG />,
-    link: "https://www.instagram.com/kirksfolly_ua/",
-  },
-  {
-    text: "silverforpeople",
-    icon: <InstagramSVG />,
-    link: "https://www.instagram.com/silverforpeople/",
-  },
-  { text: "m9tvey", icon: <TelegramSVG />, link: "https://t.me/m9tvey" },
-];
 
 export const Navbar = ({ children }: IProps) => {
   return (
@@ -44,17 +17,19 @@ export const Navbar = ({ children }: IProps) => {
             <div className={cl.headerItem}>
               <NavLink to={MAIN_ROUTE}>
                 <div className={cl.logotype}>
-                    <LogotypeSVG />
+                  <img src={`/${records?.logotype}`} alt="logotype" />
                 </div>
               </NavLink>
             </div>
             <div className={cl.headerItem}>
               <ul className={cl.information}>
-                {contacts.map(({ text, link, icon }) => (
-                  <li>
+                {records?.contacts?.map(({ text, link, icon}) => (
+                  <li key={link}>
                     <a href={link}>
                       <div className={cl.informationItem}>
-                        <div className={cl.infoItemIcon}>{icon}</div>
+                        <div className={cl.infoItemIcon}>
+                          <img src={`/${icon}`} alt="Icon" />
+                        </div>
                         <div className={cl.infoItemlink}>{text}</div>
                       </div>
                     </a>
