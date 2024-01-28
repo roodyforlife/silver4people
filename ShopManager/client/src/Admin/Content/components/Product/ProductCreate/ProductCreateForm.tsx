@@ -70,8 +70,10 @@ export interface FileInfo {
   file: File;
 }
 
+export const acceptedImageFiles = [".jpg", ".jpeg", ".png", ".webp"];
+
 export const ProductCreateForm = ({fetchProducts, handleCloseCreateModal}:IProps) => {
-  const { handleSubmit, control, formState: {errors}, getValues, setValue } = useForm<IForm>();
+  const { handleSubmit, control, formState: {errors}, setError } = useForm<IForm>();
   const [loading, setLoading] = useState<boolean>(false);
   const [mainLoading, setMainLoading] = useState<boolean>(false);
   const [files, setFiles] = useState<FileInfo[]>([])
@@ -98,7 +100,7 @@ const addMoreFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(additionalFiles).map((file, index) => ({
       id: maxId + index + 1,
       file: file,
-    }));
+    })).filter((file) => acceptedImageFiles.includes("." + file.file.type.split("/")[1]));
 
     const updatedFiles = [...files, ...newFiles];
     setFiles(updatedFiles);
@@ -217,7 +219,7 @@ const onSubmit = async (data:IForm) => {
           validate: () => files.length > 0 ? undefined : "Додайте хочаб одну фотографію"
         }}
         render={({ field }) => (
-          <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
+          <FileInput onChange={addMoreFiles} multiple={true} accept="image/*"></FileInput>
         )}
       ></Controller>
       <p style={{color: 'red'}}>{errors.images?.message}</p>

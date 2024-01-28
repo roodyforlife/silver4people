@@ -23,6 +23,7 @@ import { editProduct } from '../../../http/productApi';
 import { createImage } from '../../../http/imageApi';
 import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
+import { acceptedImageFiles } from '../ProductCreate/ProductCreateForm';
 
 export interface IProductEditFormData {
     id: string;
@@ -140,7 +141,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           const newFiles = Array.from(additionalFiles).map((file, index) => ({
             id: maxId + index + 1,
             file: file,
-          }));
+          })).filter((file) => acceptedImageFiles.includes("." + file.file.type.split("/")[1]));
       
           const updatedFiles = [...files, ...newFiles];
           setFiles(updatedFiles);
