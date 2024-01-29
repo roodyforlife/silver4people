@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { Loader } from "../../../Admin/components/UI/Loader/Loader";
 import { MAIN_ROUTE, REACT_APP_API_URL } from "../../../consts";
@@ -30,9 +30,28 @@ export const Product = () => {
   const fetchProduct = async () => {
     setLoading(true);
     if (params.id) {
-      await getProduct(params.id).then((data) => setProduct(data)).finally(() => setLoading(false));
+      await getProduct(params.id)
+        .then((data) => setProduct(data))
+        .finally(() => setLoading(false));
     }
   };
+
+  const getDescription = (description?: string):ReactNode => {
+    if (description) {
+      const descriptionWithBreaks = description.split(/\n/g).map((line, index) => (
+        <>
+          {line !== '' &&
+          <p>{line}</p>
+          }
+          <br />
+        </>
+      ));
+      
+      return descriptionWithBreaks;
+    }
+
+    return;
+  }
 
   return (
     <div className={cl.wrapper}>
@@ -51,24 +70,25 @@ export const Product = () => {
         <div className={cl.content}>
           <div className={cl.info}>
             <div className={cl.infoTitle}>
-              <h2>Категорія</h2>
+              <h2>Опис</h2>
             </div>
+            <div className={cl.infoContent}>
+              <p>{getDescription(product?.description)}</p>
+            </div>
+          </div>
+          <div className={cl.info}>
+            
             <div className={cl.infoContent}>
               <div className={cl.tiles}>
                 {product?.categories.map((category) => (
-                  <NavLink to={MAIN_ROUTE + `?category=${category.id}`} key={category.id}>
+                  <NavLink
+                    to={MAIN_ROUTE + `?category=${category.id}`}
+                    key={category.id}
+                  >
                     <div className={cl.tile}>{category.name}</div>
                   </NavLink>
                 ))}
               </div>
-            </div>
-          </div>
-          <div className={cl.info}>
-            <div className={cl.infoTitle}>
-              <h2>Опис</h2>
-            </div>
-            <div className={cl.infoContent}>
-              <p>{product?.description}</p>
             </div>
           </div>
         </div>

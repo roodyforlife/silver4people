@@ -14,7 +14,7 @@ import { getCategories } from "../../http/categoryApi";
 import { getProducts } from "../../http/productApi";
 import cl from "./MainPage.module.css";
 import { Input } from "../../../components/UI/Input/Input";
-import { MAIN_ROUTE } from "../../../consts";
+import { MAIN_ROUTE, REACT_APP_API_URL } from "../../../consts";
 import { Loader } from "../../../Admin/components/UI/Loader/Loader";
 
 export interface ICategory {
@@ -49,10 +49,6 @@ interface IImage {
   index: number;
 }
 
-interface IProductFiltration extends FieldValues {
-  searchString: string;
-}
-
 export interface IProductsRequest {
   categoryIdes?: number[] | null;
   searchString: string;
@@ -60,19 +56,18 @@ export interface IProductsRequest {
   take: number;
 }
 
-const takeItems = 48;
+const takeItems = 1;
 
 export const MainPage = () => {
-  const { control, getValues } = useForm<IProductFiltration>();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [pagesCount, setPagesCount] = useState<number>(1);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
 
   const location = useLocation();
   const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
 
   const normalizedCategories: ICategoryNormalize[] = useMemo(() => {
     const categoryMap: ICategoryNormalize[] = [];
@@ -103,26 +98,26 @@ export const MainPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    const queryParams = new URLSearchParams(location.search);
     const category = queryParams.get("category");
     const pageNumber = queryParams.get("page");
+    const searchString = queryParams.get("search");
     setCurrentPage(pageNumber ? +pageNumber : 1);
-    setCategoryId(category);
 
     const fetchData = async () => {
-      await fetchProducts(category);
+      await fetchProducts(category, pageNumber, searchString);
       await fetchCategories().then((data) => setCategories(data));
     };
 
     Promise.resolve(fetchData()).finally(() => setLoading(false));
   }, [location.search]);
 
-  const fetchProducts = async (categoryId: string | null) => {
+  const fetchProducts = async (categoryId: string | null, page: string | null, searchString: string | null) => {
     const categoryIdes = categoryId !== null ? [+categoryId] : [];
+
     const request: IProductsRequest = {
       categoryIdes: categoryIdes,
-      searchString: getValues().searchString,
-      skip: currentPage - 1,
+      searchString: searchString ?? '',
+      skip: +(page ?? 1) - 1,
       take: takeItems,
     };
 
@@ -136,19 +131,11 @@ export const MainPage = () => {
     return await getCategories();
   };
 
-  useEffect(() => {
-    setLoading(true);
-    fetchProducts(categoryId)
-    .finally(() => setLoading(false));
-  }, [currentPage])
-
   const handlePageChange = async (number:number) => {
-    navigate((MAIN_ROUTE + `?page=${number}`) + (categoryId !== null ? `&category=${categoryId}` : ''))
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.set("page", number.toString())
+    navigate(MAIN_ROUTE + `?${queryParams.toString()}`)
   }
-
-  const onSubmit = async () => {
-    await fetchProducts(categoryId);
-  };
 
   return (
     <div className={cl.wrapper}>
@@ -156,23 +143,6 @@ export const MainPage = () => {
       <div className={cl.container}>
         <Categories items={normalizedCategories} />
         <div className={cl.productsContent}>
-          <div className={cl.filtration}>
-            <div className={cl.filtrationItem}>
-              <Controller
-                control={control}
-                name={"searchString"}
-                defaultValue={""}
-                render={({ field }) => (
-                  <Input label={"Назва"} inputType="text" field={field}></Input>
-                )}
-              ></Controller>
-            </div>
-            <div className={cl.filtrationItem}>
-              <Button type="submit" variant="secondary" onClick={onSubmit}>
-                Знайти
-              </Button>
-            </div>
-          </div>
           <div className={cl.pagination}>
             <Pagination
               color={{ backgroundColor: "black", color: "white" }}

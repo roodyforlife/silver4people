@@ -21,5 +21,6 @@
             "link": "https://t.me/m9tvey"
         }
     ],
-    "logotype": "assets/images/logotype.png"
+    "logotype": "assets/images/logotype.png",
+    "logotypeLite": "assets/images/logotype_lite.png"
 }

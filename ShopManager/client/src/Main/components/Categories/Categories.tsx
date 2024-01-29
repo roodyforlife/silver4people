@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { MAIN_ROUTE } from "../../../consts";
 import { ICategory, ICategoryNormalize } from "../../pages/MainPage/MainPage";
 import cl from "./Categories.module.css";
 
 interface IProps {
-  items: ICategoryNormalize[];
+  items: ICategoryNormalize[]
 }
 
 export const Categories = ({ items }: IProps) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
 
   const handleShowHideChildrens = (item: ICategoryNormalize) => {
     setExpandedCategories((prevExpandedCategories) => {
@@ -19,6 +22,12 @@ export const Categories = ({ items }: IProps) => {
           return [...prevExpandedCategories, item.id];
         }
       });
+  };
+
+  const updateCategoryParam = (categoryId: number) => {
+    params.set('category', categoryId.toString());
+    params.delete("page");
+    return `${MAIN_ROUTE}?${params.toString()}`;
   };
 
   return (
@@ -34,7 +43,7 @@ export const Categories = ({ items }: IProps) => {
                 className={cl.item}
                 onClick={() => handleShowHideChildrens(item)}
               >
-                <NavLink to={MAIN_ROUTE + `?category=${item.id}`}>
+                <NavLink to={updateCategoryParam(item.id)}>
                   {item.name}
                 </NavLink>
                 {item.childrenCategories.length !== 0 &&
@@ -48,7 +57,7 @@ export const Categories = ({ items }: IProps) => {
                         key={childrenItem.id}
                       >
                         <NavLink
-                          to={MAIN_ROUTE + `?category=${childrenItem.id}`}
+                          to={updateCategoryParam(childrenItem.id)}
                         >
                           {childrenItem.name}
                         </NavLink>
