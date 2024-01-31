@@ -56,7 +56,7 @@ export interface IProductsRequest {
   take: number;
 }
 
-const takeItems = 1;
+const takeItems = 48;
 
 export const MainPage = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
