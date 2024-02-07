@@ -9,8 +9,8 @@ namespace ShopManager.Server.Models
 
         public string Name { get; set; }
 
-        [MaxLength(2000)]
-        public string Description { get; set; }
+        [MaxLength(8000)]
+        public string? Description { get; set; }
 
         public string Article { get;set; }
 
@@ -20,9 +20,10 @@ namespace ShopManager.Server.Models
 
         public int SalePrice { get; set; }
 
-        public string TrackNumber { get; set; }
+        public string? TrackNumber { get; set; }
 
-        public string Location { get; set; }
+        public string? Location { get; set; }
+        public string? InstagramLink { get; set; }
 
         public bool IsSaled { get; set; }
 

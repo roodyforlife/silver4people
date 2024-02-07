@@ -1,1 +1,1 @@
-export const PRODUCT_ROUTE = "product"
+export const PRODUCT_ROUTE = "/product"

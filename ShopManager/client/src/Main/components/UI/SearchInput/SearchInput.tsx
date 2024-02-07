@@ -1,6 +1,7 @@
 import React from 'react'
 import { ControllerRenderProps, FieldValues, Path } from 'react-hook-form'
 import cl from './SearchInput.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface IProps <T extends FieldValues, TName extends Path<T>> {
     field?:ControllerRenderProps<T, TName>,
@@ -10,10 +11,12 @@ interface IProps <T extends FieldValues, TName extends Path<T>> {
 }
 
 export const SearchInput = <T extends FieldValues, TName extends Path<T>>(props:IProps<T, TName>) => {
+  const {t} = useTranslation();
+
   return (
     <div className={cl.input}>
-      <input type="text" placeholder={props.placeholder} disabled={props.disabled} {...props.field}></input>
-      <button onClick={props.callback}>Знайти</button>
+      <input type="search" placeholder={props.placeholder} disabled={props.disabled} {...props.field} ></input>
+      <button onClick={props.callback}>{t("Find")}</button>
     </div>
   )
 }

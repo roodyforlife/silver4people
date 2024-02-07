@@ -1,74 +1,90 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { MAIN_ROUTE } from "../../../consts";
 import { ICategory, ICategoryNormalize } from "../../pages/MainPage/MainPage";
 import cl from "./Categories.module.css";
+import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import languages from "../../../trans/languages.json";
+import { Context } from "../../..";
 
 interface IProps {
-  items: ICategoryNormalize[]
+  items: ICategoryNormalize[];
 }
 
 export const Categories = ({ items }: IProps) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
   const location = useLocation();
+  const { t } = useTranslation();
+  const contextValue = useContext(Context);
+  const [language] = contextValue!.language;
 
   const params = new URLSearchParams(location.search);
 
   const handleShowHideChildrens = (item: ICategoryNormalize) => {
     setExpandedCategories((prevExpandedCategories) => {
-        if (prevExpandedCategories.includes(item.id)) {
-          return prevExpandedCategories.filter((id) => id !== item.id);
-        } else {
-          return [...prevExpandedCategories, item.id];
-        }
-      });
+      if (prevExpandedCategories.includes(item.id)) {
+        return prevExpandedCategories.filter((id) => id !== item.id);
+      } else {
+        return [...prevExpandedCategories, item.id];
+      }
+    });
   };
 
   const updateCategoryParam = (categoryId: number) => {
-    params.set('category', categoryId.toString());
+    params.set("category", categoryId.toString());
     params.delete("page");
     return `${MAIN_ROUTE}?${params.toString()}`;
   };
 
   return (
     <div className={cl.wrapper}>
-      <div className={cl.content}>
-        <div className={cl.header}>
-          <h4>Категорії</h4>
-        </div>
-        <div className={cl.items}>
+      <nav className={cl.content}>
+        <header className={cl.header}>
+          <h2>{t("Categories")}</h2>
+        </header>
+        <ul className={cl.items}>
           {items.map((item) => (
-            <div key={item.id}>
+            <li key={item.id}>
               <div
                 className={cl.item}
                 onClick={() => handleShowHideChildrens(item)}
               >
                 <NavLink to={updateCategoryParam(item.id)}>
-                  {item.name}
+                  {JSON.parse(item.name)[language]}
                 </NavLink>
-                {item.childrenCategories.length !== 0 &&
-                    <div className={[cl.arrow, expandedCategories.includes(item.id) && cl.active].join(' ')}></div>}
+                {item.childrenCategories.length !== 0 && (
+                  <div
+                    className={[
+                      cl.arrow,
+                      expandedCategories.includes(item.id) && cl.active,
+                    ].join(" ")}
+                  ></div>
+                )}
               </div>
               {item.childrenCategories.length !== 0 && (
-                  <div className={[cl.childrenItems, expandedCategories.includes(item.id) && cl.visible].join(' ')}>
-                    {item.childrenCategories.map((childrenItem) => (
-                      <div
-                        className={[cl.item, cl.childrenItem].join(" ")}
-                        key={childrenItem.id}
-                      >
-                        <NavLink
-                          to={updateCategoryParam(childrenItem.id)}
-                        >
-                          {childrenItem.name}
-                        </NavLink>
-                      </div>
-                    ))}
-                  </div>
-                )}
-            </div>
+                <ul
+                  className={[
+                    cl.childrenItems,
+                    expandedCategories.includes(item.id) && cl.visible,
+                  ].join(" ")}
+                >
+                  {item.childrenCategories.map((childrenItem) => (
+                    <li
+                      className={[cl.item, cl.childrenItem].join(" ")}
+                      key={childrenItem.id}
+                    >
+                      <NavLink to={updateCategoryParam(childrenItem.id)}>
+                        {JSON.parse(childrenItem.name)[language]}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </nav>
     </div>
   );
 };

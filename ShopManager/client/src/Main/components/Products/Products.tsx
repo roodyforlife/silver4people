@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Pagination } from "../../../components/UI/Pagination/Pagination";
 import { REACT_APP_API_URL } from "../../../consts";
@@ -6,6 +6,8 @@ import { PRODUCT_ROUTE } from "../../consts";
 import { IProduct } from "../../pages/MainPage/MainPage";
 import cl from "./Products.module.css";
 import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { Context } from "../../..";
 
 interface IProps {
   products: IProduct[];
@@ -14,11 +16,14 @@ interface IProps {
 export const Products = (({ products }: IProps) => {
   const [mouseEnterProductId, setMouseEnterProductId] = useState<string | null>(null);
   const [currentSegment, setCurrentSegment] = useState<number>(0);
+  const {t} = useTranslation();
+  const contextValue = useContext(Context);
+  const [language] = contextValue!.language;
 
   if (products.length === 0) {
     return (
       <div className={cl.notFound}>
-        <span>Нічого не знайдено</span>
+        <span>{t("Nothing found")}</span>
       </div>
     );
   }
@@ -41,12 +46,12 @@ export const Products = (({ products }: IProps) => {
   };
 
   return (
-    <div className={cl.wrapper}>
+    <section className={cl.wrapper} aria-label={t("Product list")}>
       <div className={cl.container}>
         <div className={cl.items}>
           {products.map((item) => (
             <article className={cl.item} key={item.id}>
-              <NavLink to={PRODUCT_ROUTE + `/${item.id}`}>
+              <NavLink to={PRODUCT_ROUTE + `/${item.id}`} aria-label={`${t("View product")} ${JSON.parse(item.name)[language]}`}>
                 <div
                   className={cl.itemImage}
                   onMouseMove={handleMouseMove}
@@ -61,7 +66,7 @@ export const Products = (({ products }: IProps) => {
                           ]?.id
                         : item.images.find(({ index }) => index === 0)?.id
                     }`}
-                    alt="Продукт"
+                    alt={`${t("Product image")} ${JSON.parse(item.name)[language]}`}
                     loading="lazy"
                   />
                   {(item.images.length > 1 && mouseEnterProductId === item.id && !isMobile) && (
@@ -73,16 +78,16 @@ export const Products = (({ products }: IProps) => {
                   )}
                 </div>
                 <div className={cl.itemInfo}>
-                  <div className={cl.infoTitle}>
+                  <h2 className={cl.infoTitle}>
                     <span className={cl.article}>{item.article}. </span>
-                    <span className={cl.title}>{item.name}</span>
-                  </div>
+                    <span className={cl.title}>{JSON.parse(item.name)[language]}</span>
+                  </h2>
                 </div>
               </NavLink>
             </article>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 });

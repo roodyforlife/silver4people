@@ -40,8 +40,11 @@ namespace ShopManager.Server.Controllers
                 Name = product.Name,
                 PurchasePrice = product.PurchasePrice,
                 SalePrice = product.SalePrice,
+                InstagramLink = product.InstagramLink
             });
         }
+
+        [HttpGet]
 
         public async Task<IActionResult> Index([FromQuery] UserProductsRequest request)
         {
@@ -58,6 +61,7 @@ namespace ShopManager.Server.Controllers
                 Name = c.Name,
                 PurchasePrice = c.PurchasePrice,
                 SalePrice = c.SalePrice,
+                InstagramLink = c.InstagramLink,
             }).ToList();
 
             return Ok(new PageResponse<UserProductResponse>()

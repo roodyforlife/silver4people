@@ -11,6 +11,8 @@ import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
 import { getSelectsCategoryItems } from '../../../../utils/SelectUtils/getSelectsItems';
 import { CustomSelect, ISelect } from '../../../../../components/UI/CustomSelect/CustomSelect';
+import { LANGUAGE_ARRAY } from '../../../../consts';
+import { getlanguagesValues } from '../../../../utils/getlanguagesValues';
 
 export interface ICategoryEditFormData {
     id: number,
@@ -42,7 +44,12 @@ export const CategoryEditForm = ({fetchCategories, handleCloseEditModal, categor
     const onSubmit = async (data:IForm) => {
         if (category !== undefined) {
             setLoading(true);
-            await editCategory({id: category.id, parentCategoryId: data.parentCategory && +data.parentCategory.value, name: data.name}).then(() => {
+            const formData:ICategoryEditFormData = {
+              id: category.id,
+              parentCategoryId: data.parentCategory && +data.parentCategory.value,
+              name: getlanguagesValues(data, "Name"),
+            }
+            await editCategory(formData).then(() => {
                 fetchCategories();
                 toast.success("Категорія успішно відредагована");
                 handleCloseEditModal();
@@ -69,28 +76,30 @@ export const CategoryEditForm = ({fetchCategories, handleCloseEditModal, categor
       <div>
         {mainLoading && <Loader />}
         <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
-      <div className={formCl.item}>
-        <Controller
-          control={control}
-          name={'name'}
-          defaultValue={category?.name}
-          rules={{
-            required: "Введіть назву категорії",
-            maxLength: {
-              value: 20,
-              message: 'Максимальна довжина категорії повинна бути не більше 20'
-            },
-            minLength: {
-              value: 5,
-              message: 'Мінімальна довжина не повинна бути менша за 5'
-            },
-          }}
-          render={({ field }) => (
-            <Input label={"Назва"} inputType="text" field={field}></Input>
+        {LANGUAGE_ARRAY.map(({title}) => 
+          <div className={formCl.item} key={title}>
+          <Controller
+            control={control}
+            name={`${title.toLowerCase()}Name` as keyof IForm}
+            defaultValue={category && JSON.parse(category.name)[title]}
+            rules={{
+              required: "Введіть назву категорії",
+              maxLength: {
+                value: 20,
+                message: 'Максимальна довжина категорії повинна бути не більше 20'
+              },
+              minLength: {
+                value: 5,
+                message: 'Мінімальна довжина не повинна бути менша за 5'
+              },
+            }}
+            render={({ field }) => (
+              <Input label={`Назва (${title})`} inputType="text" field={field}></Input>
+            )}
+          ></Controller>
+          <p style={{ color: 'red' }}>{(errors as Record<string, any>)[`${title.toLowerCase()}Name`]?.message}</p>
+        </div>
           )}
-        ></Controller>
-        <p style={{color: 'red'}}>{errors.name?.message}</p>
-      </div>
       {category?.parentCategory &&
       <div className={formCl.item}>
         <CustomSelect name="parentCategory" control={control} label={"Батьківська категорія"} multiple={false} items={selectItems}/>

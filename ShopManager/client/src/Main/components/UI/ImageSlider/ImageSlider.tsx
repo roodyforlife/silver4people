@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import cl from "./ImageSlider.module.css";
 import { isMobile } from "react-device-detect";
 import { useSwipeable } from "react-swipeable";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   imagesUrls: string[];
@@ -14,6 +15,7 @@ export const ImageSlider = ({ imagesUrls }: IProps) => {
     trackMouse: false,
     trackTouch: true,
   });
+  const {t} = useTranslation();
 
   const selectImage = (index: number) => {
     setSelected(index);
@@ -45,14 +47,16 @@ export const ImageSlider = ({ imagesUrls }: IProps) => {
       <div className={cl.container}>
         {!isMobile ? (
           <>
-            <div
+            <button
+              aria-label={t("Back")}
               className={[cl.button, cl.prev].join(" ")}
               onClick={() => handleChangeImage(-1)}
-            ></div>
-            <div
+            ></button>
+            <button
+              aria-label={t("Next")}
               className={[cl.button, cl.next].join(" ")}
               onClick={() => handleChangeImage(1)}
-            ></div>
+            ></button>
           </>
         ) : (
           <div className={cl.dots}>
@@ -73,7 +77,7 @@ export const ImageSlider = ({ imagesUrls }: IProps) => {
         >
           {imagesUrls.map((url) => (
             <div className={cl.slide} key={url}>
-              <img src={url} alt="" loading="lazy" draggable={false} />
+              <img src={url} alt={t("Product image")} loading="lazy" draggable={false} />
             </div>
           ))}
         </div>
@@ -87,7 +91,7 @@ export const ImageSlider = ({ imagesUrls }: IProps) => {
               onMouseEnter={!isMobile ? () => selectImage(index) : undefined}
               onClick={isMobile ? () => selectImage(index) : undefined}
             >
-              <img src={url} alt="" />
+              <img src={url} alt={t("Product image")} />
             </div>
           ))}
         </div>
