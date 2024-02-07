@@ -57,6 +57,28 @@
     color: black;
 }
 
+.contactItem {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgb(0, 0, 255);
+  }
+  
+  .contactIcon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .contactIcon img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    width: 20px;
+    height: 20px;
+  }
+
 
 @media (max-width: 800px) {
     .container {
@@ -67,6 +89,10 @@
     
     .title {
         font-size: 12px;
+    }
+
+    .image {
+        width: 100%;
     }
 }
 

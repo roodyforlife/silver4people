@@ -52,6 +52,7 @@ namespace ShopManager.Server.Services
                 PurchasePrice = productCreation.PurchasePrice,
                 SalePrice = productCreation.SalePrice,
                 TrackNumber = productCreation.TrackNumber,
+                InstagramLink = productCreation.InstagramLink,
                 Sites = sites,
                 Images = images,
             };

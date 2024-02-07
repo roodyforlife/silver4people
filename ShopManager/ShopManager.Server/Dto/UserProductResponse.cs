@@ -17,6 +17,7 @@ namespace ShopManager.Server.Dto
         public int PurchasePrice { get; set; }
 
         public int SalePrice { get; set; }
+        public string InstagramLink { get ; set; }
 
         public DateTime CreationDate { get; set; }
 

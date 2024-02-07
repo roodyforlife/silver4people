@@ -57,13 +57,13 @@ namespace ShopManager.Server.Repositories
             return await _appDbContext.Products.AnyAsync(p => p.Article == article);
         }
 
-        public override Task<Product> GetByIdAsync(Guid id)
+        public override async Task<Product> GetByIdAsync(Guid id)
         {
-            return _appDbContext.Products
+            return await _appDbContext.Products
                 .Include(c => c.Categories)
                 .Include(c => c.Images)
                 .Include(c => c.Sites)
-                .FirstAsync(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }

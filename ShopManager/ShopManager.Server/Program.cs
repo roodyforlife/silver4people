@@ -78,12 +78,16 @@ services.AddAuthentication(options =>
 
 services.AddCors(options =>
 {
-    options.AddPolicy(name: "_myAllowSpecificOrigins",
-                      policy =>
+    options.AddPolicy("AllowSpecificOrigin",
+                      builder =>
                       {
-                          policy.AllowAnyHeader();
-                          policy.AllowAnyMethod();
-                          policy.SetIsOriginAllowed((host) => true);
+                          builder.WithOrigins(
+                              "http://antique-group.com",
+                              "http://www.antique-group.com",
+                              "https://www.antique-group.com",
+                              "https://antique-group.com");
+                          builder.AllowAnyHeader();
+                          builder.AllowAnyMethod();
                       });
 });
 
@@ -101,7 +105,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("_myAllowSpecificOrigins");
+app.UseCors(builder =>
+    builder
+    .WithOrigins(
+        "http://antique-group.com",
+        "http://www.antique-group.com",
+        "https://www.antique-group.com",
+        "https://antique-group.com")
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 app.UseAuthentication();
 app.UseAuthorization();
 

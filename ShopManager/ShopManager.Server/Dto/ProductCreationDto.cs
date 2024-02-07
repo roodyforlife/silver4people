@@ -8,7 +8,7 @@ namespace ShopManager.Server.Dto
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string Article { get; set; }
 
@@ -19,10 +19,11 @@ namespace ShopManager.Server.Dto
         public int PurchasePrice { get; set; }
 
         public int SalePrice { get; set; }
+        public string? InstagramLink { get; set; }
 
-        public string TrackNumber { get; set; }
+        public string? TrackNumber { get; set; }
 
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
         public int[] SiteIdes { get; set; }
 

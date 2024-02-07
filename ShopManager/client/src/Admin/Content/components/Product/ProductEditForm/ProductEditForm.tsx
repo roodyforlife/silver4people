@@ -24,6 +24,10 @@ import { createImage } from '../../../http/imageApi';
 import { Loader } from '../../../../components/UI/Loader/Loader';
 import { toast } from 'react-toastify';
 import { acceptedImageFiles } from '../ProductCreate/ProductCreateForm';
+import { getlanguagesValues } from '../../../../utils/getlanguagesValues';
+import { LANGUAGE_ARRAY } from '../../../../consts';
+import languages from '../../../../../trans/languages.json';
+import { getChildrenCategories } from '../../../../utils/childrenCategory';
 
 export interface IProductEditFormData {
     id: string;
@@ -43,12 +47,15 @@ export interface IProductEditFormData {
 
   interface IForm {
     id: string;
-    name: string;
+    uaName: string;
+    ruName: string;
     published: boolean;
-    description: string;
+    uaDescription: string;
+    ruDescription: string;
     purchasePrice: number;
     salePrice: number;
     trackNumber: string;
+    instagramLink: string,
     location: string;
     images: IImage[];
     article: string;
@@ -77,6 +84,10 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
     const { handleSubmit, control, formState: {errors}, setError } = useForm<IForm>({
         defaultValues: {
             ...product,
+            uaName: product && JSON.parse(product.name)[languages.ua.title],
+            ruName: product && JSON.parse(product.name)[languages.ru.title],
+            uaDescription: product && JSON.parse(product.description)[languages.ua.title],
+            ruDescription: product && JSON.parse(product.description)[languages.ru.title],
             categoryIdes: product?.categories ? getSelectsCategoryItems(product.categories) : [],
             siteIdes: product?.sites ? getSelectsSiteItems(product.sites) : [],
         }
@@ -93,7 +104,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         const fetchData = async () => {
           const categoriesData = await fetchCategories();
           const sitesData = await fetchSites();
-          setCategories(categoriesData.filter((category:ICategory) => category.parentCategory));
+          setCategories(getChildrenCategories(categoriesData) as ICategory[]);
           setSites(sitesData);
         };
       
@@ -174,6 +185,8 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         
           const formData:IProductEditFormData = {
             ...data,
+            description: getlanguagesValues(data, "Description"),
+            name: getlanguagesValues(data, "Name"),
             categoryIdes: data.categoryIdes?.map(({value}) => +value),
             siteIdes: data.siteIdes?.map(({value}) => +value),
             id: product.id,
@@ -202,44 +215,47 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
         <div>
           {mainLoading && <Loader />}
           <form onSubmit={handleSubmit(onSubmit)} className={cl.form}>
-        <div className={formCl.item}>
-          <Controller
-            control={control}
-            name={'name'}
-            rules={{
-              required: "Введіть назву продукту",
-              maxLength: {
-                value: 100,
-                message: 'Максимальна довжина продукту повинна бути не більше 100'
-              },
-              minLength: {
-                value: 5,
-                message: 'Мінімальна довжина не повинна бути менша за 5'
-              },
-            }}
-            render={({ field }) => (
-              <Input label={"Назва"} inputType="text" field={field}></Input>
-            )}
-          ></Controller>
-          <p style={{color: 'red'}}>{errors.name?.message}</p>
-        </div>
-        <div className={formCl.item}>
-          <Controller
-            control={control}
-            name={'description'}
-            rules={{
-              required: "Введіть опис продукту",
-              maxLength: {
-                value: 2000,
-                message: 'Максимальна довжина опису повинна бути не більше 2000'
-              }
-            }}
-            render={({ field }) => (
-              <Textarea height={200} label={"Опис"} field={field}></Textarea>
-            )}
-          ></Controller>
-          <p style={{color: 'red'}}>{errors.description?.message}</p>
-        </div>
+        {LANGUAGE_ARRAY.map(({title}) => 
+        <div className={formCl.item} key={title}>
+        <Controller
+          control={control}
+          name={`${title.toLowerCase()}Name` as keyof IForm}
+          rules={{
+            required: "Введіть назву продукту",
+            maxLength: {
+              value: 100,
+              message: 'Максимальна довжина продукту повинна бути не більше 100'
+            },
+            minLength: {
+              value: 5,
+              message: 'Мінімальна довжина не повинна бути менша за 5'
+            },
+          }}
+          render={({ field }) => (
+            <Input label={`Назва (${title})`} inputType="text" field={field}></Input>
+          )}
+        ></Controller>
+        <p style={{ color: 'red' }}>{(errors as Record<string, any>)[`${title.toLowerCase()}Name`]?.message}</p>
+      </div>
+        )}
+        {LANGUAGE_ARRAY.map(({title}) => 
+        <div className={formCl.item} key={title}>
+        <Controller
+          control={control}
+          name={`${title.toLowerCase()}Description` as keyof IForm}
+          rules={{
+            maxLength: {
+              value: 2500,
+              message: 'Максимальна довжина опису повинна бути не більше 2000'
+            }
+          }}
+          render={({ field }) => (
+            <Textarea height={200} label={`Опис (${title})`} field={field}></Textarea>
+          )}
+        ></Controller>
+        <p style={{ color: 'red' }}>{(errors as Record<string, any>)[`${title.toLowerCase()}Description`]?.message}</p>
+      </div>
+        )}
         {imageLoading ?
           <div className={cl.imageLoader}>
             <Loader position='static' size={20}/>
@@ -256,7 +272,7 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
           validate: () => files.length > 0 ? undefined : "Додайте хочаб одну фотографію"
         }}
         render={() => (
-          <FileInput onChange={addMoreFiles} multiple={true}></FileInput>
+          <FileInput onChange={addMoreFiles} multiple={true} accept="image/*"></FileInput>
         )}
       ></Controller>
       <p style={{color: 'red'}}>{errors.images?.message}</p>
@@ -283,7 +299,6 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
             control={control}
             name={'salePrice'}
             rules={{
-              required: "Введіть ціну продажу",
               min: {
                 value: 0,
                 message: 'Невірне число'
@@ -324,6 +339,20 @@ export const ProductEditForm = ({fetchProducts, handleCloseEditModal, product}:I
             )}
           ></Controller>
           <p style={{color: 'red'}}>{errors.trackNumber?.message}</p>
+        </div>
+        <div className={formCl.item}>
+          <Controller
+            control={control}
+            name={"instagramLink"}
+            render={({ field }) => (
+              <Input
+                label={"Instagram"}
+                inputType="text"
+                field={field}
+              ></Input>
+            )}
+          ></Controller>
+          <p style={{ color: "red" }}>{errors.instagramLink?.message}</p>
         </div>
         <div className={formCl.item}>
           <Controller

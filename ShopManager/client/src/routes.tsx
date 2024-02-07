@@ -12,6 +12,7 @@ import { ADMIN_ROLE, MAIN_ROUTE, MANAGER_ROLE, NO_ROUTE } from "./consts";
 import { Navbar } from "./Main/components/UI/Navbar/Navbar";
 import { PRODUCT_ROUTE } from "./Main/consts";
 import { MainPage } from "./Main/pages/MainPage/MainPage";
+import { NotFoundPage } from "./Main/pages/NotFoundPage/NotFoundPage";
 import { Product } from "./Main/pages/Product/Product";
 
 interface RouteData {
@@ -31,5 +32,5 @@ export const publicRoutes: RouteData[] = [
     { path: MAIN_ROUTE, Component: MainPage },
     { path: PRODUCT_ROUTE + `/:id`, Component: Product },
     { path: LOGIN_ROUTE, Component: Login },
-    { path: NO_ROUTE, Component: () => <Navigate to={MAIN_ROUTE} /> },
+    { path: NO_ROUTE, Component: NotFoundPage },
 ];

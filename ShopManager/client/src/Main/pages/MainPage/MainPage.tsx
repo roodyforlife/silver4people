@@ -16,6 +16,8 @@ import cl from "./MainPage.module.css";
 import { Input } from "../../../components/UI/Input/Input";
 import { MAIN_ROUTE, REACT_APP_API_URL } from "../../../consts";
 import { Loader } from "../../../Admin/components/UI/Loader/Loader";
+import { Helmet } from 'react-helmet-async';
+import records from '../../../records.json';
 
 export interface ICategory {
   id: number;
@@ -32,6 +34,7 @@ export interface ICategoryNormalize {
 
 export interface IProduct {
   id: string;
+  instagramLink: string,
   name: string;
   article: string,
   description: string,
@@ -138,6 +141,12 @@ export const MainPage = () => {
   }
 
   return (
+    <>
+    <Helmet>
+      <title>{records.siteTitle}</title>
+      <meta name="description" content={records.siteDescription} />
+      <link rel="canonical" href={`http://antique-group.com`} />
+    </Helmet>
     <div className={cl.wrapper}>
       {loading && <Loader />}
       <div className={cl.container}>
@@ -163,5 +172,6 @@ export const MainPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };

@@ -18,7 +18,7 @@ namespace ShopManager.Server.Requests
                 product.Description.ToLower().Contains(lowerSearchString));
 
 
-            var filter = new FilterSpecification<Product>(product => product.Published &&
+            var filter = new FilterSpecification<Product>(product => product.Published && !product.IsSaled &&
                 (CategoryIdes == null || product.Categories.Any(c => CategoryIdes.Contains(c.Id) || CategoryIdes.Any(i => i == c.ParentCategoryId))));
 
             return new AndSpecification<Product>(filter, search);

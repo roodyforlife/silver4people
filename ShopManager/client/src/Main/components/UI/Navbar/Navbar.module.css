@@ -46,14 +46,6 @@ body {
   height: 75px;
 }
 
-.logotypeMain {
-  display: block;
-}
-
-.logotypeLite {
-  display: none;
-}
-
 .logotype img {
   height: 100%;
 }
@@ -105,13 +97,24 @@ body {
     width: 500px;
 }
 
-@media (max-width: 600px) {
-  .logotypeMain {
-    display: none;
-  }
+.languagePicker {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
-  .logotypeLite {
-    display: block;
+.languageItem {
+  background: transparent;
+  font-weight: 600;
+}
+
+.languageItem.active{
+  color: rgb(141, 141, 141);
+}
+
+@media (max-width: 600px) {
+  .logotype {
+    height: 55px;
   }
 }
 

@@ -1,6 +1,11 @@
 {
     "contacts": [
         {
+            "text": "silverforpeople",
+            "icon": "assets/images/instagram_icon.png",
+            "link": "https://www.instagram.com/silverforpeople/"
+        },
+        {
             "text": "silver4woman",
             "icon": "assets/images/instagram_icon.png",
             "link": "https://www.instagram.com/silver4woman/"
@@ -9,13 +14,13 @@
             "text": "kirksfolly_ua",
             "icon": "assets/images/instagram_icon.png",
             "link": "https://www.instagram.com/kirksfolly_ua/"
-        },
-        {
-            "text": "silverforpeople",
-            "icon": "assets/images/instagram_icon.png",
-            "link": "https://www.instagram.com/silverforpeople/"
         }
     ],
     "logotype": "assets/images/logotype.png",
-    "logotypeLite": "assets/images/logotype_lite.png"
+    "logotypeLite": "assets/images/logotype_lite.png",
+    "siteTitle": "Antique-group - Антикваріат. Вінтаж. Срібло. Порцеляна",
+    "siteDescription": "Уникальные антикварные находки: серебряные изделия, вазы, украшения и многое другое. Откройте мир старины в нашем каталоге.",
+    "statusCodes": {
+        "notFound": 404
+    }
 }
