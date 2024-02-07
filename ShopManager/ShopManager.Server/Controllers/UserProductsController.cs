@@ -21,7 +21,7 @@ namespace ShopManager.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var product = await _productService.GetAsync(id);
+            var product = await _productService.GetPublishedNotSaledAsync(id);
 
             if(product == null)
             {

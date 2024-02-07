@@ -64,9 +64,9 @@ namespace ShopManager.Server.Services
             await _productRepository.CreateAsync(product);
         }
 
-        public async Task<Product> GetAsync(Guid id)
+        public async Task<Product> GetPublishedNotSaledAsync(Guid id)
         {
-            return await _productRepository.GetByIdAsync(id);
+            return await _productRepository.GetByIdAsync(id, product => !product.IsSaled && product.Published);
         }
 
         public async Task<PageResponse<Product>> GetAllAsync(IPageRequest<Product> specification)

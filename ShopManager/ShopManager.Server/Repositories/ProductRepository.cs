@@ -3,6 +3,7 @@ using ShopManager.Server.Interfaces;
 using ShopManager.Server.Models;
 using ShopManager.Server.Requests;
 using ShopManager.Server.RequestSpecifications;
+using System.Linq.Expressions;
 
 namespace ShopManager.Server.Repositories
 {
@@ -64,6 +65,11 @@ namespace ShopManager.Server.Repositories
                 .Include(c => c.Images)
                 .Include(c => c.Sites)
                 .FirstAsync(c => c.Id == id);
+        }
+
+        public async Task<Product> GetByIdAsync(Guid id, Expression<Func<Product, bool>> predicate)
+        {
+            return await _appDbContext.Products.Where(predicate).FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }
