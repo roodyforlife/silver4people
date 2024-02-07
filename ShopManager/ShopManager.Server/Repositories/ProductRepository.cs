@@ -69,7 +69,10 @@ namespace ShopManager.Server.Repositories
 
         public async Task<Product> GetByIdAsync(Guid id, Expression<Func<Product, bool>> predicate)
         {
-            return await _appDbContext.Products.Where(predicate).FirstOrDefaultAsync(c => c.Id == id);
+            return await _appDbContext.Products
+                .Include(c => c.Categories)
+                .Include(c => c.Images)
+                .Where(predicate).FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }
