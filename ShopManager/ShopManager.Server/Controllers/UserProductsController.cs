@@ -38,8 +38,6 @@ namespace ShopManager.Server.Controllers
                 Id = product.Id,
                 Images = product.Images,
                 Name = product.Name,
-                PurchasePrice = product.PurchasePrice,
-                SalePrice = product.SalePrice,
                 InstagramLink = product.InstagramLink
             });
         }
@@ -52,16 +50,10 @@ namespace ShopManager.Server.Controllers
 
             var products = result.PageItems.Select(c => new UserProductResponse
             {
-                CreationDate = c.CreationDate,
-                EditionDate = c.EditionDate,
                 Article = c.Article,
-                Categories = c.Categories,
                 Id = c.Id,
                 Images = c.Images,
                 Name = c.Name,
-                PurchasePrice = c.PurchasePrice,
-                SalePrice = c.SalePrice,
-                InstagramLink = c.InstagramLink,
             }).ToList();
 
             return Ok(new PageResponse<UserProductResponse>()
