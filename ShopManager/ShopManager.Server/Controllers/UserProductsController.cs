@@ -31,8 +31,6 @@ namespace ShopManager.Server.Controllers
             return Ok(new UserProductResponse
             {
                 Description = product.Description,
-                CreationDate = product.CreationDate,
-                EditionDate = product.EditionDate,
                 Article = product.Article,
                 Categories = product.Categories,
                 Id = product.Id,
