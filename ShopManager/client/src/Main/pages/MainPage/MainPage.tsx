@@ -120,7 +120,7 @@ export const MainPage = () => {
     const request: IProductsRequest = {
       categoryIdes: categoryIdes,
       searchString: searchString ?? '',
-      skip: +(page ?? 1) - 1,
+      skip: takeItems * (+(page ?? 1) - 1),
       take: takeItems,
     };
 

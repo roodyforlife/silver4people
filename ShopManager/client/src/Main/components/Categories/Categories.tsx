@@ -20,6 +20,7 @@ export const Categories = ({ items }: IProps) => {
   const [language] = contextValue!.language;
 
   const params = new URLSearchParams(location.search);
+  const paramCategory: number = parseInt(params.get("category")!);
 
   const handleShowHideChildrens = (item: ICategoryNormalize) => {
     setExpandedCategories((prevExpandedCategories) => {
@@ -31,8 +32,12 @@ export const Categories = ({ items }: IProps) => {
     });
   };
 
-  const updateCategoryParam = (categoryId: number) => {
-    params.set("category", categoryId.toString());
+  const updateCategoryParam = (categoryId?: number) => {
+    if (categoryId) {
+      params.set("category", categoryId.toString());
+    } else {
+      params.delete("category");
+    }
     params.delete("page");
     return `${MAIN_ROUTE}?${params.toString()}`;
   };
@@ -44,10 +49,16 @@ export const Categories = ({ items }: IProps) => {
           <h2>{t("Categories")}</h2>
         </header>
         <ul className={cl.items}>
+          <li className={[cl.item].join(" ")}>
+            <NavLink to={updateCategoryParam(0)}>Усі категорії</NavLink>
+          </li>
           {items.map((item) => (
             <li key={item.id}>
               <div
-                className={cl.item}
+                className={[
+                  cl.item,
+                  paramCategory === item.id && cl.active,
+                ].join(" ")}
                 onClick={() => handleShowHideChildrens(item)}
               >
                 <NavLink to={updateCategoryParam(item.id)}>
@@ -71,7 +82,11 @@ export const Categories = ({ items }: IProps) => {
                 >
                   {item.childrenCategories.map((childrenItem) => (
                     <li
-                      className={[cl.item, cl.childrenItem].join(" ")}
+                      className={[
+                        cl.item,
+                        cl.childrenItem,
+                        paramCategory === childrenItem.id && cl.active,
+                      ].join(" ")}
                       key={childrenItem.id}
                     >
                       <NavLink to={updateCategoryParam(childrenItem.id)}>

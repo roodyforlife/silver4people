@@ -109,7 +109,7 @@ const headColumns: string[] = [
   "Контроллери",
 ];
 
-const takeItems = 100;
+const takeItems = 48;
 const maxTextLength = 20;
 
 export const AdminProducts = () => {
@@ -174,7 +174,7 @@ export const AdminProducts = () => {
       order: orderField,
       orderType: orderType,
       take: takeItems,
-      skip: currentPage - 1,
+      skip: (currentPage - 1) * takeItems,
     };
 
     try {
@@ -504,7 +504,7 @@ export const AdminProducts = () => {
                       <td>{row.isSaled ? "Так" : "Ні"}</td>
                       <td>{row.purchasePrice}</td>
                       <td>{row.salePrice}</td>
-                      <td>{row.salePrice - row.purchasePrice}</td>
+                      <td>{row.salePrice !== 0 ? row.salePrice - row.purchasePrice : 0}</td>
                       <td>
                         {row.trackNumber ? row.trackNumber?.length > maxTextLength
                           ? row.trackNumber.substring(0, maxTextLength) + "..."

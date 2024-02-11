@@ -9,10 +9,10 @@ export const getFileListNode = (fileList: FileInfo[]): IItem[] => {
       content: (
         <div className={cl.listItem} key={fileInfo.id}>
           <div className={cl.image}>
-            <img src={URL.createObjectURL(fileInfo.file)} alt={`Image ${fileInfo.id}`} />
+            <img src={fileInfo.file && URL.createObjectURL(fileInfo.file)} alt={`Image ${fileInfo.id}`} />
           </div>
           <div className={cl.imageName}>
-            <span>{fileInfo.file.name}</span>
+            <span>{fileInfo.file?.name}</span>
           </div>
         </div>
       ),
