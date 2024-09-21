@@ -41,7 +41,6 @@ namespace ShopManager.Server.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> Index([FromQuery] UserProductsRequest request)
         {
             var result = (await _productService.GetAllAsync(request));
@@ -52,6 +51,7 @@ namespace ShopManager.Server.Controllers
                 Id = c.Id,
                 Images = c.Images,
                 Name = c.Name,
+                InstagramLink = c.InstagramLink
             }).ToList();
 
             return Ok(new PageResponse<UserProductResponse>()

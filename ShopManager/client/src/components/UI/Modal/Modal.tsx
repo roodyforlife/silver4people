@@ -10,10 +10,18 @@ interface IProps {
 }
 
 export const Modal = ({show, children, onClose, title}:IProps) => {
+
+    const handleClose = () => {
+        // eslint-disable-next-line no-restricted-globals
+        if (confirm("Ви дійсно хочете вийти з модального меню?")) {
+            onClose();
+        }
+    };
+
   return (
     <>
         {show &&
-            <div className={cl.container} onClick={onClose}>
+            <div className={cl.container} onClick={handleClose}>
                 <div className={cl.modal} onClick={(e) => e.stopPropagation()}>
                     <div className={cl.content}>
                         <div className={cl.header}>

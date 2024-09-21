@@ -13,6 +13,10 @@
 .header {
   background: var(--dark-gr-color);
   padding: 10px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .header > h2 {

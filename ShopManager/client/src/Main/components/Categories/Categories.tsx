@@ -4,9 +4,8 @@ import { MAIN_ROUTE } from "../../../consts";
 import { ICategory, ICategoryNormalize } from "../../pages/MainPage/MainPage";
 import cl from "./Categories.module.css";
 import { useTranslation } from "react-i18next";
-import { useLocalStorage } from "../../../hooks/useLocalStorage";
-import languages from "../../../trans/languages.json";
 import { Context } from "../../..";
+import { isMobile } from 'react-device-detect';
 
 interface IProps {
   items: ICategoryNormalize[];
@@ -14,6 +13,7 @@ interface IProps {
 
 export const Categories = ({ items }: IProps) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
+  const [isMenuActive, setIsMenuActive] = useState<boolean>(true);
   const location = useLocation();
   const { t } = useTranslation();
   const contextValue = useContext(Context);
@@ -31,6 +31,10 @@ export const Categories = ({ items }: IProps) => {
       }
     });
   };
+  
+  const handleToggleMenu = () => {
+    setIsMenuActive(!isMenuActive);
+  }
 
   const updateCategoryParam = (categoryId?: number) => {
     if (categoryId) {
@@ -45,10 +49,18 @@ export const Categories = ({ items }: IProps) => {
   return (
     <div className={cl.wrapper}>
       <nav className={cl.content}>
-        <header className={cl.header}>
+        <header className={cl.header} onClick={handleToggleMenu}>
           <h2>{t("Categories")}</h2>
+          <div
+                    className={[
+                      cl.arrow,
+                      isMenuActive && cl.active,
+                    ].join(" ")}
+                  ></div>
         </header>
         <ul className={cl.items}>
+          {(isMenuActive) &&
+          <>
           <li className={[cl.item].join(" ")}>
             <NavLink to={updateCategoryParam(0)}>Усі категорії</NavLink>
           </li>
@@ -98,6 +110,8 @@ export const Categories = ({ items }: IProps) => {
               )}
             </li>
           ))}
+          </>
+                    }
         </ul>
       </nav>
     </div>

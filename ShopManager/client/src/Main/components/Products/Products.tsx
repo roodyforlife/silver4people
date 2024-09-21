@@ -79,7 +79,6 @@ export const Products = (({ products }: IProps) => {
                 </div>
                 <div className={cl.itemInfo}>
                   <h2 className={cl.infoTitle}>
-                    <span className={cl.article}>{item.article}. </span>
                     <span className={cl.title}>{JSON.parse(item.name)[language]}</span>
                   </h2>
                 </div>
