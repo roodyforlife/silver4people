@@ -138,6 +138,9 @@ export const MainPage = () => {
     const queryParams = new URLSearchParams(location.search);
     queryParams.set("page", number.toString())
     navigate(MAIN_ROUTE + `?${queryParams.toString()}`)
+    window.scrollTo({
+      top: 0
+    })
   }
 
   return (

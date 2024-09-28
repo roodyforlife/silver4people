@@ -183,6 +183,9 @@ export const AdminProducts = () => {
   const handlePageChange = async (number:number) => {
     navigate(ADMIN_PRODUCTS_ROUTE + `?page=${number}`)
     setCurrentPage(number);
+    window.scrollTo({
+      top: 0
+    })
   }
 
   useEffect(() => {
